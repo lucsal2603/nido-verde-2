@@ -152,14 +152,11 @@ html.is-ridotto .manifesto__testo { color: var(--inchiostro); }
 .nido__foto { position: absolute; inset: 0; margin: 0; }
 .nido__foto img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--e-out); }
 @media (hover: hover) { .nido:hover .nido__foto img { transform: scale(1.04); } }
-/* il guscio: si incrina a zig-zag come un uovo, la metà alta cade in basso a destra, quella bassa resta ferma e poi scende */
-.nido__guscio { position: absolute; inset: -1px; background: var(--oliva); will-change: transform; }
-.nido__guscio--alto { clip-path: polygon(0 0, 100% 0, 100% 53%, 89% 45%, 79% 57%, 68% 46%, 58% 58%, 48% 44%, 38% 57%, 28% 45%, 18% 58%, 9% 46%, 0% 54%); transform-origin: 100% 55%; }
-.nido__guscio--basso { clip-path: polygon(0% 54%, 9% 46%, 18% 58%, 28% 45%, 38% 57%, 48% 44%, 58% 58%, 68% 46%, 79% 57%, 89% 45%, 100% 53%, 100% 100%, 0 100%); }
-.nido__crepa { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
-.nido__crepa polyline { fill: none; stroke: var(--notte); stroke-width: 2.5; stroke-linejoin: miter; vector-effect: non-scaling-stroke; }
-.nido__crepa { clip-path: inset(0 100% 0 0); }
-html.is-ridotto .nido__guscio, html.is-ridotto .nido__crepa { display: none; }
+/* le ante: due metà verdi incernierate in basso al centro; si abbassano ruotando, la sinistra verso sinistra e la destra verso destra, e restano come due triangoli in basso */
+.nido__anta { position: absolute; top: 0; bottom: 0; width: 50.5%; background: var(--oliva); will-change: transform; }
+.nido__anta--sx { left: 0; transform-origin: 100% 100%; }
+.nido__anta--dx { right: 0; transform-origin: 0 100%; }
+html.is-ridotto .nido__anta { display: none; }
 .nido__corpo { padding: clamp(24px, 3vw, 44px) 0 0; }
 .nido__corpo > p { max-width: 52ch; }
 .nido__nome { font-size: var(--t-l); line-height: 1; }

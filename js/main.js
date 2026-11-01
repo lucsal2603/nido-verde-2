@@ -212,14 +212,10 @@
   function nidi() {
     if (RIDOTTO) return;
     qa('[data-nido]').forEach((n) => {
-      const alto = q('.nido__guscio--alto', n), basso = q('.nido__guscio--basso', n), crepa = q('.nido__crepa', n), img = q('.nido__foto img', n);
-      /* come un uovo: la crepa corre da sinistra a destra, il guscio trema, la metà alta si abbassa e cade in basso a destra; la metà bassa resta ferma, poi scende */
-      gsap.timeline({ scrollTrigger: { trigger: n, start: 'top 82%', end: 'top 22%', scrub: .5 } })
-        .to(crepa, { clipPath: 'inset(0 0% 0 0)', ease: 'none', duration: .22 }, 0)
-        .to([alto, basso], { keyframes: [{ x: -3, rotate: -.6 }, { x: 3, rotate: .6 }, { x: -2, rotate: -.3 }, { x: 0, rotate: 0 }], ease: 'none', duration: .12 }, .1)
-        .set(crepa, { autoAlpha: 0 }, .24)
-        .to(alto, { keyframes: [{ y: '6%', rotate: 4, duration: .18 }, { xPercent: 120, yPercent: 140, rotate: 34, duration: .48 }], ease: 'none' }, .24)
-        .to(basso, { yPercent: 102, ease: 'none', duration: .3 }, .7);
+      const sx = q('.nido__anta--sx', n), dx = q('.nido__anta--dx', n), img = q('.nido__foto img', n);
+      /* le ante si aprono dall'alto verso il basso, ruotando sul punto in basso al centro: la sinistra cade a sinistra, la destra a destra */
+      gsap.timeline({ scrollTrigger: { trigger: n, start: 'top 82%', end: 'top 28%', scrub: .5 } })
+        .to(sx, { rotate: -40, ease: 'power1.in' }, 0).to(dx, { rotate: 40, ease: 'power1.in' }, 0);
       gsap.fromTo(img, { yPercent: -6 }, { yPercent: 6, ease: 'none', scrollTrigger: { trigger: n, start: 'top bottom', end: 'bottom top', scrub: true } });
     });
   }
