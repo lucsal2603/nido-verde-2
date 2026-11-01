@@ -137,7 +137,7 @@ html.is-ridotto .manifesto__testo { color: var(--inchiostro); }
 .manifesto__palco { overflow: hidden; }
 .teli { position: absolute; inset: 0; pointer-events: none; z-index: 3; }
 .telo { position: absolute; inset: 0; filter: drop-shadow(0 -10px 22px rgba(14, 26, 18, .22)); will-change: transform; }
-.telo span { position: absolute; inset: 0; background: var(--c); }
+.telo span { position: absolute; inset: 0 0 calc(var(--tetto) * -1 - 24px) 0; background: var(--c); }
 html.is-ridotto .teli, html:not(.js) .teli { display: none; }
 /* la punta del foglio: tetto semplice con la punta arrotondata; è l'ultimo dei teli e sale con tutto il contenuto (forma calcolata in JS) */
 .sezione__testa { max-width: 900px; margin-bottom: clamp(48px, 7vw, 96px); }

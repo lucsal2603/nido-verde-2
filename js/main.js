@@ -110,7 +110,7 @@
     if ('ResizeObserver' in window) new ResizeObserver(ricalcola).observe(f); else window.addEventListener('resize', ricalcola);
   }
 
-  /* ── teli: prima che il foglio dei nidi salga, tre teli a forma di tetto salgono dal basso uno dopo l'altro; la punta parte alta e si abbassa mentre salgono ── */
+  /* ── teli: prima che il foglio dei nidi salga, quattro teli a forma di tetto salgono dal basso uno dopo l'altro; la punta parte alta e si abbassa mentre salgono, e alla fine ognuno copre tutto lo schermo ── */
   function teli() {
     const f = q('.foglio'), palco = q('.manifesto__palco'), lista = qa('.telo'); if (!f || !palco || !lista.length || RIDOTTO) return;
     const stati = lista.map(() => ({ t: .5 }));
@@ -123,7 +123,7 @@
     lista.forEach((el, i) => forma(el, stati[i]));
     const tl = gsap.timeline({ scrollTrigger: { trigger: f, start: () => 'top bottom+=' + Math.round(innerHeight * .6), end: 'top 80%', scrub: .6, invalidateOnRefresh: true } });
     lista.forEach((el, i) => {
-      tl.fromTo(el, { yPercent: 110 }, { yPercent: 0, ease: 'power3.inOut', duration: .55 }, i * .12)
+      tl.fromTo(el, { yPercent: 110, y: 0 }, { yPercent: 0, y: () => -(altezzaTetto() + 4), ease: 'power3.inOut', duration: .55 }, i * .12)
         .fromTo(stati[i], { t: 1 }, { t: 0, ease: 'power2.inOut', duration: .55, onUpdate: () => forma(el, stati[i]) }, i * .12);
     });
     window.addEventListener('resize', () => lista.forEach((el, i) => forma(el, stati[i])));
