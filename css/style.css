@@ -152,7 +152,7 @@ html.is-ridotto .manifesto__testo { color: var(--inchiostro); }
 .nido__foto { position: absolute; inset: 0; margin: 0; }
 .nido__foto img { width: 100%; height: 100%; object-fit: cover; transition: transform 1.2s var(--e-out); }
 @media (hover: hover) { .nido:hover .nido__foto img { transform: scale(1.04); } }
-/* le ante: due metà verdi incernierate in basso al centro; si abbassano ruotando, la sinistra verso sinistra e la destra verso destra, e restano come due triangoli in basso */
+/* le ante: due metà verdi incernierate in basso al centro; si abbassano ruotando, la sinistra verso sinistra e la destra verso destra, e scendono fino a uscire del tutto, lasciando la foto intera */
 .nido__anta { position: absolute; top: 0; bottom: 0; width: 50.5%; background: var(--oliva); will-change: transform; }
 .nido__anta--sx { left: 0; transform-origin: 100% 100%; }
 .nido__anta--dx { right: 0; transform-origin: 0 100%; }
