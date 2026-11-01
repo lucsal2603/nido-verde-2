@@ -676,13 +676,13 @@
     if (!RIDOTTO) {
       /* la busta arriva, il sigillo salta, il lembo si apre e diventa il tetto, il biglietto esce, passa davanti e si posa */
       gsap.set(big, { transformPerspective: 1200 });
-      /* il voucher viene scoperto dal risucchio dei dintorni: la busta si apre solo dopo, quando si continua a scorrere */
-      gsap.timeline({ scrollTrigger: { trigger: '.voucher', start: 'top top', end: () => '+=' + Math.round(innerHeight * .8), scrub: .7 } })
+      /* il voucher viene scoperto dal risucchio dei dintorni: il sigillo salta mentre il cerchio si chiude e la busta finisce di aprirsi poco dopo */
+      gsap.timeline({ scrollTrigger: { trigger: '.voucher', start: 'top 20%', end: () => '+=' + Math.round(innerHeight * .55), scrub: .6 } })
         .to(sigillo, { scale: 1.25, ease: 'power2.out', duration: .06 }, 0)
         .to(sigillo, { scale: 0, rotate: 140, opacity: 0, ease: 'power2.in', duration: .08 }, .06)
         .to(lembo, { rotateX: 180, ease: 'power2.inOut', duration: .26 }, .1)
         .set(lembo, { zIndex: 1 }, .23)
-        .to(big, { yPercent: -78, rotate: -4, ease: 'power2.inOut', duration: .3 }, .36)
+        .to(big, { yPercent: () => (innerWidth <= 860 ? -58 : -78), rotate: -4, ease: 'power2.inOut', duration: .3 }, .36)
         .set(big, { zIndex: 5 }, .66)
         .to(big, { yPercent: -34, rotate: -2.5, scale: 1.04, ease: 'power3.out', duration: .3 }, .66)
         .to(busta, { y: 18, ease: 'none', duration: .3 }, .66);
