@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Il Nido tra gli Ulivi — Glamping fra gli ulivi sul lago di Viverone</title>
+  <meta name="description" content="Due nidi separati fra gli ulivi con il lago di Viverone davanti: Skyroom e Starsbox, una notte per due con colazione artigianale, vasca privata e mille stelle. Viverone (BI), dal 15 marzo al 31 ottobre.">
+  <meta name="robots" content="noindex, nofollow">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Il Nido tra gli Ulivi — Glamping sul lago di Viverone">
+  <meta property="og:description" content="Due nidi fra gli ulivi con il lago davanti: una notte per due, colazione artigianale, vasca privata, mille stelle.">
+  <meta property="og:image" content="img/starsbox-letto.webp">
+  <meta name="theme-color" content="#EEF1E6">
+  <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="img/favicon-192.png">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Albert+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css?v=2026092235">
+  <script>if ('scrollRestoration' in history) history.scrollRestoration = 'manual';</script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.4/dist/lenis.min.js"></script>
+  <script src="js/main.js?v=2026092235" defer></script>
+</head>
+<body>
+
+<!-- il velo: il tetto della casetta che si apre sulla pagina -->
+<div class="velo" id="velo" aria-hidden="true">
+  <div class="velo__anta velo__anta--sx"></div>
+  <div class="velo__anta velo__anta--dx"></div>
+  <div class="velo__marchio">
+    <svg class="velo__casa" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round">
+      <path class="velo__tratto" d="M50 9 L92 43 L92 91 L8 91 L8 43 Z"/>
+      <path class="velo__ramo velo__tratto" d="M46 84 C48 66 56 56 70 50 M52 72 C58 70 63 66 66 60 M48 78 C42 76 37 72 35 66 M56 64 C62 63 66 60 68 55 M50 70 C45 66 42 62 41 56"/>
+    </svg>
+  </div>
+</div>
+
+<!-- il puntatore: una foglia d'ulivo -->
+<div class="foglia" id="foglia" aria-hidden="true">
+  <svg viewBox="0 0 32 32" fill="currentColor"><path d="M16 2C9 7 5 14 5 21c0 5 4 9 11 9s11-4 11-9c0-7-4-14-11-19z" opacity=".95"/><path d="M16 6v22" stroke="#EEF1E6" stroke-width="1.2" fill="none"/></svg>
+</div>
+
+<header class="testata" id="testata">
+  <a class="testata__logo" href="#top" aria-label="Il Nido tra gli Ulivi, torna su">
+    <img class="testata__logo-chiaro" src="img/logo-testata.png" alt="" width="103" height="120">
+    <img class="testata__logo-scuro" src="img/logo-testata-bianco.png" alt="" width="103" height="120">
+    <span>Il Nido <em>tra gli Ulivi</em></span>
+  </a>
+  <nav class="testata__nav" aria-label="Sezioni">
+    <a href="#nidi">I due nidi</a>
+    <a href="#stelle">Le stelle</a>
+    <a href="#extra">Le coccole</a>
+    <a href="#dintorni">Dintorni</a>
+    <a href="#domande">Domande</a>
+  </nav>
+  <a class="bottone bottone--pieno testata__prenota" href="#prenota">Prenota</a>
+  <button class="testata__menu" id="menuBottone" type="button" aria-label="Apri il menu" aria-expanded="false" aria-controls="menu"><span></span><span></span></button>
+</header>
+
+<nav class="menu" id="menu" aria-label="Menu" hidden>
+  <a href="#nidi">I due nidi</a>
+  <a href="#stelle">Le stelle</a>
+  <a href="#extra">Le coccole</a>
+  <a href="#dintorni">Dintorni</a>
+  <a href="#voucher">Voucher regalo</a>
+  <a href="#domande">Domande</a>
+  <a href="#prenota">Prenota</a>
+  <p class="menu__contatti"><a href="https://wa.me/393515987323" target="_blank" rel="noreferrer">WhatsApp</a><a href="https://www.instagram.com/ilnidotragliulivi/" target="_blank" rel="noreferrer">Instagram</a><a href="mailto:agriflecchia2022@gmail.com">Mail</a></p>
+</nav>
+
+<main id="top">
+
+  <!-- hero pinnata: la foto a tutto schermo diventa una finestra a casetta -->
+  <section class="hero" id="hero">
+    <div class="hero__palco">
+      <figure class="hero__foto">
+        <img src="img/starsbox-letto.webp" alt="Dal letto della Starsbox, con il tetto aperto, la vista sul lago di Viverone" fetchpriority="high">
+      </figure>
+      <div class="hero__testo">
+        <p class="occhiello" data-sale>Glamping sul lago di Viverone</p>
+        <h1 class="hero__titolo">
+          <span class="riga"><i>Il paradiso</i></span>
+          <span class="riga"><i>all’improvviso.</i></span>
+        </h1>
+        <p class="hero__sotto" data-sale>Due nidi separati fra gli ulivi, con il lago davanti e nessuno intorno. Una notte per due, dal 15 marzo al 31 ottobre.</p>
+        <div class="hero__azioni" data-sale>
+          <a class="bottone bottone--pieno" href="#prenota">Prenota una notte</a>
+          <a class="bottone" href="#nidi">Guarda i nidi</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- manifesto: le parole di Federica si accendono scorrendo -->
+  <section class="manifesto" id="federica" aria-label="Chi ti accoglie">
+    <div class="manifesto__palco">
+      <p class="occhiello">Chi ti accoglie</p>
+      <p class="manifesto__testo" data-parole>
+        <span class="frase">Sono Federica.<svg class="icona icona--ulivo" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path d="M8 40C16 30 26 20 40 10" stroke="#8B5E3C" stroke-width="2.6" fill="none" stroke-linecap="round"/><path d="M14 30c-6-1-9-6-8-12 6 1 9 6 8 12z" fill="#6E8F58"/><path d="M20 24c-1-6 3-11 9-12 1 6-3 11-9 12z" fill="#8FB06A"/><path d="M26 20c6-2 11 1 13 6-6 2-11-1-13-6z" fill="#6E8F58"/><path d="M17 33c5-3 11-2 14 3-5 3-11 2-14-3z" fill="#8FB06A"/><ellipse cx="31" cy="35" rx="5" ry="6" fill="#3F5E42"/><ellipse cx="29.5" cy="33" rx="1.6" ry="2.2" fill="#A9C56A" opacity=".85"/></svg></span>
+        <span class="frase">Il Nido è il posto che ho costruito per chi ha bisogno di una pausa dal mondo: due casette fra gli ulivi, il lago di Viverone davanti, nessuno intorno.<svg class="icona icona--casetta" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><circle cx="39" cy="10" r="5" fill="#F2C14E"/><path d="M3 42h42v4H3z" fill="#5E9EC4"/><path d="M10 42V24L24 12l14 12v18z" fill="#D9AE76"/><path d="M5 27L24 9l19 18-3.2 3L24 15 8.2 30z" fill="#8B5E3C"/><path d="M24 21l1.9 4.2 4.5.4-3.4 3 1.1 4.4-4.1-2.5-4.1 2.5 1.1-4.4-3.4-3 4.5-.4z" fill="#A0B028"/><rect x="20" y="33" width="8" height="9" fill="#8B5E3C"/></svg></span>
+        <span class="frase">Arrivi, ti lascio le chiavi e il cestino della colazione.<svg class="icona icona--cestino" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><path d="M14 22C14 11 34 11 34 22" stroke="#8B5E3C" stroke-width="3" fill="none" stroke-linecap="round"/><rect x="30" y="9" width="6" height="15" rx="2" fill="#F28C28"/><rect x="31" y="6" width="4" height="4" rx="1" fill="#3F5E42"/><path d="M6 22h36l-4 20H10z" fill="#B9834A"/><path d="M6 22h36v5H6z" fill="#D9534F"/><path d="M10 22h4v5h-4zM18 22h4v5h-4zM26 22h4v5h-4zM34 22h4v5h-4z" fill="#fff" opacity=".85"/><path d="M9 32h30M10 37h28" stroke="#8B5E3C" stroke-width="1.5"/></svg></span>
+        <span class="frase">Da lì in poi il tempo è tuo.<svg class="icona icona--stelle" viewBox="0 0 48 48" aria-hidden="true" focusable="false"><circle cx="24" cy="24" r="22" fill="#1B2A1E"/><path d="M30 11a10 10 0 1 0 8.5 16.5A8 8 0 1 1 30 11z" fill="#F2E3A0"/><path d="M14 13l1.5 3.3 3.5.3-2.6 2.3.8 3.5-3.2-1.9-3.2 1.9.8-3.5-2.6-2.3 3.5-.3z" fill="#A0B028"/><path d="M20 31l1.1 2.3 2.5.2-1.9 1.7.6 2.5-2.3-1.4-2.3 1.4.6-2.5-1.9-1.7 2.5-.2z" fill="#F2C14E"/><circle cx="35" cy="35" r="1.6" fill="#fff"/><circle cx="11" cy="30" r="1.2" fill="#fff"/><circle cx="27" cy="40" r="1" fill="#fff"/></svg></span>
+      </p>
+    </div>
+  </section>
+
+  <!-- i due nidi: il foglio sale a coprire il manifesto -->
+  <section class="nidi foglio" id="nidi">
+    <div class="tetto" aria-hidden="true"><span class="tetto__falda tetto__falda--sx"></span><span class="tetto__falda tetto__falda--dx"></span><svg class="tetto__colmo" viewBox="0 0 60 62"><defs><linearGradient id="colmoCil" x1="0" x2="1"><stop offset="0" stop-color="#6E3119"/><stop offset=".25" stop-color="#C47B4F"/><stop offset=".42" stop-color="#B5643C"/><stop offset=".75" stop-color="#93482A"/><stop offset="1" stop-color="#5E2814"/></linearGradient><linearGradient id="colmoMalta" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#7E7360"/><stop offset=".35" stop-color="#B3A68C"/><stop offset="1" stop-color="#C9BDA3"/></linearGradient></defs><path d="M11 58V27a19 19 0 0 1 38 0v31z" fill="url(#colmoMalta)"/><path d="M14 30a16 16 0 0 1 32 0" stroke="#655A48" stroke-width="2.2" fill="none" opacity=".45"/><g fill="#8F8470" opacity=".55"><circle cx="20" cy="40" r=".9"/><circle cx="34" cy="35" r=".7"/><circle cx="40" cy="47" r="1"/><circle cx="26" cy="51" r=".8"/><circle cx="31" cy="44" r=".6"/></g><path d="M4 58V26a26 26 0 0 1 52 0v32h-7V27a19 19 0 0 0-38 0v31z" fill="url(#colmoCil)"/><path d="M9 27a21 21 0 0 1 16-20" stroke="#F3C29A" stroke-width="1.6" fill="none" opacity=".45" stroke-linecap="round"/><path d="M11 27a19 19 0 0 1 38 0" stroke="#3E1A0B" stroke-width="1" fill="none" opacity=".5"/><path d="M1 61c2-3 4-3 6-2 2-2 5-2 6 0 3-1 4 1 4 2zM43 61c1-2 3-3 5-1 2-2 5-1 6 0 2-1 4 0 5 1z" fill="#B9AC92"/></svg></div>
+    <header class="sezione__testa">
+      <p class="occhiello" data-sale>I due nidi</p>
+      <h2 class="titolo-l"><span class="riga"><i>Due casette,</i></span><span class="riga"><i>una sola <em>magia.</em></i></span></h2>
+      <p class="sezione__intro" data-sale>Sono completamente separate, ognuna con il suo spazio privato, la vista sul lago e la colazione del Nido. Cambia solo la casetta: scegli come vivere la notte.</p>
+    </header>
+
+    <div class="nidi__griglia">
+      <article class="nido" id="skyroom" data-nido>
+        <div class="nido__tetto">
+          <figure class="nido__foto"><img src="img/skyroom-fronte.webp" alt="La Skyroom, la casetta con il tetto trasparente, davanti al lago" loading="lazy"></figure>
+          <div class="nido__guscio nido__guscio--basso" aria-hidden="true"></div>
+          <div class="nido__guscio nido__guscio--alto" aria-hidden="true"></div>
+          <svg class="nido__crepa" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><polyline points="0,54 9,46 18,58 28,45 38,57 48,44 58,58 68,46 79,57 89,45 100,53"/></svg>
+        </div>
+        <div class="nido__corpo">
+          <p class="occhiello">Nido 1, due cuori e un nido</p>
+          <h3 class="nido__nome">Skyroom</h3>
+          <p class="nido__motto">La nostra finestra sul lago.</p>
+          <p>Una casetta in legno con ampie vetrate e il tetto trasparente che scorre: di giorno il lago, di notte il cielo sopra il letto. Fuori, il gazebo privato con tavolo, sdraio e frigo; il bagno con la doccia sotto il tetto trasparente. La vasca idromassaggio riscaldata è a cinque metri, vista lago, senza limiti di orario.</p>
+          <ul class="nido__lista">
+            <li>Letto matrimoniale vista lago, piumone, coperta elettrica e vestaglie</li>
+            <li>Gazebo privato con tavolo, sdraio, frigo e presa elettrica</li>
+            <li>Bagno privato con doccia, accappatoi, asciugamani e phon</li>
+            <li>Macchina del caffè, tisane, bicchieri da vino, giochi da tavola</li>
+            <li>Colazione del Nido inclusa, per ogni dieta</li>
+          </ul>
+          <div class="nido__prezzi">
+            <div class="prezzo"><strong><span data-conta="110">0</span> €</strong><small>da lunedì a giovedì</small></div>
+            <div class="prezzo"><strong><span data-conta="130">0</span> €</strong><small>venerdì, sabato, domenica, festivi e agosto</small></div>
+          </div>
+          <a class="bottone" href="#prenota">Prenota la Skyroom</a>
+        </div>
+      </article>
+
+      <article class="nido" id="starsbox" data-nido>
+        <div class="nido__tetto">
+          <figure class="nido__foto"><img src="img/starsbox-aperta.webp" alt="La Starsbox con il tetto aperto fra gli ulivi" loading="lazy"></figure>
+          <div class="nido__guscio nido__guscio--basso" aria-hidden="true"></div>
+          <div class="nido__guscio nido__guscio--alto" aria-hidden="true"></div>
+          <svg class="nido__crepa" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><polyline points="0,54 9,46 18,58 28,45 38,57 48,44 58,58 68,46 79,57 89,45 100,53"/></svg>
+        </div>
+        <div class="nido__corpo">
+          <p class="occhiello">Nido 2, mille stelle e coccole</p>
+          <h3 class="nido__nome">Starsbox</h3>
+          <p class="nido__motto">Look up.</p>
+          <p>La casetta in legno con il tetto che si apre sul cielo e una terrazza panoramica privata, dietro la casetta, raggiungibile con una scaletta. Sulla terrazza il gazebo chiuso da zanzariere, riscaldato nelle mezze stagioni, e il bagno privato. La vasca idromassaggio o la tinozza finlandese sono lì, con vista lago e accesso esclusivo.</p>
+          <ul class="nido__lista">
+            <li>Letto matrimoniale sotto il tetto apribile, piumone e quattro cuscini</li>
+            <li>Terrazza panoramica esclusiva con gazebo, sdraio, angolo caffè e tisane, frigo</li>
+            <li>Bagno privato con doccia, accappatoi in cotone, asciugamani e phon</li>
+            <li>Bicchieri da vino, cavatappi, giochi da tavola</li>
+            <li>Colazione del Nido inclusa, per ogni dieta</li>
+          </ul>
+          <div class="nido__prezzi">
+            <div class="prezzo"><strong><span data-conta="110">0</span> €</strong><small>da lunedì a giovedì</small></div>
+            <div class="prezzo"><strong><span data-conta="130">0</span> €</strong><small>venerdì, sabato, domenica, festivi e agosto</small></div>
+          </div>
+          <a class="bottone" href="#prenota">Prenota la Starsbox</a>
+        </div>
+      </article>
+    </div>
+    <p class="nidi__nota" data-sale>Prezzi per una notte, due persone, IVA e colazione incluse. Vasca idromassaggio o tinozza finlandese: 40 € a coppia, da confermare 24 ore prima del check-in.</p>
+  </section>
+
+  <!-- la magia è la stessa -->
+  <section class="magia" id="magia">
+    <h2 class="magia__titolo titolo-xl"><span class="riga"><i>La magia</i></span><span class="riga"><i>è <em>la stessa.</em></i></span></h2>
+    <ul class="magia__quattro">
+      <li data-sale><h3>Privacy totale</h3><p>Due spazi completamente separati: nessun vicino, nessun passante, solo voi.</p></li>
+      <li data-sale><h3>Vista lago</h3><p>Il lago di Viverone davanti, dal letto, dalla vasca, dal gazebo.</p></li>
+      <li data-sale><h3>Optional</h3><p>Vasca privata, aperitivi, torta, barbecue: le stesse coccole per entrambi i nidi.</p></li>
+      <li data-sale><h3>Contesto</h3><p>Gli ulivi, il silenzio, le stelle. Cambia solo la casetta.</p></li>
+    </ul>
+  </section>
+
+  <!-- nido family -->
+  <section class="family" id="family">
+    <figure class="family__foto" data-cornice><img src="img/nidi-dall-alto.webp" alt="I due nidi visti dall’alto, fra gli ulivi" loading="lazy"></figure>
+    <div class="family__testo">
+      <p class="occhiello" data-sale>Nido 1 e Nido 2 insieme</p>
+      <h2 class="titolo-l"><span class="riga"><i>Nido <em>family.</em></i></span></h2>
+      <p data-sale>Tutto il Nido per te: le due casette e le due esperienze a tua completa disposizione, con la vasca idromassaggio o la tinozza finlandese incluse. Per una famiglia, due coppie di amici, o chi vuole semplicemente tutto.</p>
+      <div class="nido__prezzi" data-sale>
+        <div class="prezzo"><strong><span data-conta="270">0</span> €</strong><small>da lunedì a giovedì</small></div>
+        <div class="prezzo"><strong><span data-conta="290">0</span> €</strong><small>da venerdì a domenica e agosto</small></div>
+      </div>
+      <a class="bottone" href="#prenota" data-sale>Prenota il Nido family</a>
+    </div>
+  </section>
+
+  <!-- le stelle: la pagina si fa notte -->
+  <section class="stelle" id="stelle">
+    <div class="stelle__palco">
+      <canvas class="stelle__cielo" aria-hidden="true"></canvas>
+      <div class="stelle__dentro">
+        <p class="occhiello">Look up</p>
+        <h2 class="titolo-xl"><span class="riga"><i>Mille stelle</i></span><span class="riga"><i>e <em>coccole.</em></i></span></h2>
+        <p class="stelle__testo">Di notte il tetto si apre e il cielo entra nella stanza: il silenzio, le luci del lago in fondo, le stelle sopra il letto. Nessuna tecnologia, solo l’energia della terra e il tempo che rallenta.</p>
+      </div>
+      <figure class="stelle__foto"><img src="img/nido-notte.webp" alt="Il nido illuminato al crepuscolo, fra gli ulivi" loading="lazy"></figure>
+    </div>
+  </section>
+
+  <!-- nastro -->
+  <div class="nastro" aria-hidden="true">
+    <div class="nastro__riga" data-nastro><span>Colazione artigianale del Nido</span><i>✦</i><span>Vasca idromassaggio privata</span><i>✦</i><span>Aperitivo nel cestino</span><i>✦</i><span>Tinozza finlandese</span><i>✦</i><span>Torta a sorpresa</span><i>✦</i><span>Barbecue sulla terrazza</span><i>✦</i></div>
+    <div class="nastro__riga nastro__riga--contro" data-nastro="contro"><span>Una notte per due</span><i>✦</i><span>Vista lago</span><i>✦</i><span>Privacy totale</span><i>✦</i><span>Dal 15 marzo al 31 ottobre</span><i>✦</i><span>Fra gli ulivi</span><i>✦</i><span>Sotto le stelle</span><i>✦</i></div>
+  </div>
+
+  <!-- le coccole: l'indice di traverso, con le foto sfalsate -->
+  <section class="coccole" id="extra">
+    <header class="coccole__testa">
+      <p class="occhiello" data-sale>Le coccole del Nido</p>
+      <h2 class="titolo-l"><span class="riga"><i>Tutto artigianale,</i></span><span class="riga"><i>tutto tuo.</i></span></h2>
+      <p data-sale>Colazione inclusa. Vasca idromassaggio o tinozza finlandese 40 € a coppia, aperitivo brindisi 20 €, aperitivo del contadino 40 €, torta di compleanno 15 €, barbecue 10 €. Gli extra si confermano almeno 48 ore prima del check-in; allergie, intolleranze e diete: basta dirlo.</p>
+    </header>
+    <ul class="coccole__lista">
+      <li class="coccole__voce coccole__voce--destra">
+        <a class="coccole__parola" href="#prenota"><span>colazione</span><i class="coccole__binario"></i></a>
+        <a class="coccole__foto" href="#prenota" tabindex="-1" aria-hidden="true"><img src="img/skyroom-dentro.webp" alt="" loading="lazy"></a>
+        <a class="coccole__foto coccole__foto--seconda" href="#prenota" tabindex="-1" aria-hidden="true"><img src="img/starsbox-dentro.webp" alt="" loading="lazy"></a>
+      </li>
+      <li class="coccole__voce coccole__voce--centro">
+        <a class="coccole__parola" href="#prenota"><span>vasca</span><i class="coccole__binario"></i></a>
+        <a class="coccole__foto" href="#prenota" tabindex="-1" aria-hidden="true"><img src="img/vasca-lago.webp" alt="" loading="lazy"></a>
+        <a class="coccole__foto coccole__foto--seconda" href="#prenota" tabindex="-1" aria-hidden="true"><img src="img/vasca-ombrellone.webp" alt="" loading="lazy"></a>
+      </li>
+      <li class="coccole__voce coccole__voce--destra">
+        <a class="coccole__parola" href="#prenota"><span>tinozza</span><i class="coccole__binario"></i></a>
+        <a class="coccole__foto" href="#prenota" tabindex="-1" aria-hidden="true"><img src="img/tinozza.webp" alt="" loading="lazy"></a>
+        <a class="coccole__foto coccole__foto--seconda" href="#prenota" tabindex="-1" aria-hidden="true"><img src="img/nido-notte-2.webp" alt="" loading="lazy"></a>
+      </li>
+      <li class="coccole__voce coccole__voce--centro">
+        <a class="coccole__parola" href="#prenota"><span>aperitivi</span><i class="coccole__binario"></i></a>
+        <a class="coccole__foto" href="#prenota" tabindex="-1" aria-hidden="true"><img src="img/aperitivo-calice.webp" alt="" loading="lazy"></a>
+        <a class="coccole__foto coccole__foto--seconda" href="#prenota" tabindex="-1" aria-hidden="true"><img src="img/skyroom-tetto.webp" alt="" loading="lazy"></a>
+      </li>
+      <li class="coccole__voce coccole__voce--destra">
+        <a class="coccole__parola" href="#prenota"><span>torta</span><i class="coccole__binario"></i></a>
+        <a class="coccole__foto" href="#prenota" tabindex="-1" aria-hidden="true"><img src="img/cestino-lago.webp" alt="" loading="lazy"></a>
+        <a class="coccole__foto coccole__foto--seconda" href="#prenota" tabindex="-1" aria-hidden="true"><img src="img/starsbox-letto.webp" alt="" loading="lazy"></a>
+      </li>
+      <li class="coccole__voce coccole__voce--centro">
+        <a class="coccole__parola" href="#prenota"><span>barbecue</span><i class="coccole__binario"></i></a>
+        <a class="coccole__foto" href="#prenota" tabindex="-1" aria-hidden="true"><img src="img/starsbox-cielo.webp" alt="" loading="lazy"></a>
+        <a class="coccole__foto coccole__foto--seconda" href="#prenota" tabindex="-1" aria-hidden="true"><img src="img/ragazza-tetto.webp" alt="" loading="lazy"></a>
+      </li>
+    </ul>
+  </section>
+
+  <!-- dintorni: sezione appiccicosa a passi (impianto di funtownstudio.com), con l'omino a destra -->
+  <section class="dintorni" id="dintorni">
+    <i class="dintorni__grana" aria-hidden="true"></i>
+    <header class="sezione__testa dintorni__testa">
+      <p class="occhiello" data-sale>Dintorni</p>
+      <h2 class="titolo-l"><span class="riga"><i>Cosa <em>visitare.</em></i></span></h2>
+    </header>
+    <div class="passi" data-passi>
+      <div class="passi__fisso">
+        <div class="passi__riga">
+          <div class="passi__testi">
+            <article class="passo" data-passo>
+              <h3 class="passo__titolo"><span class="passo__nome">Panchina Gigante</span> <em class="passo__corsivo">di Viverone.</em></h3>
+              <p class="passo__testo">La grande panchina sopra il lago: vista su acqua, montagne e vigneti. La gita più corta e più fotografata.</p>
+              <ul class="passo__lista"><li>5 minuti a piedi</li></ul>
+            </article>
+            <article class="passo" data-passo>
+              <h3 class="passo__titolo"><span class="passo__nome">Anfiteatro</span> <em class="passo__corsivo">morenico.</em></h3>
+              <p class="passo__testo">Terrazzamenti a secco recuperati e nuove vigne di Erbaluce, in un punto panoramico che vale la salita. Sono i cugini di Federica.</p>
+              <ul class="passo__lista"><li>20 minuti a piedi</li></ul>
+            </article>
+            <article class="passo" data-passo>
+              <h3 class="passo__titolo"><span class="passo__nome">Lago</span> <em class="passo__corsivo">di Viverone.</em></h3>
+              <p class="passo__testo">Terzo lago del Piemonte, balneabile: spiagge, un giro in battello, canoa o pedalò, la scuola di wakeboard, la vita notturna sulla sponda nord.</p>
+              <ul class="passo__lista"><li>Ai piedi della collina</li></ul>
+            </article>
+            <article class="passo" data-passo>
+              <h3 class="passo__titolo"><span class="passo__nome">Lago di Bertignano</span> <em class="passo__corsivo">e la Serra.</em></h3>
+              <p class="passo__testo">Un anello tranquillo fra i boschi sul sentiero della Gran Traversata del Biellese; oltre, chilometri di natura verso Ivrea.</p>
+              <ul class="passo__lista"><li>A piedi o in bici</li></ul>
+            </article>
+            <article class="passo" data-passo>
+              <h3 class="passo__titolo"><span class="passo__nome">Palafitte</span> <em class="passo__corsivo">di Azeglio.</em></h3>
+              <p class="passo__testo">I resti del villaggio dell’età del bronzo, patrimonio Unesco, con una postazione di birdwatching lì vicino.</p>
+              <ul class="passo__lista"><li>Via lago o sui sentieri</li></ul>
+            </article>
+            <article class="passo" data-passo>
+              <h3 class="passo__titolo"><span class="passo__nome">I castelli di Roppolo</span> <em class="passo__corsivo">e Masino.</em></h3>
+              <p class="passo__testo">Il maniero che guarda il lago e la dimora dei conti Valperga, con uno dei labirinti più grandi d’Italia.</p>
+              <ul class="passo__lista"><li>In auto, poco lontano</li></ul>
+            </article>
+            <p class="dintorni__azioni" data-sale><a class="bottone" href="guida-dintorni.pdf" target="_blank" rel="noreferrer">Scarica la guida dei dintorni</a></p>
+          </div>
+          <div class="passi__scena" aria-hidden="true">
+          <div class="passi__omino passi__omino--panchina"><picture><source srcset="img/anima-panchina-fermo.webp" media="(prefers-reduced-motion: reduce)"><img src="img/anima-panchina.webp" alt="" width="640" height="473" loading="lazy" decoding="async"></picture></div>
+          <div class="passi__omino passi__omino--cammina"><picture><source srcset="img/anima-cammina-fermo.webp" media="(prefers-reduced-motion: reduce)"><img src="img/anima-cammina.webp" alt="" width="385" height="640" loading="lazy" decoding="async"></picture></div>
+          <div class="passi__omino passi__omino--saluta"><picture><source srcset="img/anima-saluta-fermo.webp" media="(prefers-reduced-motion: reduce)"><img src="img/anima-saluta.webp" alt="" width="405" height="640" loading="lazy" decoding="async"></picture></div>
+          <div class="passi__omino passi__omino--bici"><picture><source srcset="img/anima-bici-fermo.webp" media="(prefers-reduced-motion: reduce)"><img src="img/anima-bici.webp" alt="" width="608" height="640" loading="lazy" decoding="async"></picture></div>
+          <div class="passi__omino passi__omino--barca"><picture><source srcset="img/anima-barca-fermo.webp" media="(prefers-reduced-motion: reduce)"><img src="img/anima-barca.webp" alt="" width="640" height="266" loading="lazy" decoding="async"></picture></div>
+          <div class="passi__omino passi__omino--auto"><picture><source srcset="img/anima-auto-fermo.webp" media="(prefers-reduced-motion: reduce)"><img src="img/anima-auto.webp" alt="" width="640" height="327" loading="lazy" decoding="async"></picture></div>
+          </div>
+        </div>
+        <div class="passi__tappe" aria-hidden="true">
+          <div class="passi__tappa" data-tappa><span class="passi__forma"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M3 9h26v4H3zM3 13h3v5H3zM26 13h3v5h-3zM5 17h22v4H5zM6 21h4v8H6zM22 21h4v8h-4z"/></svg></span><span class="passi__barra"><i></i></span></div>
+          <div class="passi__tappa" data-tappa><span class="passi__forma"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M15 2h2v6h-2z"/><path d="M17 3c4 0 7 2 8 5-4 0-7-2-8-5z"/><circle cx="12" cy="11" r="3.4"/><circle cx="20" cy="11" r="3.4"/><circle cx="8" cy="17" r="3.4"/><circle cx="16" cy="17" r="3.4"/><circle cx="24" cy="17" r="3.4"/><circle cx="12" cy="23" r="3.4"/><circle cx="20" cy="23" r="3.4"/><circle cx="16" cy="29" r="3"/></svg></span><span class="passi__barra"><i></i></span></div>
+          <div class="passi__tappa" data-tappa><span class="passi__forma"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M2 11c3-4 6-4 9 0s6 4 9 0 6-4 9 0l1 1v4l-1-1c-3-4-6-4-9 0s-6 4-9 0-6-4-9 0l-1 1v-4zM2 20c3-4 6-4 9 0s6 4 9 0 6-4 9 0l1 1v4l-1-1c-3-4-6-4-9 0s-6 4-9 0-6-4-9 0l-1 1v-4z"/></svg></span><span class="passi__barra"><i></i></span></div>
+          <div class="passi__tappa" data-tappa><span class="passi__forma"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 1l8 11h-5l7 9h-6l6 8H6l6-8H6l7-9H8zM14 27h4v5h-4z"/></svg></span><span class="passi__barra"><i></i></span></div>
+          <div class="passi__tappa" data-tappa><span class="passi__forma"><svg viewBox="0 0 32 32" aria-hidden="true"><path fill-rule="evenodd" d="M16 3l12 9H4zM7 12h18v10H7zm7 3v7h4v-7z"/><path d="M8 22h3v8H8zM21 22h3v8h-3zM2 29h28v2H2z"/></svg></span><span class="passi__barra"><i></i></span></div>
+          <div class="passi__tappa" data-tappa><span class="passi__forma"><svg viewBox="0 0 32 32" aria-hidden="true"><path fill-rule="evenodd" d="M5 5h5v4h4V5h4v4h4V5h5v25H5zm8 15v10h6V20a3 3 0 0 0-6 0z"/></svg></span><span class="passi__barra"><i></i></span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- voucher regalo -->
+  <section class="voucher" id="voucher">
+    <div class="voucher__carta" data-tilt>
+      <div class="voucher__dentro">
+        <svg class="voucher__stella" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2.6 6.9L22 9.3l-5.7 4.6L18.2 22 12 17.8 5.8 22l1.9-8.1L2 9.3l7.4-.4z" fill="currentColor"/></svg>
+        <p class="voucher__eti">Voucher regalo</p>
+        <p class="voucher__grande">Una notte<br><em>sotto le stelle</em></p>
+        <p class="voucher__dati"><span>Per due persone, colazione inclusa</span><span>A data aperta</span><span>130 €</span></p>
+      </div>
+    </div>
+    <div class="voucher__testo">
+      <p class="occhiello" data-sale>Regala il Nido</p>
+      <h2 class="titolo-l"><span class="riga"><i>Regala una notte</i></span><span class="riga"><i><em>sotto le stelle.</em></i></span></h2>
+      <p data-sale>Il voucher vale una notte per due in uno dei due nidi, a data aperta, con la colazione del Nido: 130 € a coppia. Puoi aggiungere la vasca privata o un aperitivo. Scrivi a Federica con il nome di chi lo riceve e lo prepara lei.</p>
+      <p class="voucher__azioni" data-sale><a class="bottone bottone--pieno" href="https://wa.me/393515987323?text=Ciao%20Federica%2C%20vorrei%20un%20voucher%20regalo%20per%20il%20Nido" target="_blank" rel="noreferrer">Chiedi il voucher su WhatsApp</a><a class="bottone" href="mailto:agriflecchia2022@gmail.com?subject=Voucher%20regalo%20Il%20Nido">Scrivi una mail</a></p>
+    </div>
+  </section>
+
+  <!-- recensioni -->
+  <section class="voci" id="recensioni">
+    <h2 class="titolo-l"><span class="riga"><i>Vuoi sapere</i></span><span class="riga"><i>cosa dicono <em>di noi?</em></i></span></h2>
+    <p class="sezione__intro" data-sale>Parole vere, lasciate su Airbnb da chi ha dormito nei due nidi: la Skyroom ha 86 recensioni e la Starsbox 35, con una media di 4,9 su 5. Qui ne trovi sei, le altre sono tutte sulle due pagine.</p>
+    <div class="voci__griglia">
+      <article class="citazione" data-sale><blockquote>Federica è stata gentilissima e sempre disponibile, ci siamo sentite subito a casa! Colazione buonissima e super abbondante. Torneremo sicuramente, grazie di tutto!</blockquote><footer><b>Mahnoosh</b> <span>settembre 2026</span> <span class="nido">Skyroom</span></footer></article>
+      <article class="citazione" data-sale><blockquote>Posto incantevole immerso nella natura, un’esperienza davvero unica! Una notte comodissima sotto le stelle, in un’atmosfera magica. Federica è stata gentilissima e molto disponibile. Consigliatissimo!</blockquote><footer><b>Irene</b> <span>agosto 2026</span> <span class="nido">Starsbox</span></footer></article>
+      <article class="citazione" data-sale><blockquote>È stata una bellissima esperienza! Addormentarsi guardando il cielo stellato e svegliarsi all’alba con il cinguettio degli uccelli… un soggiorno che porteremo sempre nel cuore.</blockquote><footer><b>Giorgia</b> <span>agosto 2026</span> <span class="nido">Skyroom</span></footer></article>
+      <article class="citazione" data-sale><blockquote>È stata una nottata magica sotto le Perseidi! Di giorno in estate il caldo si fa sentire, ma basta infilarsi nell’idromassaggio o fare una passeggiata sul lago. La colazione era ottima e il letto molto pulito!</blockquote><footer><b>Sofia</b> <span>agosto 2026</span> <span class="nido">Starsbox</span></footer></article>
+      <article class="citazione" data-sale><blockquote>Relax e tranquillità, il posto giusto per rigenerarsi. Un vero angolo di paradiso. Accoglienza gentile e super disponibile. Esperienza da ripetere.</blockquote><footer><b>Stefania</b> <span>luglio 2026</span> <span class="nido">Skyroom</span></footer></article>
+      <article class="citazione" data-sale><blockquote>Non ci sono parole per descrivere questa esperienza! La Starsbox di Federica è immersa in un paradiso con vista lago ineguagliabile, e ogni dettaglio era curato alla perfezione. Torneremo sicuramente.</blockquote><footer><b>Marta</b> <span>luglio 2025</span> <span class="nido">Starsbox</span></footer></article>
+    </div>
+    <div class="voci__due">
+      <a class="voce voce--sx" href="https://www.airbnb.it/rooms/1009265614261996404" target="_blank" rel="noreferrer">
+        <i class="voce__ombra" aria-hidden="true"></i>
+        <figure><img src="img/skyroom-vista.webp" alt="" loading="lazy"></figure>
+        <div><p class="occhiello">Nido 1</p><h3>Gli ospiti della Skyroom</h3><p>Tutte le 86 recensioni su Airbnb</p></div>
+      </a>
+      <a class="voce voce--dx" href="https://www.airbnb.it/rooms/1009287311700061954" target="_blank" rel="noreferrer">
+        <i class="voce__ombra" aria-hidden="true"></i>
+        <figure><img src="img/starsbox-dentro.webp" alt="" loading="lazy"></figure>
+        <div><p class="occhiello">Nido 2</p><h3>Gli ospiti della Starsbox</h3><p>Tutte le 35 recensioni su Airbnb</p></div>
+      </a>
+    </div>
+  </section>
+
+  <!-- domande frequenti -->
+  <section class="domande" id="domande">
+    <header class="sezione__testa">
+      <p class="occhiello" data-sale>Domande frequenti</p>
+      <h2 class="titolo-l"><span class="riga"><i>Prima di <em>partire.</em></i></span></h2>
+    </header>
+    <div class="fisarmonica" data-fisarmonica>
+      <div class="fisarmonica__voce"><h3><button type="button" aria-expanded="false">Quando siete aperti?<span aria-hidden="true"></span></button></h3><div class="fisarmonica__pannello"><p>Dal 15 marzo al 31 ottobre, sette giorni su sette.</p></div></div>
+      <div class="fisarmonica__voce"><h3><button type="button" aria-expanded="false">A che ora si arriva e si parte?<span aria-hidden="true"></span></button></h3><div class="fisarmonica__pannello"><p>Check-in dalle 13:00 alle 19:30, comunicando l’orario il giorno prima; check-out entro le 11:00.</p></div></div>
+      <div class="fisarmonica__voce"><h3><button type="button" aria-expanded="false">Cosa include la notte?<span aria-hidden="true"></span></button></h3><div class="fisarmonica__pannello"><p>Il nido con il suo spazio privato vista lago, il gazebo attrezzato, il bagno privato con doccia, accappatoi e asciugamani, e la colazione artigianale del Nido. Il prezzo è per due persone, IVA inclusa.</p></div></div>
+      <div class="fisarmonica__voce"><h3><button type="button" aria-expanded="false">Qual è la differenza fra i due nidi?<span aria-hidden="true"></span></button></h3><div class="fisarmonica__pannello"><p>La magia è la stessa: privacy totale, vista lago, optional e contesto. Cambia la casetta: la Skyroom ha il tetto trasparente scorrevole e la vasca a cinque metri, la Starsbox il tetto che si apre sulle stelle e una terrazza panoramica privata con vasca o tinozza finlandese.</p></div></div>
+      <div class="fisarmonica__voce"><h3><button type="button" aria-expanded="false">E se piove?<span aria-hidden="true"></span></button></h3><div class="fisarmonica__pannello"><p>Con piogge persistenti si può cancellare o spostare la notte fino a 48 ore prima del check-in, una sola volta. Per motivi personali il rimborso totale o il cambio data è possibile fino a 15 giorni prima.</p></div></div>
+      <div class="fisarmonica__voce"><h3><button type="button" aria-expanded="false">Posso portare il cane?<span aria-hidden="true"></span></button></h3><div class="fisarmonica__pannello"><p>No, gli animali non sono ammessi.</p></div></div>
+      <div class="fisarmonica__voce"><h3><button type="button" aria-expanded="false">Come prenoto la vasca e gli extra?<span aria-hidden="true"></span></button></h3><div class="fisarmonica__pannello"><p>La vasca va confermata almeno 24 ore prima del check-in; aperitivi, torta, barbecue e pranzo al sacco almeno 48 ore prima.</p></div></div>
+      <div class="fisarmonica__voce"><h3><button type="button" aria-expanded="false">Ho intolleranze o una dieta particolare<span aria-hidden="true"></span></button></h3><div class="fisarmonica__pannello"><p>La colazione e gli aperitivi sono artigianali e freschi: segnala allergie, intolleranze o regimi alimentari e Federica li asseconda.</p></div></div>
+      <div class="fisarmonica__voce"><h3><button type="button" aria-expanded="false">Si può usare il drone?<span aria-hidden="true"></span></button></h3><div class="fisarmonica__pannello"><p>No, salvo permessi speciali delle autorità competenti.</p></div></div>
+      <div class="fisarmonica__voce"><h3><button type="button" aria-expanded="false">Come si paga?<span aria-hidden="true"></span></button></h3><div class="fisarmonica__pannello"><p>La prenotazione si conferma con bonifico bancario; i dati arrivano insieme alla conferma. La fattura viene inviata via mail.</p></div></div>
+    </div>
+  </section>
+
+  <!-- prenota -->
+  <section class="prenota" id="prenota">
+    <div class="prenota__testo">
+      <p class="occhiello" data-sale>Prenota</p>
+      <h2 class="titolo-xl"><span class="riga"><i>Scrivi a</i></span><span class="riga"><i><em>Federica.</em></i></span></h2>
+      <p data-sale>Ti risponde lei, di persona. Dille il nido che preferisci, le date, e se vuoi la vasca o un aperitivo. La disponibilità la trovi anche sulle pagine Airbnb.</p>
+      <div class="prenota__azioni" data-sale>
+        <a class="bottone bottone--pieno bottone--grande" href="https://wa.me/393515987323" target="_blank" rel="noreferrer">WhatsApp</a>
+        <a class="bottone bottone--grande" href="tel:+393515987323">Chiama, 351 598 7323</a>
+        <a class="bottone bottone--grande" href="mailto:agriflecchia2022@gmail.com">agriflecchia2022@gmail.com</a>
+        <a class="bottone bottone--grande" href="https://www.instagram.com/ilnidotragliulivi/" target="_blank" rel="noreferrer">Instagram</a>
+      </div>
+    </div>
+    <dl class="prenota__info" data-sale>
+      <div><dt>Dove</dt><dd>Via Zimone 43, frazione Rolle di Viverone, Viverone (BI). <a href="https://www.google.com/maps/search/?api=1&query=Via+Zimone+43+Viverone+BI" target="_blank" rel="noreferrer">Apri in Google Maps</a></dd></div>
+      <div><dt>Quando</dt><dd>Dal 15 marzo al 31 ottobre, sette giorni su sette.</dd></div>
+      <div><dt>Orari</dt><dd>Check-in dalle 13:00 alle 19:30, check-out entro le 11:00.</dd></div>
+      <div><dt>Pagamento</dt><dd>La prenotazione si conferma con bonifico bancario; la fattura arriva via mail.</dd></div>
+      <div><dt>Recensioni</dt><dd><a href="https://www.airbnb.it/rooms/1009265614261996404" target="_blank" rel="noreferrer">Skyroom su Airbnb</a> e <a href="https://www.airbnb.it/rooms/1009287311700061954" target="_blank" rel="noreferrer">Starsbox su Airbnb</a>.</dd></div>
+    </dl>
+    <!-- la mappa di Google si carica solo al clic: niente cookie di terzi finché l'ospite non lo chiede -->
+    <div class="prenota__mappa" data-mappa>
+      <div class="mappa__copertina">
+        <svg class="mappa__casetta" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2 30 13v17H2V13z"/></svg>
+        <p class="mappa__dove">Via Zimone 43, frazione Rolle di Viverone, sulla collina sopra il lago.</p>
+        <button class="bottone bottone--pieno" type="button" data-mappa-apri>Guarda dove siamo su Google Maps</button>
+        <p class="mappa__nota">Aprendo la mappa ti colleghi a Google.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="piede" id="piede">
+  <div class="piede__griglia">
+    <div class="piede__colonna" data-sale>
+      <p class="piede__titolo">Il Nido tra gli Ulivi</p>
+      <p>Glamping sul lago di Viverone: due casette fra gli ulivi, con vista, colazione e coccole.</p>
+      <p>Via Zimone 43, frazione Rolle<br>13886 Viverone (BI)</p>
+      <p>Aperto dal 15 marzo al 31 ottobre.</p>
+    </div>
+    <div class="piede__colonna" data-sale>
+      <p class="piede__titolo">Contatti</p>
+      <p>Federica Poma</p>
+      <ul class="piede__lista">
+        <li><a href="https://wa.me/393515987323" target="_blank" rel="noreferrer">WhatsApp</a></li>
+        <li><a href="tel:+393515987323">351 598 7323</a></li>
+        <li><a href="mailto:agriflecchia2022@gmail.com">agriflecchia2022@gmail.com</a></li>
+        <li><a href="https://www.instagram.com/ilnidotragliulivi/" target="_blank" rel="noreferrer">Instagram @ilnidotragliulivi</a></li>
+      </ul>
+    </div>
+    <div class="piede__colonna" data-sale>
+      <p class="piede__titolo">Il sito</p>
+      <ul class="piede__lista">
+        <li><a href="#nidi">I due nidi</a></li>
+        <li><a href="#stelle">Le stelle</a></li>
+        <li><a href="#extra">Le coccole</a></li>
+        <li><a href="#dintorni">Dintorni</a></li>
+        <li><a href="#voucher">Voucher regalo</a></li>
+        <li><a href="#recensioni">Recensioni</a></li>
+        <li><a href="#domande">Domande</a></li>
+        <li><a href="#prenota">Prenota</a></li>
+      </ul>
+    </div>
+    <div class="piede__colonna" data-sale>
+      <p class="piede__titolo">Dati e note legali</p>
+      <p>CIR 096080 AGR 00004<br>CIN IT096080B5XIX23IKI<br>P. IVA 02709350025</p>
+      <ul class="piede__lista">
+        <li><a href="privacy.html">Privacy e cookie</a></li>
+        <li><a href="https://www.airbnb.it/rooms/1009265614261996404" target="_blank" rel="noreferrer">Recensioni della Skyroom</a></li>
+        <li><a href="https://www.airbnb.it/rooms/1009287311700061954" target="_blank" rel="noreferrer">Recensioni della Starsbox</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="piede__legale">
+    <p>© 2026 Il Nido tra gli Ulivi. Tutti i diritti riservati.</p>
+    <p>Sito di <a href="https://lucsal.it" target="_blank" rel="noreferrer">Luca Salvemini</a></p>
+  </div>
+</footer>
+
+<!-- popup di benvenuto: appare alla prima visita, poi ogni quattro visite (localStorage), mai due volte nella stessa sessione -->
+<div class="popup" id="popup" hidden>
+  <div class="popup__velo" data-popup-chiudi></div>
+  <div class="popup__carta" role="dialog" aria-modal="true" aria-labelledby="popupTitolo">
+    <button class="popup__chiudi" type="button" aria-label="Chiudi" data-popup-chiudi><span></span><span></span></button>
+    <figure class="popup__foto"><img src="img/skyroom-vista.webp" alt="" loading="lazy"></figure>
+    <div class="popup__testo">
+      <p class="occhiello">Benvenuto al Nido</p>
+      <h2 class="popup__titolo" id="popupTitolo">Due casette,<br>un lago, <em>una notte.</em></h2>
+      <p>Siamo a Viverone, sulla collina sopra il lago: la Skyroom con il tetto trasparente, la Starsbox con il tetto che si apre, colazione e coccole comprese. Prenoti scrivendo a Federica, ti risponde lei.</p>
+      <div class="popup__azioni">
+        <a class="bottone bottone--pieno" href="#nidi" data-popup-chiudi>Scopri i due nidi</a>
+        <a class="bottone" href="#prenota" data-popup-chiudi>Scrivi a Federica</a>
+      </div>
+    </div>
+  </div>
+</div>
+<a class="wa" href="https://wa.me/393515987323" target="_blank" rel="noreferrer" aria-label="Scrivi a Federica su WhatsApp">
+  <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false"><path d="M16 3C9 3 3.3 8.6 3.3 15.5c0 2.4.7 4.7 1.9 6.7L3 29l7-1.9c1.9 1 4 1.6 6.1 1.6 7 0 12.7-5.6 12.7-12.5S23 3 16 3zm0 22.8c-1.9 0-3.8-.5-5.4-1.5l-.4-.2-4.1 1.1 1.1-4-.3-.4a10.2 10.2 0 0 1-1.6-5.5C5.4 9.8 10.2 5.2 16 5.2s10.6 4.6 10.6 10.3S21.8 25.8 16 25.8zm5.8-7.7c-.3-.2-1.9-.9-2.2-1-.3-.1-.5-.2-.7.2l-1 1.2c-.2.2-.4.2-.7.1-.3-.2-1.3-.5-2.6-1.6-1-.9-1.6-1.9-1.8-2.2-.2-.3 0-.5.1-.6l.5-.6.3-.5c.1-.2 0-.4 0-.6l-1-2.3c-.3-.6-.5-.5-.7-.5h-.6c-.2 0-.6.1-.9.4-.3.3-1.1 1.1-1.1 2.7s1.2 3.1 1.3 3.4c.2.2 2.3 3.5 5.6 4.9 2.8 1.1 3.3.9 3.9.8.6-.1 1.9-.8 2.2-1.5.3-.8.3-1.4.2-1.5-.1-.2-.3-.3-.6-.4z" fill="currentColor"/></svg>
+  <span>Scrivi a Federica</span>
+</a>
+
+</body>
+</html>
