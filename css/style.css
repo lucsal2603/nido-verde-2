@@ -251,7 +251,8 @@ html.js:not(.is-ridotto) .stella { transform: none; }
 }
 
 /* ── dintorni: la sezione a passi (clonata da funtownstudio.com): testi a sinistra, omino a destra, tappe sotto ── */
-.dintorni { position: relative; z-index: 2; background: var(--notte); color: var(--carta); padding: clamp(96px, 11vw, 156px) 0; overflow: clip; }
+.dintorni { position: relative; z-index: 4; background: var(--notte); color: var(--carta); padding: clamp(96px, 11vw, 156px) 0 0; overflow: clip; }   /* sopra il voucher, che sta sotto e viene scoperto dal risucchio */
+html.is-ridotto .dintorni { padding-bottom: clamp(96px, 11vw, 156px); }
 .dintorni__grana { position: absolute; inset: 0; pointer-events: none; opacity: .05; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E"); background-size: 220px 220px; }
 .dintorni__testa { padding: 0 var(--gut); margin-bottom: clamp(24px, 4vw, 56px); position: relative; }
 .dintorni__testa .occhiello { color: var(--lime); }
@@ -514,8 +515,6 @@ html.is-ridotto .dintorni__azioni { position: static; }
   .stelle__casa { top: var(--casa-top); transform: translateX(-50%); }
   .stelle__titolo { font-size: clamp(2.1rem, 10vw, 3.2rem); }
   .stelle__titolo { z-index: 2; }
-  .dintorni { margin-bottom: -100svh; }   /* la sezione dopo (voucher) sale sopra il blocco fermo e lo copre, invece di far scendere lo schermo */
-  .voucher { z-index: 3; }
   .stelle, .nastro { background-color: var(--notte); background-image: url("../img/stelle-sfondo.png"); background-size: 512px 512px; }   /* cielo stellato fisso sotto tutto il pezzo notturno, anche oltre il blocco fermo */
   .nastro { color: var(--carta); border-color: rgba(247, 248, 243, .18); }
   .nastro__riga--contro { color: var(--salvia-chiara); }

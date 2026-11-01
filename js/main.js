@@ -483,12 +483,19 @@
     const N = passi.length; let attivo = -1;
     ST.create({ trigger: '.dintorni', start: 'top 80px', end: 'bottom 80px', onToggle: (e) => testata.classList.toggle('is-scura', e.isActive) });
     if (RIDOTTO) { html.classList.add('is-ridotto'); return; }
-    /* su telefono il blocco resta fermo per un altro schermo dopo l'ultima tappa, mentre la sezione del voucher sale a coprirlo (margine negativo nel CSS) */
-    const mob = window.matchMedia('(max-width: 860px)').matches; let sonda = null;
-    if (mob) { sonda = document.createElement('i'); sonda.style.cssText = 'position:absolute;top:0;left:0;width:0;height:100svh;visibility:hidden;pointer-events:none'; root.appendChild(sonda); }
-    root.style.height = mob ? `calc(${(N + 1) * 60}svh + 100svh)` : `${(N + 1) * 60}svh`;
-    const extra = () => (sonda ? sonda.offsetHeight : 0);
+    /* dopo l'ultima tappa il blocco resta fermo ancora un po': la macchina arriva in fondo e risucchia la pagina, sotto compare il voucher.
+       La sezione dopo (voucher) sta sotto i dintorni (margine negativo di uno schermo) e viene tenuta ferma in alto mentre si scopre. */
     const fisso = q('.passi__fisso', root), scena = q('.passi__scena', root);
+    const sezione = q('.dintorni'), voucherSez = q('.voucher');
+    let EXTRA = innerHeight;
+    const misura = () => {
+      const H = innerHeight, top = parseFloat(getComputedStyle(fisso).top) || 0;
+      EXTRA = Math.max(0, 2 * H - top - fisso.offsetHeight);   /* così il risucchio comincia esattamente quando la macchina è arrivata, e il blocco resta fermo fino alla fine */
+      root.style.height = `calc(${(N + 1) * 60}svh + ${Math.round(EXTRA)}px)`;
+      if (sezione) sezione.style.marginBottom = `${-H}px`;
+    };
+    misura(); ST.addEventListener('refreshInit', misura);
+    const extra = () => EXTRA;
     /* su telefono la testata «Dintorni / Cosa visitare» entra nel blocco fisso e resta a schermo per tutte le tappe; su computer resta sopra e scorre via */
     const testaSez = q('.dintorni__testa');
     if (testaSez) gsap.matchMedia().add('(max-width: 860px)', () => { fisso.prepend(testaSez); ST.refresh(); return () => { root.before(testaSez); ST.refresh(); }; });
@@ -514,16 +521,75 @@
     };
     gsap.set(q('.passi__omino--cammina img', root), { scaleX: -1 });   /* l'omino a piedi guarda a sinistra nel render: specchiato, cammina nel verso in cui scivola */
     attiva(0); posiziona(0, 0);
+    /* le animazioni a destra si caricano tardi: appena un'immagine arriva si ricalcola la sua corsa, così la macchina non parte da fuori scena */
+    let ultimaU = 0, ultimaK = 0;
+    qa('img', scena).forEach((im) => im.addEventListener('load', () => posiziona(ultimaU, ultimaK)));
     ST.create({
       trigger: root, start: () => `top ${parseFloat(getComputedStyle(fisso).top) || 0}px`, end: () => `+=${Math.max(1, root.offsetHeight - fisso.offsetHeight - extra())}`, invalidateOnRefresh: true,
       onUpdate: (e) => {
         const u = e.progress * (N + 1), k = Math.min(N - 1, Math.floor(u));
         attiva(k);
         barre.forEach((b, i) => gsap.set(b, { xPercent: -100 + frazione(u, i) * 100, x: 0 }));
-        posiziona(u, k);
+        ultimaU = u; ultimaK = k; posiziona(u, k);
       },
       onRefresh: (e) => { const u = e.progress * (N + 1), k = Math.min(N - 1, Math.floor(u)); attiva(k); posiziona(u, k); },
     });
+
+    /* ── il risucchio: tutto viene tirato dentro la macchina (si stringe, gira e si sfoca verso di lei), il buio si chiude a cerchio sulla macchina, che alla fine sparisce con un ultimo scatto ── */
+    if (!sezione || !voucherSez) return;
+    const auto = q('.passi__omino--auto img', root);
+    const tirati = [q('.passi__testi', root), q('.passi__tappe', root), q('.dintorni__testa', fisso)].filter(Boolean);
+    const easeIn = gsap.parseEase('power3.in'), easeIn2 = gsap.parseEase('power2.in'), easeInOut = gsap.parseEase('power2.inOut');
+    let origini = null, ultimo = -1;
+    const pulisci = () => {
+      tirati.forEach((el) => { el.style.scale = el.style.rotate = el.style.translate = el.style.filter = el.style.opacity = el.style.transformOrigin = ''; });
+      if (auto) auto.style.scale = auto.style.rotate = auto.style.translate = '';
+      sezione.style.clipPath = ''; voucherSez.style.translate = voucherSez.style.scale = ''; voucherSez.style.transformOrigin = '';
+    };
+    const puntoAuto = () => {
+      const r = auto ? auto.getBoundingClientRect() : scena.getBoundingClientRect();
+      return [r.left + r.width * .5, r.top + r.height * .58];
+    };
+    const disegna = (sv) => {
+      if (sv === ultimo) return; ultimo = sv;
+      if (sv <= 0) { pulisci(); origini = null; return; }
+      const H = innerHeight;
+      if (!origini) {
+        tirati.forEach((el) => { el.style.scale = el.style.rotate = el.style.translate = el.style.filter = ''; });
+        const [px, py] = puntoAuto();
+        origini = tirati.map((el) => { const r = el.getBoundingClientRect(); return [px - r.left, py - r.top]; });
+      }
+      /* 1. la pagina si tira verso la macchina: si stringe, gira a spirale, si sfoca */
+      const k = clamp01(sv / .66), pe = easeIn(k);
+      tirati.forEach((el, i) => {
+        el.style.transformOrigin = `${origini[i][0]}px ${origini[i][1]}px`;
+        el.style.scale = `${(1 - pe).toFixed(4)} ${(1 - pe * .92).toFixed(4)}`;
+        el.style.rotate = `${(pe * (i % 2 ? -38 : 46)).toFixed(2)}deg`;
+        el.style.filter = `blur(${(pe * 5).toFixed(2)}px)`;
+        el.style.opacity = String(1 - clamp01((k - .7) / .3));
+      });
+      /* 2. la macchina trema mentre aspira, poi si rimpicciolisce di colpo e sparisce nel punto */
+      if (auto) {
+        const trema = Math.sin(sv * 90) * 2.2 * (1 - clamp01((sv - .72) / .18)) * clamp01(sv / .1);
+        const fine = easeIn2(clamp01((sv - .72) / .2));
+        auto.style.translate = `${trema.toFixed(2)}px ${(Math.cos(sv * 70) * 1.2 * clamp01(sv / .1)).toFixed(2)}px`;
+        auto.style.scale = String((1 + .06 * easeInOut(clamp01(sv / .72))) * (1 - fine));
+        auto.style.rotate = `${(-14 * fine).toFixed(2)}deg`;
+      }
+      /* 3. il buio si chiude a cerchio sulla macchina e scopre il voucher che sta sotto */
+      const [px, py] = puntoAuto(), sr = sezione.getBoundingClientRect();
+      const R0 = Math.hypot(Math.max(px, innerWidth - px), Math.max(py, H - py)) + 40;
+      const chiusura = gsap.parseEase('power2.inOut')(clamp01((sv - .04) / .88));
+      sezione.style.clipPath = `circle(${Math.max(0, R0 * (1 - chiusura)).toFixed(1)}px at ${(px - sr.left).toFixed(1)}px ${(py - sr.top).toFixed(1)}px)`;
+      /* il voucher resta fermo in alto mentre si scopre, e si assesta da appena più grande */
+      voucherSez.style.translate = `0 ${(-H * (1 - sv)).toFixed(1)}px`;
+      voucherSez.style.transformOrigin = '50% 0';
+      voucherSez.style.scale = String(1 + .05 * (1 - easeInOut(sv)));
+      testata.classList.toggle('is-scura', sv < .7);
+    };
+    ST.create({ trigger: voucherSez, start: 'top bottom', end: 'top top', invalidateOnRefresh: true,
+      onUpdate: (e) => disegna(e.progress), onRefresh: (e) => { origini = null; ultimo = -1; disegna(e.progress); },
+      onLeave: () => disegna(1), onLeaveBack: () => disegna(0) });
   }
 
   /* ── recensioni: al passaggio la carta gira su se stessa da sinistra a destra, mostra per un attimo sul retro in quale nido ha dormito chi scrive, poi torna com'era ── */
@@ -610,8 +676,8 @@
     if (!RIDOTTO) {
       /* la busta arriva, il sigillo salta, il lembo si apre e diventa il tetto, il biglietto esce, passa davanti e si posa */
       gsap.set(big, { transformPerspective: 1200 });
-      gsap.fromTo(busta, { y: 60, opacity: 0, rotate: -3 }, { y: 0, opacity: 1, rotate: 0, duration: 1.1, ease: 'power3.out', scrollTrigger: { trigger: scena, start: 'top 90%', once: true } });
-      gsap.timeline({ scrollTrigger: { trigger: scena, start: 'top 72%', end: 'top 8%', scrub: .7 } })
+      /* il voucher viene scoperto dal risucchio dei dintorni: la busta si apre solo dopo, quando si continua a scorrere */
+      gsap.timeline({ scrollTrigger: { trigger: '.voucher', start: 'top top', end: () => '+=' + Math.round(innerHeight * .8), scrub: .7 } })
         .to(sigillo, { scale: 1.25, ease: 'power2.out', duration: .06 }, 0)
         .to(sigillo, { scale: 0, rotate: 140, opacity: 0, ease: 'power2.in', duration: .08 }, .06)
         .to(lembo, { rotateX: 180, ease: 'power2.inOut', duration: .26 }, .1)
