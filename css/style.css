@@ -191,12 +191,23 @@ html.is-ridotto .nido__anta { display: none; }
 .stelle { height: 250svh; position: relative; z-index: 2; }
 .stelle__palco { position: sticky; top: 0; height: 100svh; overflow: hidden; background: var(--carta); }
 .stelle__cielo { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; }
-.stelle__dentro { position: absolute; left: var(--gut); bottom: clamp(32px, 8vh, 96px); max-width: 640px; z-index: 2; color: var(--inchiostro); }
-.stelle__dentro .occhiello { color: inherit; opacity: .8; }
-.stelle__testo { margin-top: 1.4em; max-width: 46ch; font-size: 1.1rem; }
-.stelle__foto { position: absolute; right: var(--gut); top: 50%; width: clamp(240px, 32vw, 460px); aspect-ratio: 3 / 4; margin: 0; transform: translateY(-50%); clip-path: var(--timpano); overflow: hidden; }
+/* impaginazione: la casetta al centro, il titolo diviso ai due lati, il testo sotto la seconda metà */
+.stelle__palco { --casa: min(26vw, calc(64svh * .75)); --stacco: clamp(24px, 3vw, 56px); color: var(--inchiostro); }
+.stelle__occhiello { position: absolute; left: 0; right: 0; top: calc(var(--testata-h) + 4px); text-align: center; color: var(--salvia); z-index: 2; margin: 0; }
+.stelle__titolo { position: absolute; inset: 0; margin: 0; font-size: clamp(2.6rem, 6.8vw, 7.6rem); line-height: .92; pointer-events: none; z-index: 2; }
+.stelle__riga { position: absolute; display: block; }
+.stelle__riga--a { right: calc(50% + var(--casa) / 2 + var(--stacco)); top: 27%; text-align: right; }
+.stelle__riga--b { left: calc(50% + var(--casa) / 2 + var(--stacco)); top: 40%; }
+.stelle__a-capo { display: block; }
+.stelle__titolo .lettera { display: inline-block; will-change: opacity, filter, transform; }
+.stelle__casa { position: absolute; left: 50%; top: 54%; width: var(--casa); aspect-ratio: 3 / 4; transform: translate(-50%, -50%); z-index: 1; }
+.stelle__foto { position: absolute; inset: 0; margin: 0; clip-path: var(--timpano); overflow: hidden; }
 .stelle__foto img { width: 100%; height: 100%; object-fit: cover; }
-@media (max-width: 860px) { .stelle__foto { width: 46vw; top: calc(var(--testata-h) + 24px); transform: none; right: var(--gut); } .stelle__dentro { bottom: 28px; right: var(--gut); } }
+.stelle__costellazione { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.stelle__linea { fill: none; stroke: #F7F8F3; stroke-width: 1.4; vector-effect: non-scaling-stroke; stroke-dasharray: 1; stroke-dashoffset: 1; opacity: .85; }
+.stelle__punti circle { fill: #F7F8F3; filter: drop-shadow(0 0 6px rgba(247, 248, 243, .9)) drop-shadow(0 0 14px rgba(160, 176, 40, .7)); }
+.stelle__testo { position: absolute; left: calc(50% + var(--casa) / 2 + var(--stacco)); top: calc(40% + 2 * .92 * clamp(2.6rem, 6.8vw, 7.6rem) + 28px); max-width: min(34ch, calc(50% - var(--casa) / 2 - var(--stacco) - var(--gut))); font-size: 1.05rem; z-index: 2; }
+
 
 /* ── nastro ── */
 .nastro { overflow: hidden; padding: clamp(28px, 4vw, 56px) 0; background: var(--carta); position: relative; z-index: 2; border-top: 1px solid var(--salvia-chiara); border-bottom: 1px solid var(--salvia-chiara); }
@@ -385,7 +396,7 @@ html.is-ridotto .voce { grid-area: auto; width: auto; margin-top: 0; }
 .wa:active { transform: scale(.96); }
 html:not(.is-pronto) .wa { opacity: 0; translate: 0 24px; pointer-events: none; }
 html.is-menu .wa { opacity: 0; pointer-events: none; }
-@media (max-width: 860px) { .wa { right: 14px; bottom: 14px; height: 52px; padding: 0 13px; } .wa svg { width: 24px; height: 24px; } .stelle__dentro { padding-right: 60px; } }
+@media (max-width: 860px) { .wa { right: 14px; bottom: 14px; height: 52px; padding: 0 13px; } .wa svg { width: 24px; height: 24px; } }
 
 /* ── piede ── */
 .piede { background: var(--oliva); color: var(--carta); padding: clamp(40px, 6vw, 80px) var(--gut) 28px; position: relative; z-index: 2; overflow: hidden; }
@@ -410,8 +421,12 @@ html.is-menu .wa { opacity: 0; pointer-events: none; }
   .manifesto__palco { padding: var(--sez) var(--gut); }
   .foglio { margin-top: 0; }
   .stelle__palco { background: var(--notte); color: var(--carta); padding: var(--sez) var(--gut); min-height: 0; }
-  .stelle__dentro, .stelle__foto { position: static; transform: none; margin-top: 32px; }
-  .stelle__dentro { color: var(--carta); }
+  .stelle__palco { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 28px; }
+  .stelle__occhiello, .stelle__titolo, .stelle__riga, .stelle__testo, .stelle__casa { position: static; transform: none; max-width: 46ch; }
+  .stelle__casa { width: min(80vw, 360px); }
+  .stelle__titolo, .stelle__testo { color: var(--carta); }
+  .stelle__a-capo { display: inline; }
+  .stelle__linea { stroke-dashoffset: 0; opacity: .5; }
   .coccole__binario { transform: none; }
   .sentiero__barra i { transform: none; }
   .nastro__riga { width: auto; white-space: normal; flex-wrap: wrap; }
@@ -442,13 +457,16 @@ html.is-ridotto .dintorni__azioni { position: static; }
 /* ── telefono: la notte delle stelle a tutto schermo, foto centrata e più grande, nastro scuro per non spezzare la magia, tre recensioni ── */
 @media (max-width: 860px) {
   .stelle__palco { height: 100lvh; }
-  .stelle__foto { aspect-ratio: 3 / 4; width: min(calc(100vw - 40px), calc((100svh - 390px) * .75)); left: 50%; right: auto; transform: translateX(-50%); top: calc(var(--testata-h) + 8px); }   /* casetta enorme: da bordo a bordo, alta quanto lo schermo permette sopra il testo */
+  .stelle__palco { --casa: min(66vw, calc((100svh - 400px) * .75)); --fs-t: clamp(2.4rem, 11vw, 3.4rem); --t-top: calc(var(--testata-h) + 34px + var(--casa) * 4 / 3 + 22px); }
+  .stelle__occhiello { top: calc(var(--testata-h) - 6px); }
+  .stelle__casa { top: calc(var(--testata-h) + 34px); transform: translateX(-50%); }
+  .stelle__titolo { inset: auto 0 auto 0; top: var(--t-top); font-size: var(--fs-t); text-align: center; }
+  .stelle__riga { position: static; display: block; text-align: center; }
+  .stelle__a-capo { display: inline; }
+  .stelle__testo { left: var(--gut); right: var(--gut); top: calc(var(--t-top) + var(--fs-t) * 1.84 + 16px); max-width: none; text-align: center; font-size: .95rem; padding: 0 12px; }
   .dintorni { margin-bottom: -100svh; }   /* la sezione dopo (voucher) sale sopra il blocco fermo e lo copre, invece di far scendere lo schermo */
   .voucher { z-index: 3; }
   .stelle, .nastro { background-color: var(--notte); background-image: url("../img/stelle-sfondo.png"); background-size: 512px 512px; }   /* cielo stellato fisso sotto tutto il pezzo notturno, anche oltre il blocco fermo */
-  .stelle__dentro { bottom: calc(100lvh - 100svh + 36px); right: var(--gut); padding-right: 0; }   /* sopra la barra del browser: l'ultima riga non finisce fuori */
-  .stelle__dentro .titolo-xl { font-size: clamp(2.3rem, 10.5vw, 3.2rem); }
-  .stelle__testo { font-size: .95rem; margin-top: 1em; }
   .nastro { color: var(--carta); border-color: rgba(247, 248, 243, .18); }
   .nastro__riga--contro { color: var(--salvia-chiara); }
   .citazione:nth-child(n + 4) { display: none; }

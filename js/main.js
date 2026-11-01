@@ -256,24 +256,42 @@
     });
   }
 
-  /* ── le stelle: la pagina si fa notte ── */
+  /* ── le stelle: la pagina si fa notte, il cielo gira piano, una costellazione disegna la casetta e dentro si accende la luce ── */
   function stelle() {
     const sez = q('.stelle'); if (!sez || RIDOTTO) return;
-    const palco = q('.stelle__palco', sez), dentro = q('.stelle__dentro', sez), foto = q('.stelle__foto', sez), canvas = q('.stelle__cielo', sez), occ = q('.occhiello', dentro);
+    const palco = q('.stelle__palco', sez), canvas = q('.stelle__cielo', sez), occ = q('.stelle__occhiello', sez);
+    const titolo = q('.stelle__titolo', sez), testo = q('.stelle__testo', sez), casa = q('.stelle__casa', sez), foto = q('.stelle__foto', sez), img = q('img', foto);
+    const linea = q('.stelle__linea', sez), punti = qa('.stelle__punti circle', sez);
+    /* il titolo diviso in lettere: si accendono una per una, in ordine sparso, come stelle */
+    const lettere = [];
+    const spezza = (nodo) => [...nodo.childNodes].forEach((n) => {
+      if (n.nodeType === 3) {
+        const frag = document.createDocumentFragment();
+        [...n.textContent].forEach((ch) => { if (ch === ' ') { frag.append(' '); return; } const sp = document.createElement('span'); sp.className = 'lettera'; sp.textContent = ch; lettere.push(sp); frag.append(sp); });
+        n.replaceWith(frag);
+      } else spezza(n);
+    });
+    titolo.setAttribute('aria-label', titolo.textContent.replace(/\s+/g, ' ').trim()); spezza(titolo);
+    qa('.lettera', titolo).forEach((l) => l.setAttribute('aria-hidden', 'true'));
+
     const ctx = canvas.getContext('2d');
-    let stelleArr = [], attivo = false, raf = 0, cadenti = [], prossima = 0, tPrima = 0;
+    let stelleArr = [], attivo = false, raf = 0, cadenti = [], prossima = 0, tPrima = 0, giro = 0;
     const dim = () => {
       const r = palco.getBoundingClientRect(), dpr = Math.min(2, window.devicePixelRatio || 1);
       canvas.width = Math.round(r.width * dpr); canvas.height = Math.round(r.height * dpr);
-      stelleArr = Array.from({ length: 170 }, () => ({ x: Math.random(), y: Math.random() * .85, r: .5 + Math.random() * 1.3, f: Math.random() * Math.PI * 2, s: .4 + Math.random() * 1.2, lime: Math.random() < .12 }));
+      /* stelle sparse su un disco più grande dello schermo: girando non lasciano angoli vuoti */
+      const R = Math.hypot(canvas.width, canvas.height);
+      stelleArr = Array.from({ length: 300 }, () => ({ a: Math.random() * Math.PI * 2, d: Math.sqrt(Math.random()) * R, r: .45 + Math.random() * 1.3, f: Math.random() * Math.PI * 2, s: .4 + Math.random() * 1.2, lime: Math.random() < .12 }));
     };
     const disegna = (t) => {
       const w = canvas.width, h = canvas.height, dpr = Math.min(2, window.devicePixelRatio || 1);
       ctx.clearRect(0, 0, w, h);
+      const cx = w * .5, cy = h * 1.05;
       for (const s of stelleArr) {
-        const a = .3 + .7 * Math.abs(Math.sin(t * .0012 * s.s + s.f));
-        ctx.globalAlpha = a; ctx.fillStyle = s.lime ? '#A0B028' : '#F7F8F3';
-        ctx.beginPath(); ctx.arc(s.x * w, s.y * h, s.r * dpr, 0, Math.PI * 2); ctx.fill();
+        const x = cx + Math.cos(s.a + giro) * s.d, y = cy + Math.sin(s.a + giro) * s.d;
+        if (x < -4 || x > w + 4 || y < -4 || y > h + 4) continue;
+        ctx.globalAlpha = .3 + .7 * Math.abs(Math.sin(t * .0012 * s.s + s.f)); ctx.fillStyle = s.lime ? '#A0B028' : '#F7F8F3';
+        ctx.beginPath(); ctx.arc(x, y, s.r * dpr, 0, Math.PI * 2); ctx.fill();
       }
       /* stelle cadenti: ogni tanto una scia attraversa un pezzo di cielo e si spegne */
       const dt = Math.min(50, tPrima ? t - tPrima : 16); tPrima = t;
@@ -298,16 +316,30 @@
     };
     const accendi = (v) => { if (v === attivo) return; attivo = v; if (v) raf = requestAnimationFrame(disegna); else cancelAnimationFrame(raf); };
     dim(); window.addEventListener('resize', dim, { passive: true });
-    const tl = gsap.timeline({ scrollTrigger: { trigger: sez, start: 'top top', end: 'bottom bottom', scrub: .5, onToggle: (e) => accendi(e.isActive), onUpdate: (e) => { testata.classList.toggle('is-scura', e.progress > .16 && e.progress < .98); } } });
-    tl.to(palco, { backgroundColor: '#0E1A12', ease: 'none', duration: .24 }, 0)
-      .to(dentro, { color: '#F7F8F3', ease: 'none', duration: .24 }, 0)
-      .to(occ, { color: '#A0B028', ease: 'none', duration: .24 }, 0)
-      .to(canvas, { opacity: 1, ease: 'none', duration: .3 }, .1)
-      .fromTo(qa('.riga i', dentro), { yPercent: 110, y: 0 }, { yPercent: 0, y: 0, ease: 'power2.out', duration: .2, stagger: .05 }, .05)
-      .fromTo(q('.stelle__testo', dentro), { opacity: 0, y: 30 }, { opacity: 1, y: 0, ease: 'power2.out', duration: .18 }, .18)
-      .fromTo(foto, { opacity: 0, scale: .82, transformOrigin: '50% 100%' }, { opacity: 1, scale: 1, ease: 'power2.out', duration: .3 }, .2)
-      .fromTo(q('img', foto), { yPercent: 6 }, { yPercent: -6, ease: 'none', duration: .78 }, .22);
-    if (QA) { /* nello stato qa le righe mascherate del titolo restano visibili quando scrubbate */ }
+
+    const centro = 'polygon(50% 56%, 50% 56%, 50% 56%, 50% 56%, 50% 56%)';
+    const timpano = 'polygon(50% 0%, 100% 32%, 100% 100%, 0% 100%, 0% 32%)';
+    gsap.set(foto, { clipPath: centro }); gsap.set(img, { filter: 'brightness(.25) saturate(.6)', scale: 1.18 });
+    punti.forEach((c) => { c.dataset.r = c.getAttribute('r'); }); gsap.set(punti, { attr: { r: 0 }, opacity: 0 }); gsap.set(lettere, { opacity: 0, filter: 'blur(10px)', scale: 1.4 }); gsap.set([testo, occ], { opacity: 0, y: 24 });
+
+    const tl = gsap.timeline({ scrollTrigger: { trigger: sez, start: 'top top', end: 'bottom bottom', scrub: .6, onToggle: (e) => accendi(e.isActive),
+      onUpdate: (e) => { giro = e.progress * .35; testata.classList.toggle('is-scura', e.progress > .1 && e.progress < .98); } } });
+    tl.to(palco, { backgroundColor: '#0E1A12', ease: 'none', duration: .16 }, 0)
+      .to(canvas, { opacity: 1, ease: 'none', duration: .2 }, .06)
+      .to(occ, { opacity: 1, y: 0, color: '#A0B028', ease: 'power2.out', duration: .1 }, .1)
+      /* la costellazione: le stelle d'angolo si accendono e la linea le unisce disegnando la casetta */
+      .to(punti, { attr: { r: (i, c) => c.dataset.r }, opacity: 1, ease: 'back.out(3)', duration: .05, stagger: .035 }, .14)
+      .to(linea, { strokeDashoffset: 0, ease: 'none', duration: .2 }, .16)
+      /* dentro la costellazione la casetta prende forma dal centro, poi si accende la luce */
+      .to(foto, { clipPath: timpano, ease: 'power2.inOut', duration: .2 }, .34)
+      .to(img, { filter: 'brightness(1) saturate(1)', scale: 1.04, ease: 'power1.out', duration: .3 }, .4)
+      .to(linea, { opacity: .3, ease: 'none', duration: .12 }, .48)
+      /* il titolo si accende lettera per lettera, ai due lati della casetta */
+      .to(lettere, { opacity: 1, filter: 'blur(0px)', scale: 1, color: '#F7F8F3', ease: 'power2.out', duration: .07, stagger: { each: .012, from: 'random' } }, .3)
+      .to(testo, { opacity: 1, y: 0, color: '#DCE3D0', ease: 'power2.out', duration: .1 }, .6)
+      /* in fondo la casetta respira e le stelle d'angolo pulsano */
+      .to(casa, { scale: 1.05, ease: 'none', duration: .3 }, .7)
+      .to(punti, { attr: { r: (i, c) => c.dataset.r * 1.6 }, opacity: .75, ease: 'sine.inOut', duration: .15, stagger: .03, yoyo: true, repeat: 1 }, .7);
   }
 
   /* ── nastro con lo skew dalla velocità ── */

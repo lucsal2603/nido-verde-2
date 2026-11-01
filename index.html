@@ -17,12 +17,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Albert+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=2026110105">
+  <link rel="stylesheet" href="css/style.css?v=2026110107">
   <script>if ('scrollRestoration' in history) history.scrollRestoration = 'manual';</script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.4/dist/lenis.min.js"></script>
-  <script src="js/main.js?v=2026110105" defer></script>
+  <script src="js/main.js?v=2026110107" defer></script>
 </head>
 <body>
 
@@ -202,12 +202,16 @@
   <section class="stelle" id="stelle">
     <div class="stelle__palco">
       <canvas class="stelle__cielo" aria-hidden="true"></canvas>
-      <div class="stelle__dentro">
-        <p class="occhiello">Look up</p>
-        <h2 class="titolo-xl"><span class="riga"><i>Mille stelle</i></span><span class="riga"><i>e <em>coccole.</em></i></span></h2>
-        <p class="stelle__testo">Di notte il tetto si apre e il cielo entra nella stanza: il silenzio, le luci del lago in fondo, le stelle sopra il letto. Nessuna tecnologia, solo l’energia della terra e il tempo che rallenta.</p>
+      <p class="occhiello stelle__occhiello">Look up</p>
+      <h2 class="stelle__titolo"><span class="stelle__riga stelle__riga--a">Mille <span class="stelle__a-capo">stelle</span></span> <span class="stelle__riga stelle__riga--b">e <em>coccole.</em></span></h2>
+      <div class="stelle__casa">
+        <figure class="stelle__foto"><img src="img/nido-notte.webp" alt="Il nido illuminato al crepuscolo, fra gli ulivi" loading="lazy"></figure>
+        <svg class="stelle__costellazione" viewBox="0 0 300 400" preserveAspectRatio="none" aria-hidden="true">
+          <path class="stelle__linea" d="M150 0 L300 128 L300 400 L0 400 L0 128 Z" pathLength="1"/>
+          <g class="stelle__punti"><circle cx="150" cy="0" r="5"/><circle cx="300" cy="128" r="4"/><circle cx="300" cy="400" r="4.5"/><circle cx="0" cy="400" r="4"/><circle cx="0" cy="128" r="4.5"/></g>
+        </svg>
       </div>
-      <figure class="stelle__foto"><img src="img/nido-notte.webp" alt="Il nido illuminato al crepuscolo, fra gli ulivi" loading="lazy"></figure>
+      <p class="stelle__testo">Di notte il tetto si apre e il cielo entra nella stanza: il silenzio, le luci del lago in fondo, le stelle sopra il letto. Nessuna tecnologia, solo l’energia della terra e il tempo che rallenta.</p>
     </div>
   </section>
 
