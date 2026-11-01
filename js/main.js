@@ -546,7 +546,7 @@
         if (gira?.isActive()) return;
         gira = gsap.timeline({ onComplete: () => gsap.set(giro, { rotateY: 0 }) })
           .to(giro, { rotateY: 180, duration: .7, ease: 'power3.inOut' })
-          .to(giro, { rotateY: 360, duration: .7, ease: 'power3.inOut' }, '+=1');
+          .to(giro, { rotateY: 360, duration: .7, ease: 'power3.inOut' }, '+=0.5');
       };
       c.addEventListener('mouseenter', via);
       if (TOUCH) c.addEventListener('click', via);
