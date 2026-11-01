@@ -162,18 +162,18 @@
       ['#skyroom .nido__tetto', .2, .2, 220, -125, 'dietro'],
       ['#starsbox .nido__tetto', .9, .3, 230, -12, 'dietro'],
       ['.family__foto', .9, .04, 250, -50, 'dietro'],
-      ['.busta', .03, .97, 230, 150, 'dietro', 'desk'],
+      ['.busta', .06, .95, 230, 165, 'dentro', 'desk'],
       ['.magia__quattro li:last-child', .98, 0, 170, -14, 'sopra', 'desk'],
       ['.prenota__mappa', .95, .04, 240, -40, 'dietro'],
     ];
     const piazzati = [];
     MAPPA.forEach(([sel, ax, ay, d, rot, dove, solo], i) => {
       const anc = q(sel); if (!anc) return;
-      const box = dove === 'sopra' ? anc : anc.parentElement;
+      const box = dove === 'sopra' || dove === 'dentro' ? anc : anc.parentElement;
       if (getComputedStyle(box).position === 'static') box.style.position = 'relative';
       if (dove === 'dietro') { if (getComputedStyle(anc).position === 'static') anc.style.position = 'relative'; anc.style.zIndex = anc.style.zIndex || '1'; }
       const el = document.createElement('span');
-      el.className = 'ulivo' + (solo === 'desk' ? ' ulivo--desk' : '');
+      el.className = 'ulivo' + (solo === 'desk' ? ' ulivo--desk' : '') + (dove === 'dentro' ? ' ulivo--dentro' : '');
       el.setAttribute('aria-hidden', 'true');
       el.style.setProperty('--d', d + 'px'); el.style.setProperty('--r', rot + 'deg'); el.style.setProperty('--ritardo', -(i * 2.3) + 's');
       el.innerHTML = `<span class="ulivo__dondolo">${rametto(i * 977 + 13)}</span>`;
@@ -183,7 +183,7 @@
     });
     const metti = () => piazzati.forEach(({ el, anc, box, ax, ay, dove }) => {
       let x = anc.offsetWidth * ax, y = anc.offsetHeight * ay;
-      if (dove !== 'sopra') { const a = anc.getBoundingClientRect(), b = box.getBoundingClientRect(); x += a.left - b.left; y += a.top - b.top; }
+      if (dove === 'dietro') { const a = anc.getBoundingClientRect(), b = box.getBoundingClientRect(); x += a.left - b.left; y += a.top - b.top; }
       el.style.left = x + 'px'; el.style.top = y + 'px';
     });
     metti(); window.addEventListener('resize', metti); window.addEventListener('load', metti); ST.addEventListener('refresh', metti);
