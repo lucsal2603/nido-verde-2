@@ -88,20 +88,44 @@
   }
 
   /* ── la punta del foglio: tetto con la punta arrotondata e bordo nero, ricalcolato quando cambia la misura ── */
+  /* il profilo del tetto: falde dritte e punta arrotondata, largo W e alto T */
+  const profiloTetto = (W, T) => {
+    const L = Math.hypot(W / 2, T), d = Math.min(L * .3, Math.max(34, W * .045));   /* quanto della falda si piega nella curva */
+    const k = d / L, ax = W / 2 - (W / 2) * k, ay = T * k, bx = W / 2 + (W / 2) * k;
+    return `M0 ${T.toFixed(1)} L${ax.toFixed(1)} ${ay.toFixed(1)} Q${W / 2} 0 ${bx.toFixed(1)} ${ay.toFixed(1)} L${W} ${T.toFixed(1)}`;
+  };
   function puntaFoglio() {
     const f = q('.foglio'), bordo = q('.foglio__bordo path'); if (!f || !bordo) return;
     const svg = bordo.parentNode;
     const disegna = () => {
       const W = f.offsetWidth, H = f.offsetHeight, T = parseFloat(getComputedStyle(svg).height) - 20;
-      const L = Math.hypot(W / 2, T), d = Math.min(L * .3, Math.max(34, W * .045));   /* quanto della falda si piega nella curva */
-      const k = d / L, ax = W / 2 - (W / 2) * k, ay = T * k, bx = W / 2 + (W / 2) * k;
-      const bordoD = `M0 ${T} L${ax.toFixed(1)} ${ay.toFixed(1)} Q${W / 2} 0 ${bx.toFixed(1)} ${ay.toFixed(1)} L${W} ${T}`;
+      const bordoD = profiloTetto(W, T);
       bordo.setAttribute('d', bordoD);
       svg.setAttribute('viewBox', `0 0 ${W} ${T + 20}`);
       f.style.clipPath = `path('${bordoD} L${W} ${H} L0 ${H} Z')`;
     };
     disegna();
     if ('ResizeObserver' in window) new ResizeObserver(disegna).observe(f); else window.addEventListener('resize', disegna);
+  }
+
+  /* ── teli: prima che il foglio dei nidi salga, tre teli a forma di tetto salgono dal basso uno dopo l'altro; la punta parte alta e si abbassa mentre salgono ── */
+  function teli() {
+    const f = q('.foglio'), palco = q('.manifesto__palco'), lista = qa('.telo'); if (!f || !palco || !lista.length || RIDOTTO) return;
+    const svg = q('.foglio__bordo');
+    const stati = lista.map(() => ({ t: .5 }));
+    const forma = (el, st) => {
+      const W = palco.offsetWidth, H = palco.offsetHeight, Tf = svg ? parseFloat(getComputedStyle(svg).height) - 20 : H * .15;
+      const T = Tf + (H * .55 - Tf) * st.t;
+      q('span', el).style.clipPath = `path('${profiloTetto(W, T)} L${W} ${H + T} L0 ${H + T} Z')`;
+    };
+    gsap.set(lista, { yPercent: 110 });
+    lista.forEach((el, i) => forma(el, stati[i]));
+    const tl = gsap.timeline({ scrollTrigger: { trigger: f, start: () => 'top bottom+=' + Math.round(innerHeight * .55), end: 'top 80%', scrub: .6, invalidateOnRefresh: true } });
+    lista.forEach((el, i) => {
+      tl.fromTo(el, { yPercent: 110 }, { yPercent: 0, ease: 'power3.inOut', duration: .55 }, i * .14)
+        .fromTo(stati[i], { t: 1 }, { t: 0, ease: 'power2.inOut', duration: .55, onUpdate: () => forma(el, stati[i]) }, i * .14);
+    });
+    window.addEventListener('resize', () => lista.forEach((el, i) => forma(el, stati[i])));
   }
 
   /* ── rametti di ulivo: sempre attaccati a qualcosa (spuntano da dietro foto, carte e righe), mai fluttuanti ── */
@@ -247,7 +271,7 @@
     const totale = .5 + .04 * (parole.length - 1);
     /* ogni icona si sveglia quando l'evidenziazione raggiunge l'ultima parola della sua frase */
     const icone = qa('.icona', p).map((el) => { const ultime = qa('.parola', el.closest('.frase')); const idx = parole.indexOf(ultime[ultime.length - 1]); return { el, soglia: (.04 * idx + .25) / totale }; });
-    const tl = gsap.to(parole, { color: '#1B2A1E', ease: 'none', duration: .5, stagger: .04, scrollTrigger: { trigger: '.manifesto', start: 'top top', end: '66% bottom', scrub: true },
+    const tl = gsap.to(parole, { color: '#1B2A1E', ease: 'none', duration: .5, stagger: .04, scrollTrigger: { trigger: '.manifesto', start: 'top top', end: '56% bottom', scrub: true },
       onUpdate: () => { const pr = tl.progress(); icone.forEach(({ el, soglia }) => el.classList.toggle('is-viva', pr >= soglia)); } });
   }
 
@@ -558,7 +582,7 @@
 
   /* ── avvio ── */
   const introHero = hero();
-  puntaFoglio(); ramettiUlivo(); manifesto(); nidi(); family(); stelle(); nastro(); coccole(); dintorni(); voucher(); domande(); piede(); contatori(); carteVoci(); mappa(); popup(); reveal();
+  puntaFoglio(); teli(); ramettiUlivo(); manifesto(); nidi(); family(); stelle(); nastro(); coccole(); dintorni(); voucher(); domande(); piede(); contatori(); carteVoci(); mappa(); popup(); reveal();
   const tlVelo = velo();
   if (RIDOTTO || QA || RIPRISTINO) { html.classList.add('is-pronto'); if (RIPRISTINO) introHero?.progress(1); }
   else { tlVelo.add(() => introHero.play(), 2.0); tlVelo.add(() => html.classList.add('is-pronto'), 3.1); }

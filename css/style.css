@@ -133,6 +133,12 @@ html.is-ridotto .manifesto__testo { color: var(--inchiostro); }
 /* ── il foglio che sale, e i due nidi ── */
 .foglio { position: relative; z-index: 2; margin-top: -100svh; background: var(--carta-2); clip-path: polygon(0 var(--tetto), 50% 0, 100% var(--tetto), 100% 100%, 0 100%); }
 .nidi { padding: calc(var(--tetto) + var(--sez) * .6) var(--gut) calc(var(--sez) * .7); }
+/* tre teli a forma di tetto che salgono dal basso, uno dopo l'altro, prima del foglio dei nidi */
+.manifesto__palco { overflow: hidden; }
+.teli { position: absolute; inset: 0; pointer-events: none; z-index: 3; }
+.telo { position: absolute; inset: 0; filter: drop-shadow(0 -10px 22px rgba(14, 26, 18, .22)); will-change: transform; }
+.telo span { position: absolute; inset: 0; background: var(--c); }
+html.is-ridotto .teli, html:not(.js) .teli { display: none; }
 /* la punta del foglio: tetto semplice, punta arrotondata e bordo nero un po' spesso (forma calcolata in JS, qui la versione di riserva) */
 .foglio { --bordo-tetto: 7px; }
 .foglio__bordo { position: absolute; left: 0; top: 0; width: 100%; height: calc(var(--tetto) + 20px); overflow: visible; pointer-events: none; z-index: 1; }
