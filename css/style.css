@@ -63,9 +63,9 @@ html.is-statico .riga i, html.is-statico [data-sale] { opacity: 1; transform: no
 html.is-statico .velo { display: none; }
 
 /* ── foglia: il puntatore ── */
-.foglia { position: fixed; top: 0; left: 0; width: 28px; height: 28px; margin: -14px 0 0 -14px; color: var(--oliva); pointer-events: none; z-index: 95; opacity: 0; }
-.foglia svg { width: 100%; height: 100%; transition: transform var(--d-base) var(--e-out); }
-html.foglia-grande .foglia svg { transform: scale(1.7); }
+.foglia { position: fixed; top: 0; left: 0; width: 28px; height: 28px; margin: -1.75px 0 0 -14px; transform-origin: 50% 6%; color: var(--oliva); pointer-events: none; z-index: 95; opacity: 0; }
+.foglia svg { width: 100%; height: 100%; transform-origin: 50% 6%; transform: rotate(-32deg); transition: transform var(--d-base) var(--e-out); }   /* inclinata come la freccetta: la punta in alto a sinistra è il punto che clicca */
+html.foglia-grande .foglia svg { transform: rotate(-32deg) scale(1.5); }
 html.con-foglia, html.con-foglia * { cursor: none !important; }
 @media (hover: none) { .foglia { display: none; } }
 

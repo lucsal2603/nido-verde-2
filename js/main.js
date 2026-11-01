@@ -79,6 +79,7 @@
   const foglia = q('#foglia');
   if (foglia && !TOUCH && !RIDOTTO) {
     html.classList.add('con-foglia');
+    gsap.set(foglia, { transformOrigin: '50% 6%' });
     const xTo = gsap.quickTo(foglia, 'x', { duration: .18, ease: 'power3' }), yTo = gsap.quickTo(foglia, 'y', { duration: .18, ease: 'power3' });
     const rotTo = gsap.quickTo(foglia, 'rotation', { duration: .5, ease: 'power2' });
     window.addEventListener('pointermove', (e) => { xTo(e.clientX); yTo(e.clientY); foglia.style.opacity = '1'; }, { passive: true });
