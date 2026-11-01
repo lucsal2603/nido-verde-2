@@ -261,7 +261,8 @@
     const sez = q('.stelle'); if (!sez || RIDOTTO) return;
     const palco = q('.stelle__palco', sez), canvas = q('.stelle__cielo', sez), occ = q('.stelle__occhiello', sez);
     const titolo = q('.stelle__titolo', sez), testo = q('.stelle__testo', sez), casa = q('.stelle__casa', sez), foto = q('.stelle__foto', sez), img = q('img', foto);
-    const linea = q('.stelle__linea', sez), punti = qa('.stelle__punti circle', sez);
+    const tratti = qa('.stelle__tratto', sez), punti = qa('.stella', sez), scintilla = q('.stelle__scintilla', sez);
+    const POS = punti.map((p) => [parseFloat(p.style.left), parseFloat(p.style.top)]);
     /* il titolo diviso in lettere: si accendono una per una, in ordine sparso, come stelle */
     const lettere = [];
     const spezza = (nodo) => [...nodo.childNodes].forEach((n) => {
@@ -288,7 +289,7 @@
       ctx.clearRect(0, 0, w, h);
       const cx = w * .5, cy = h * 1.05;
       for (const s of stelleArr) {
-        const x = cx + Math.cos(s.a + giro) * s.d, y = cy + Math.sin(s.a + giro) * s.d;
+        const ang = s.a + giro + t * .00004, x = cx + Math.cos(ang) * s.d, y = cy + Math.sin(ang) * s.d;
         if (x < -4 || x > w + 4 || y < -4 || y > h + 4) continue;
         ctx.globalAlpha = .3 + .7 * Math.abs(Math.sin(t * .0012 * s.s + s.f)); ctx.fillStyle = s.lime ? '#A0B028' : '#F7F8F3';
         ctx.beginPath(); ctx.arc(x, y, s.r * dpr, 0, Math.PI * 2); ctx.fill();
@@ -320,26 +321,34 @@
     const centro = 'polygon(50% 56%, 50% 56%, 50% 56%, 50% 56%, 50% 56%)';
     const timpano = 'polygon(50% 0%, 100% 32%, 100% 100%, 0% 100%, 0% 32%)';
     gsap.set(foto, { clipPath: centro }); gsap.set(img, { filter: 'brightness(.25) saturate(.6)', scale: 1.18 });
-    punti.forEach((c) => { c.dataset.r = c.getAttribute('r'); }); gsap.set(punti, { attr: { r: 0 }, opacity: 0 }); gsap.set(lettere, { opacity: 0, filter: 'blur(10px)', scale: 1.4 }); gsap.set([testo, occ], { opacity: 0, y: 24 });
+    gsap.set(punti, { xPercent: -50, yPercent: -50, scale: 0, opacity: 0, rotate: -90 }); gsap.set(lettere, { opacity: 0, filter: 'blur(10px)', scale: 1.4 }); gsap.set([testo, occ], { opacity: 0, y: 24 });
 
     const tl = gsap.timeline({ scrollTrigger: { trigger: sez, start: 'top top', end: 'bottom bottom', scrub: .6, onToggle: (e) => accendi(e.isActive),
-      onUpdate: (e) => { giro = e.progress * .35; testata.classList.toggle('is-scura', e.progress > .1 && e.progress < .98); } } });
+      onUpdate: (e) => { giro = e.progress * 1.3; testata.classList.toggle('is-scura', e.progress > .1 && e.progress < .98); } } });
     tl.to(palco, { backgroundColor: '#0E1A12', ease: 'none', duration: .16 }, 0)
       .to(canvas, { opacity: 1, ease: 'none', duration: .2 }, .06)
       .to(occ, { opacity: 1, y: 0, color: '#A0B028', ease: 'power2.out', duration: .1 }, .1)
-      /* la costellazione: le stelle d'angolo si accendono e la linea le unisce disegnando la casetta */
-      .to(punti, { attr: { r: (i, c) => c.dataset.r }, opacity: 1, ease: 'back.out(3)', duration: .05, stagger: .035 }, .14)
-      .to(linea, { strokeDashoffset: 0, ease: 'none', duration: .2 }, .16)
+      /* la costellazione: si accende la prima stella, una scintilla corre lungo il tratto fino alla successiva, che si accende all'arrivo, e così via fino a chiudere la casetta */
+      .to(punti[0], { scale: 1.6, opacity: 1, rotate: 0, ease: 'back.out(2.4)', duration: .025 }, .12)
+      .to(punti[0], { scale: 1, ease: 'power2.out', duration: .02 }, .145);
+    const T0 = .15, SEG = .04;
+    tratti.forEach((tr, i) => {
+      const t = T0 + i * (SEG + .006), da = POS[i], a = POS[(i + 1) % POS.length], arrivo = punti[(i + 1) % punti.length];
+      tl.to(tr, { strokeDashoffset: 0, ease: 'none', duration: SEG }, t)
+        .fromTo(scintilla, { left: da[0] + '%', top: da[1] + '%', opacity: 1 }, { left: a[0] + '%', top: a[1] + '%', ease: 'none', duration: SEG, immediateRender: false }, t)
+        .to(arrivo, { scale: 1.6, opacity: 1, rotate: 0, ease: 'back.out(2.4)', duration: .02 }, t + SEG)
+        .to(arrivo, { scale: 1, ease: 'power2.out', duration: .02 }, t + SEG + .02);
+    });
+    tl.to(scintilla, { opacity: 0, duration: .01 }, T0 + 5 * (SEG + .006))
       /* dentro la costellazione la casetta prende forma dal centro, poi si accende la luce */
-      .to(foto, { clipPath: timpano, ease: 'power2.inOut', duration: .2 }, .34)
-      .to(img, { filter: 'brightness(1) saturate(1)', scale: 1.04, ease: 'power1.out', duration: .3 }, .4)
-      .to(linea, { opacity: .3, ease: 'none', duration: .12 }, .48)
+      .to(foto, { clipPath: timpano, ease: 'power2.inOut', duration: .18 }, .4)
+      .to(img, { filter: 'brightness(1) saturate(1)', scale: 1.04, ease: 'power1.out', duration: .28 }, .46)
+      .to(tratti, { opacity: .35, ease: 'none', duration: .12 }, .5)
       /* il titolo si accende lettera per lettera, ai due lati della casetta */
-      .to(lettere, { opacity: 1, filter: 'blur(0px)', scale: 1, color: '#F7F8F3', ease: 'power2.out', duration: .07, stagger: { each: .012, from: 'random' } }, .3)
-      .to(testo, { opacity: 1, y: 0, color: '#DCE3D0', ease: 'power2.out', duration: .1 }, .6)
+      .to(lettere, { opacity: 1, filter: 'blur(0px)', scale: 1, color: '#F7F8F3', ease: 'power2.out', duration: .07, stagger: { each: .012, from: 'random' } }, .36)
+      .to(testo, { opacity: 1, y: 0, color: '#DCE3D0', ease: 'power2.out', duration: .1 }, .64)
       /* in fondo la casetta respira e le stelle d'angolo pulsano */
-      .to(casa, { scale: 1.05, ease: 'none', duration: .3 }, .7)
-      .to(punti, { attr: { r: (i, c) => c.dataset.r * 1.6 }, opacity: .75, ease: 'sine.inOut', duration: .15, stagger: .03, yoyo: true, repeat: 1 }, .7);
+      .to(casa, { scale: 1.05, ease: 'none', duration: .3 }, .7);
   }
 
   /* ── nastro con lo skew dalla velocità ── */

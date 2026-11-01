@@ -204,8 +204,18 @@ html.is-ridotto .nido__anta { display: none; }
 .stelle__foto { position: absolute; inset: 0; margin: 0; clip-path: var(--timpano); overflow: hidden; }
 .stelle__foto img { width: 100%; height: 100%; object-fit: cover; }
 .stelle__costellazione { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
-.stelle__linea { fill: none; stroke: #F7F8F3; stroke-width: 1.4; vector-effect: non-scaling-stroke; stroke-dasharray: 1; stroke-dashoffset: 1; opacity: .85; }
-.stelle__punti circle { fill: #F7F8F3; filter: drop-shadow(0 0 6px rgba(247, 248, 243, .9)) drop-shadow(0 0 14px rgba(160, 176, 40, .7)); }
+.stelle__tratto { fill: none; stroke: #F7F8F3; stroke-width: 1.1; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; filter: drop-shadow(0 0 3px rgba(247, 248, 243, .8)) drop-shadow(0 0 8px rgba(160, 176, 40, .45)); }
+/* le stelle della costellazione: nucleo, quattro raggi lunghi e quattro corti, alone che respira */
+.stelle__punti { position: absolute; inset: 0; pointer-events: none; }
+.stella { position: absolute; width: clamp(34px, 3.4vw, 54px); aspect-ratio: 1; transform: translate(-50%, -50%); }
+html.js:not(.is-ridotto) .stella { transform: none; }
+.stella__dentro { position: absolute; inset: 0; animation: brilla 3.2s ease-in-out calc(var(--g) * -.7s) infinite; }
+.stella__alone { position: absolute; inset: -60%; border-radius: 50%; background: radial-gradient(circle, rgba(247, 248, 243, .55) 0, rgba(201, 214, 122, .22) 22%, rgba(160, 176, 40, 0) 60%); }
+.stella__luce { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; animation: ruota 14s linear infinite; }
+@keyframes brilla { 0%, 100% { transform: scale(1); opacity: 1; } 45% { transform: scale(.78); opacity: .78; } 55% { transform: scale(1.08); opacity: 1; } }
+@keyframes ruota { to { transform: rotate(90deg); } }
+.stelle__scintilla { position: absolute; width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px; border-radius: 50%; background: #fff; box-shadow: 0 0 8px 3px rgba(247, 248, 243, .9), 0 0 22px 8px rgba(160, 176, 40, .55); opacity: 0; }
+@media (prefers-reduced-motion: reduce) { .stella__dentro, .stella__luce { animation: none; } }
 .stelle__testo { position: absolute; left: calc(50% + var(--casa) / 2 + var(--stacco)); top: calc(40% + 2 * .92 * clamp(2.6rem, 6.8vw, 7.6rem) + 28px); max-width: min(34ch, calc(50% - var(--casa) / 2 - var(--stacco) - var(--gut))); font-size: 1.05rem; z-index: 2; }
 
 
@@ -426,7 +436,7 @@ html.is-menu .wa { opacity: 0; pointer-events: none; }
   .stelle__casa { width: min(80vw, 360px); }
   .stelle__titolo, .stelle__testo { color: var(--carta); }
   .stelle__a-capo { display: inline; }
-  .stelle__linea { stroke-dashoffset: 0; opacity: .5; }
+  .stelle__tratto { stroke-dashoffset: 0; opacity: .5; }
   .coccole__binario { transform: none; }
   .sentiero__barra i { transform: none; }
   .nastro__riga { width: auto; white-space: normal; flex-wrap: wrap; }
