@@ -177,6 +177,7 @@
       el.style.setProperty('--d', d + 'px'); el.style.setProperty('--r', rot + 'deg'); el.style.setProperty('--ritardo', -(i * 2.3) + 's');
       el.innerHTML = `<span class="ulivo__dondolo">${rametto(i * 977 + 13)}</span>`;
       box.insertBefore(el, box.firstChild);
+      el.ancora = anc;
       piazzati.push({ el, anc, box, ax, ay, dove });
     });
     const metti = () => piazzati.forEach(({ el, anc, box, ax, ay, dove }) => {
@@ -295,7 +296,16 @@
     if (RIDOTTO) return;
     qa('[data-cornice]').forEach((f) => {
       const img = q('img', f);
-      if (!QA) gsap.fromTo(f, { clipPath: 'inset(0 0 100% 0 round 36px)' }, { clipPath: 'inset(0 0 0% 0 round 36px)', duration: 1.4, ease: 'expo.out', scrollTrigger: { trigger: f, start: 'top 85%', once: true } });
+      /* il rametto attaccato alla foto spunta solo quando la foto è caricata e la cornice si è aperta: mai prima, mai a mezz'aria */
+      const rametto = qa('.ulivo', f.parentElement).find((u) => u.ancora === f);
+      rametto?.classList.add('is-nascosto');
+      const caricata = new Promise((ok) => { if (img.complete && img.naturalWidth) ok(); else { img.addEventListener('load', ok, { once: true }); img.addEventListener('error', ok, { once: true }); } });
+      const mostraRametto = () => caricata.then(() => rametto?.classList.remove('is-nascosto'));
+      if (QA) mostraRametto();
+      else {
+        gsap.set(f, { clipPath: 'inset(0 0 100% 0 round 36px)' });
+        ST.create({ trigger: f, start: 'top 92%', once: true, onEnter: () => caricata.then(() => gsap.to(f, { clipPath: 'inset(0 0 0% 0 round 36px)', duration: 1.4, ease: 'expo.out', onComplete: mostraRametto })) });
+      }
       gsap.fromTo(img, { yPercent: -8 }, { yPercent: 8, ease: 'none', scrollTrigger: { trigger: f, start: 'top bottom', end: 'bottom top', scrub: true } });
     });
   }

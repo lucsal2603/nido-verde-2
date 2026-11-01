@@ -479,7 +479,8 @@ html.is-ridotto .dintorni__azioni { position: static; }
 /* ── rametti di ulivo: attaccati a foto, carte e righe; la base del gambo è il punto d'attacco, dondolano appena da lì ── */
 .ulivo { position: absolute; z-index: 0; width: var(--d); height: var(--d); margin-top: calc(var(--d) * -.873); margin-left: calc(var(--d) * -.036); pointer-events: none; --f1: var(--oliva); --f2: var(--salvia); --f3: var(--carta); transform-origin: 3.6% 87.3%; transform: rotate(var(--r)); }
 .ulivo__dondolo { display: block; width: 100%; height: 100%; transform-origin: 3.6% 87.3%; animation: dondola 8s ease-in-out var(--ritardo) infinite; }
-.ulivo svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.ulivo svg { display: block; width: 100%; height: 100%; overflow: visible; transform-origin: 3.6% 87.3%; transition: transform .9s var(--e-out), opacity .4s; }
+.ulivo.is-nascosto svg { transform: scale(0) rotate(-25deg); opacity: 0; }
 @keyframes dondola { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(4deg); } }
 @media (max-width: 760px) { .ulivo--desk { display: none; } .ulivo { width: calc(var(--d) * .7); height: calc(var(--d) * .7); margin-top: calc(var(--d) * -.61); margin-left: calc(var(--d) * -.025); } }
 @media (prefers-reduced-motion: reduce) { .ulivo__dondolo { animation: none; } }
