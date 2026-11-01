@@ -155,6 +155,8 @@
       .to(q('.velo__anta--sx', v), { rotateY: -96, duration: 1.2, ease: 'power3.inOut' }, 1.85)
       .to(q('.velo__anta--dx', v), { rotateY: 96, duration: 1.2, ease: 'power3.inOut' }, 1.85)
       .add(() => { v.remove(); html.classList.remove('is-velato'); lenis?.start(); }, 3.1);
+    /* rete di sicurezza: se il browser si inceppa, dopo 6 s il velo sparisce comunque */
+    setTimeout(() => { if (v.isConnected) { v.remove(); html.classList.remove('is-velato'); lenis?.start(); } }, 6000);
     return tl;
   }
 

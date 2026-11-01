@@ -140,7 +140,7 @@ html.is-ridotto .manifesto__testo { color: var(--inchiostro); }
   background:
     linear-gradient(to bottom, transparent calc(100% - 15px), rgba(30, 12, 4, .55) calc(100% - 15px), transparent calc(100% - 11px)),
     linear-gradient(to bottom, transparent calc(100% - 13px), #7A4A2A calc(100% - 13px), #D59A6A calc(100% - 11px), #B9783F calc(100% - 9px), #6B3E24 calc(100% - 7px), #8A5A36 calc(100% - 7px), var(--legno) calc(100% - 5px), #B5864F calc(100% - 1px), #6B4A2E calc(100% - 1px)),
-    url("../img/tegole.svg") 0 0 / clamp(240px, 26vw, 380px) auto repeat; }
+    url("../img/tegole.webp") 0 0 / clamp(240px, 26vw, 380px) auto repeat; }
 .tetto__falda--sx { left: 0; transform-origin: 0 0; transform: skewY(calc(-1 * var(--pendenza))); }
 .tetto__falda--dx { right: 0; transform-origin: 100% 0; transform: skewY(var(--pendenza)); background-position: 0 0, 0 0, right 0 top 0; }
 .tetto__colmo { position: absolute; left: 50%; top: 0; width: clamp(24px, 3.2vw, 48px); height: auto; transform: translateX(-50%); overflow: visible; }
