@@ -87,36 +87,60 @@
     qa('a, button').forEach((el) => { el.addEventListener('pointerenter', () => html.classList.add('foglia-grande')); el.addEventListener('pointerleave', () => html.classList.remove('foglia-grande')); });
   }
 
-  /* ── foglie di ulivo sparse: piatte, nei colori del sito, con un filo di parallasse e un dondolio lento ── */
-  function foglieUlivo() {
-    const FOGLIA = '<svg viewBox="0 0 24 96"><path d="M12 2C4 22 3 60 12 94 21 60 20 22 12 2z" fill="var(--f1)"/><path d="M12 2c8 20 9 58 0 92z" fill="var(--f2)"/><path d="M12 8v84" stroke="var(--f3)" stroke-width="1" fill="none" opacity=".7"/></svg>';
-    const RAMETTO = '<svg viewBox="0 0 120 120"><path d="M8 112C40 86 72 50 112 8" stroke="#8B5E3C" stroke-width="2.4" fill="none" stroke-linecap="round"/>' +
-      [[26, 94, -20], [40, 80, 70], [56, 64, -10], [70, 50, 80], [86, 34, 0], [98, 22, 85]].map(([x, y, r]) =>
-        `<g transform="translate(${x} ${y}) rotate(${r})"><path d="M0 0C-5-10-5-26 0-36 5-26 5-10 0 0z" fill="var(--f1)"/><path d="M0 0c5-10 5-26 0-36z" fill="var(--f2)"/></g>`).join('') + '</svg>';
-    /* [sezione, x %, y %, dimensione px, rotazione, tipo] — ai margini, lontano dai testi */
+  /* ── rametti di ulivo: sempre attaccati a qualcosa (spuntano da dietro foto, carte e righe), mai fluttuanti ── */
+  function rametto(seme) {
+    /* gambo curvo dalla base (0,100) verso la punta, foglie a coppie sfalsate che si rimpiccioliscono, qualche oliva */
+    let r = seme; const rnd = () => ((r = (r * 9301 + 49297) % 233280) / 233280);
+    const P = (t) => [4 + 86 * t, 96 - 70 * t - 18 * Math.sin(t * Math.PI) ];
+    let foglie = '', olive = '';
+    const N = 11;
+    for (let k = 1; k <= N; k++) {
+      const t = k / (N + .6), [x, y] = P(t), [x2, y2] = P(t + .01);
+      const dir = Math.atan2(y2 - y, x2 - x) * 180 / Math.PI;
+      const lato = k % 2 ? -1 : 1, L = 22 - k * .9 + rnd() * 3, w = L * .19;
+      const ang = dir + lato * (38 + rnd() * 16);
+      foglie += `<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${ang.toFixed(1)})"><path d="M0 0C${L * .3} ${-w} ${L * .75} ${-w} ${L} 0 ${L * .75} ${w} ${L * .3} ${w} 0 0z" fill="var(--f2)"/><path d="M0 0C${L * .3} ${-w} ${L * .75} ${-w} ${L} 0z" fill="var(--f1)"/><path d="M1 0H${L * .92}" stroke="var(--f3)" stroke-width=".5" opacity=".55"/></g>`;
+      if (k === 3 || k === 6 || k === 8) {
+        const ox = x + lato * 5, oy = y + 6;
+        olive += `<path d="M${x.toFixed(1)} ${y.toFixed(1)}Q${(x + lato * 2).toFixed(1)} ${(y + 4).toFixed(1)} ${ox.toFixed(1)} ${(oy - 3).toFixed(1)}" stroke="#8B5E3C" stroke-width=".8" fill="none"/><ellipse cx="${ox.toFixed(1)}" cy="${oy.toFixed(1)}" rx="2.6" ry="3.4" fill="${k === 6 ? '#6E7F3A' : '#3A3550'}"/><ellipse cx="${(ox - .8).toFixed(1)}" cy="${(oy - 1.2).toFixed(1)}" rx=".8" ry="1.1" fill="#fff" opacity=".35"/>`;
+      }
+    }
+    const [tx, ty] = P(1), [px, py] = P(.98);
+    const punta = `<g transform="translate(${tx.toFixed(1)} ${ty.toFixed(1)}) rotate(${(Math.atan2(ty - py, tx - px) * 180 / Math.PI).toFixed(1)})"><path d="M0 0C4-3 11-3 15 0 11 3 4 3 0 0z" fill="var(--f1)"/></g>`;
+    let gambo = 'M' + P(0).map((v) => v.toFixed(1)).join(' ');
+    for (let t = .05; t <= 1.001; t += .05) gambo += ' L' + P(t).map((v) => v.toFixed(1)).join(' ');
+    return `<svg viewBox="0 0 110 110"><path d="${gambo}" stroke="#7A5233" stroke-width="2" fill="none" stroke-linecap="round"/>${olive}${foglie}${punta}</svg>`;
+  }
+  function ramettiUlivo() {
+    /* [ancora, x e y del punto d'attacco nell'ancora (0–1), dimensione px, rotazione, dove: 'dietro' spunta da sotto l'ancora, 'sopra' è appoggiato] */
     const MAPPA = [
-      ['#nidi', 94, 14, 61, 28, 'f'], ['#nidi', 3, 38, 46, -40, 'f'], ['#nidi', 96, 62, 112, -18, 'r'], ['#nidi', 2, 86, 54, 62, 'f'],
-      ['#magia', 92, 20, 50, 120, 'f'], ['#magia', 97, 92, 96, 200, 'r'],
-      ['#family', 96, 12, 54, -24, 'f'], ['#family', 50, 92, 43, 80, 'f'],
-      ['#extra', 4, 8, 54, 36, 'f'], ['#extra', 95, 90, 102, -150, 'r'],
-      ['#dintorni', 96, 4, 50, -60, 'f'],
-      ['#voucher', 3, 16, 102, 20, 'r'], ['#voucher', 95, 78, 54, -32, 'f'],
-      ['#recensioni', 96, 10, 46, 48, 'f'], ['#recensioni', 3, 64, 57, -70, 'f'],
-      ['#domande', 6, 22, 112, -10, 'r'], ['#domande', 94, 58, 50, 30, 'f'], ['#domande', 90, 90, 39, -80, 'f'],
-      ['#prenota', 96, 16, 54, -46, 'f'], ['#prenota', 2, 88, 92, 160, 'r'],
+      ['#skyroom .nido__tetto', .2, .2, 220, -125, 'dietro'],
+      ['#starsbox .nido__tetto', .9, .3, 230, -12, 'dietro'],
+      ['.family__foto', .9, .04, 250, -50, 'dietro'],
+      ['.voucher__carta', .08, .92, 230, 150, 'dietro', 'desk'],
+      ['.magia__quattro li:last-child', .98, 0, 170, -14, 'sopra', 'desk'],
+      ['.prenota__mappa', .95, .04, 240, -40, 'dietro'],
     ];
-    MAPPA.forEach(([sel, x, y, d, r, tipo], i) => {
-      const sez = q(sel); if (!sez) return;
-      if (getComputedStyle(sez).position === 'static') sez.style.position = 'relative';
-      const scuro = /extra|dintorni/.test(sel);
+    const piazzati = [];
+    MAPPA.forEach(([sel, ax, ay, d, rot, dove, solo], i) => {
+      const anc = q(sel); if (!anc) return;
+      const box = dove === 'sopra' ? anc : anc.parentElement;
+      if (getComputedStyle(box).position === 'static') box.style.position = 'relative';
+      if (dove === 'dietro') { if (getComputedStyle(anc).position === 'static') anc.style.position = 'relative'; anc.style.zIndex = anc.style.zIndex || '1'; }
       const el = document.createElement('span');
-      el.className = 'ulivo' + (x > 1 && x < 8 && tipo === 'f' ? ' ulivo--largo' : '') + (tipo === 'r' ? ' ulivo--rametto' : '') + (scuro ? ' ulivo--notte' : '');
+      el.className = 'ulivo' + (solo === 'desk' ? ' ulivo--desk' : '');
       el.setAttribute('aria-hidden', 'true');
-      el.style.cssText = `left:${x}%;top:${y}%;--d:${d}px;--r:${r}deg;--ritardo:${-(i * 1.7) % 9}s`;
-      el.innerHTML = `<span class="ulivo__dondolo">${tipo === 'r' ? RAMETTO : FOGLIA}</span>`;
-      sez.appendChild(el);
-      if (!RIDOTTO) gsap.fromTo(el, { y: 40 + (i % 3) * 30 }, { y: -40 - (i % 3) * 30, ease: 'none', scrollTrigger: { trigger: sez, start: 'top bottom', end: 'bottom top', scrub: true } });
+      el.style.setProperty('--d', d + 'px'); el.style.setProperty('--r', rot + 'deg'); el.style.setProperty('--ritardo', -(i * 2.3) + 's');
+      el.innerHTML = `<span class="ulivo__dondolo">${rametto(i * 977 + 13)}</span>`;
+      box.insertBefore(el, box.firstChild);
+      piazzati.push({ el, anc, box, ax, ay, dove });
     });
+    const metti = () => piazzati.forEach(({ el, anc, box, ax, ay, dove }) => {
+      let x = anc.offsetWidth * ax, y = anc.offsetHeight * ay;
+      if (dove !== 'sopra') { const a = anc.getBoundingClientRect(), b = box.getBoundingClientRect(); x += a.left - b.left; y += a.top - b.top; }
+      el.style.left = x + 'px'; el.style.top = y + 'px';
+    });
+    metti(); window.addEventListener('resize', metti); window.addEventListener('load', metti); ST.addEventListener('refresh', metti);
   }
 
   /* ── righe mascherate e blocchi che salgono ── */
@@ -476,7 +500,7 @@
 
   /* ── avvio ── */
   const introHero = hero();
-  foglieUlivo(); manifesto(); nidi(); family(); stelle(); nastro(); coccole(); dintorni(); voucher(); domande(); piede(); contatori(); carteVoci(); mappa(); popup(); reveal();
+  ramettiUlivo(); manifesto(); nidi(); family(); stelle(); nastro(); coccole(); dintorni(); voucher(); domande(); piede(); contatori(); carteVoci(); mappa(); popup(); reveal();
   const tlVelo = velo();
   if (RIDOTTO || QA || RIPRISTINO) { html.classList.add('is-pronto'); if (RIPRISTINO) introHero?.progress(1); }
   else { tlVelo.add(() => introHero.play(), 2.0); tlVelo.add(() => html.classList.add('is-pronto'), 3.1); }
