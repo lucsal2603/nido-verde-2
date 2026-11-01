@@ -161,7 +161,7 @@
       ['#skyroom .nido__tetto', .2, .2, 220, -125, 'dietro'],
       ['#starsbox .nido__tetto', .9, .3, 230, -12, 'dietro'],
       ['.family__foto', .9, .04, 250, -50, 'dietro'],
-      ['.voucher__carta', .08, .92, 230, 150, 'dietro', 'desk'],
+      ['.busta', .03, .97, 230, 150, 'dietro', 'desk'],
       ['.magia__quattro li:last-child', .98, 0, 170, -14, 'sopra', 'desk'],
       ['.prenota__mappa', .95, .04, 240, -40, 'dietro'],
     ];
@@ -602,17 +602,30 @@
 
   /* ── voucher: la carta si inclina con la mano ── */
   function voucher() {
-    const c = q('[data-tilt]'); if (!c) return;
-    if (!(RIDOTTO || QA)) gsap.fromTo(c, { opacity: 0, rotateY: -28, rotateX: 8, transformPerspective: 1200 }, { opacity: 1, rotateY: 0, rotateX: 0, duration: 1.3, ease: 'power3.out', scrollTrigger: { trigger: c, start: 'top 82%', once: true } });
+    const scena = q('[data-voucher]'); if (!scena) return;
+    const busta = q('.busta', scena), lembo = q('.busta__lembo', scena), sigillo = q('.busta__sigillo', scena), big = q('.biglietto', scena);
+    if (!RIDOTTO) {
+      /* la busta arriva, il sigillo salta, il lembo si apre e diventa il tetto, il biglietto esce, passa davanti e si posa */
+      gsap.set(big, { transformPerspective: 1200 });
+      gsap.fromTo(busta, { y: 60, opacity: 0, rotate: -3 }, { y: 0, opacity: 1, rotate: 0, duration: 1.1, ease: 'power3.out', scrollTrigger: { trigger: scena, start: 'top 90%', once: true } });
+      gsap.timeline({ scrollTrigger: { trigger: scena, start: 'top 72%', end: 'top 8%', scrub: .7 } })
+        .to(sigillo, { scale: 1.25, ease: 'power2.out', duration: .06 }, 0)
+        .to(sigillo, { scale: 0, rotate: 140, opacity: 0, ease: 'power2.in', duration: .08 }, .06)
+        .to(lembo, { rotateX: 180, ease: 'power2.inOut', duration: .26 }, .1)
+        .set(lembo, { zIndex: 1 }, .23)
+        .to(big, { yPercent: -78, rotate: -4, ease: 'power2.inOut', duration: .3 }, .36)
+        .set(big, { zIndex: 5 }, .66)
+        .to(big, { yPercent: -34, rotate: -2.5, scale: 1.04, ease: 'power3.out', duration: .3 }, .66)
+        .to(busta, { y: 18, ease: 'none', duration: .3 }, .66);
+    }
     if (TOUCH || RIDOTTO) return;
-    gsap.set(c, { transformPerspective: 1200 });
-    const rx = gsap.quickTo(c, 'rotateX', { duration: .6, ease: 'power3' }), ry = gsap.quickTo(c, 'rotateY', { duration: .6, ease: 'power3' });
-    c.addEventListener('pointermove', (e) => {
-      const r = c.getBoundingClientRect(), px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
-      ry((px - .5) * 16); rx(-(py - .5) * 16);
-      c.style.setProperty('--mx', `${px * 100}%`); c.style.setProperty('--my', `${py * 100}%`);
+    const rx = gsap.quickTo(big, 'rotateX', { duration: .6, ease: 'power3' }), ry = gsap.quickTo(big, 'rotateY', { duration: .6, ease: 'power3' });
+    big.addEventListener('pointermove', (e) => {
+      const r = big.getBoundingClientRect(), px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
+      ry((px - .5) * 14); rx(-(py - .5) * 14);
+      big.style.setProperty('--mx', `${px * 100}%`); big.style.setProperty('--my', `${py * 100}%`);
     });
-    c.addEventListener('pointerleave', () => { rx(0); ry(0); });
+    big.addEventListener('pointerleave', () => { rx(0); ry(0); });
   }
 
   /* ── domande: fisarmonica ── */

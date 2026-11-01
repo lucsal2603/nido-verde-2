@@ -315,14 +315,38 @@ html.is-ridotto .passi__tappe { display: none; }
 
 /* ── voucher ── */
 .voucher { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 5vw, 96px); align-items: center; padding: var(--sez) var(--gut); background: var(--carta-2); position: relative; z-index: 2; }
-.voucher__carta { aspect-ratio: 1.58; border-radius: var(--r-m); background: var(--oliva); color: var(--carta); position: relative; transform-style: preserve-3d; will-change: transform; overflow: hidden; }
-.voucher__carta::after { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(247, 248, 243, .18), rgba(247, 248, 243, 0) 45%); pointer-events: none; }
-.voucher__dentro { position: absolute; inset: 0; padding: 7% 8%; display: flex; flex-direction: column; justify-content: space-between; }
-.voucher__stella { position: absolute; right: 8%; top: 8%; width: clamp(28px, 4vw, 44px); color: var(--lime); }
-.voucher__eti { font: italic 1.1rem var(--serif); opacity: .85; }
-.voucher__grande { font: clamp(1.8rem, 3.6vw, 3.2rem)/1.05 var(--serif); }
-.voucher__grande em { font-style: italic; }
-.voucher__dati { display: flex; justify-content: space-between; gap: 12px; font-size: .85rem; flex-wrap: wrap; border-top: 1px solid rgba(247, 248, 243, .35); padding-top: 12px; }
+/* la scena: una busta verde con dentro il biglietto; il lembo aperto diventa il tetto della casetta */
+.voucher__scena { position: relative; padding-top: 36%; perspective: 1600px; max-width: 620px; width: 100%; justify-self: center; }
+.busta { position: relative; aspect-ratio: 1.55; container-type: inline-size; transform-style: preserve-3d; }
+.busta__retro { position: absolute; inset: 0; background: #2F4A34; border-radius: 3cqw; }
+.busta__tasca { position: absolute; inset: 0; z-index: 3; background: var(--oliva); clip-path: polygon(0 0, 50% 58%, 100% 0, 100% 100%, 0 100%); border-radius: 0 0 3cqw 3cqw; pointer-events: none; }
+.busta__tasca::after { content: ""; position: absolute; inset: 0; background: #4A6A4D; clip-path: polygon(0 100%, 50% 46%, 100% 100%); }
+.busta__tasca::before { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom right, rgba(255, 255, 255, .06), rgba(0, 0, 0, .08)); }
+.busta__lembo { position: absolute; left: 0; right: 0; top: 0; height: 60%; z-index: 4; transform-origin: 50% 0; transform-style: preserve-3d; pointer-events: none; }
+.busta__lembo::before { content: ""; position: absolute; inset: 0; background: #557658; clip-path: polygon(0 0, 100% 0, 54% 92%, 50% 100%, 46% 92%); border-radius: 3cqw 3cqw 0 0; }
+.busta__sigillo { position: absolute; left: 50%; top: 100%; width: 13cqw; aspect-ratio: 1; margin: -9cqw 0 0 -6.5cqw; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #C3D24A, #A0B028 55%, #7E8C18); box-shadow: inset 0 0 0 .9cqw rgba(255, 255, 255, .18), 0 .6cqw 1.6cqw rgba(14, 26, 18, .35); color: var(--oliva); display: grid; place-items: center; }
+.busta__sigillo svg { width: 58%; }
+/* il biglietto: carta chiara, cornice sottile, matrice staccabile con la perforazione e le due tacche */
+.biglietto { --mat: 27%; position: absolute; left: 5%; right: 5%; top: 7%; height: 84%; z-index: 2; display: grid; grid-template-columns: 1fr var(--mat); background: #F8F6EC radial-gradient(circle at 18% 22%, rgba(160, 176, 40, .07), transparent 40%); color: var(--inchiostro); border-radius: 1.6cqw; box-shadow: 0 1.4cqw 4cqw -1cqw rgba(14, 26, 18, .45);
+  -webkit-mask: radial-gradient(circle 2.2cqw at calc(100% - var(--mat)) 0, #0000 98%, #000) top / 100% 51% no-repeat, radial-gradient(circle 2.2cqw at calc(100% - var(--mat)) 100%, #0000 98%, #000) bottom / 100% 51% no-repeat;
+          mask: radial-gradient(circle 2.2cqw at calc(100% - var(--mat)) 0, #0000 98%, #000) top / 100% 51% no-repeat, radial-gradient(circle 2.2cqw at calc(100% - var(--mat)) 100%, #0000 98%, #000) bottom / 100% 51% no-repeat; }
+.biglietto::before { content: ""; position: absolute; inset: 2.2cqw; border: 1px solid rgba(63, 94, 66, .35); border-radius: 1cqw; pointer-events: none; }
+.biglietto__corpo { padding: 5.5cqw 4cqw 5cqw 6cqw; display: flex; flex-direction: column; justify-content: space-between; min-width: 0; }
+.biglietto__eti { font: 600 1.7cqw/1.2 var(--sans); letter-spacing: .14em; text-transform: uppercase; color: var(--oliva); }
+.biglietto__eti span { font-weight: 400; color: var(--salvia); letter-spacing: .06em; }
+.biglietto__grande { font: 400 7.6cqw/.95 var(--serif); letter-spacing: -.02em; margin: 2cqw 0; }
+.biglietto__grande em { font-style: italic; color: var(--oliva); }
+.biglietto__dati { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .6cqw 2.4cqw; font: 400 1.9cqw/1.3 var(--sans); color: var(--salvia); }
+.biglietto__dati li::before { content: "✦"; color: var(--lime); margin-right: .8cqw; }
+.biglietto__matrice { border-left: 2px dashed rgba(63, 94, 66, .35); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.6cqw; padding: 4cqw 2cqw; color: var(--oliva); text-align: center; }
+.biglietto__marchio { width: 10cqw; }
+.biglietto__prezzo { font: 400 6cqw/1 var(--serif); color: var(--inchiostro); }
+.biglietto__num { font: 500 1.5cqw/1 var(--sans); letter-spacing: .2em; color: var(--salvia); }
+.biglietto__luce { position: absolute; inset: 0; border-radius: inherit; background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(255, 255, 255, .5), rgba(255, 255, 255, 0) 40%); mix-blend-mode: soft-light; pointer-events: none; opacity: 0; transition: opacity .4s; }
+.biglietto:hover .biglietto__luce { opacity: 1; }
+html.is-ridotto .busta__lembo { transform: rotateX(180deg); z-index: 1; }
+html.is-ridotto .busta__sigillo { display: none; }
+html.is-ridotto .biglietto { transform: translateY(-32%); z-index: 5; }
 .voucher__testo > p { max-width: 48ch; margin: 1.2em 0 1.4em; }
 .voucher__azioni { display: flex; flex-wrap: wrap; gap: 12px; }
 @media (max-width: 860px) { .voucher { grid-template-columns: 1fr; } }
