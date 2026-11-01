@@ -121,10 +121,10 @@
     };
     gsap.set(lista, { yPercent: 110 });
     lista.forEach((el, i) => forma(el, stati[i]));
-    const tl = gsap.timeline({ scrollTrigger: { trigger: f, start: () => 'top bottom+=' + Math.round(innerHeight * .62), end: 'top 80%', scrub: .6, invalidateOnRefresh: true } });
+    const tl = gsap.timeline({ scrollTrigger: { trigger: f, start: () => 'top bottom+=' + Math.round(innerHeight * .6), end: 'top 80%', scrub: .6, invalidateOnRefresh: true } });
     lista.forEach((el, i) => {
-      tl.fromTo(el, { yPercent: 110 }, { yPercent: 0, ease: 'power3.inOut', duration: .5 }, i * .085)
-        .fromTo(stati[i], { t: 1 }, { t: 0, ease: 'power2.inOut', duration: .55, onUpdate: () => forma(el, stati[i]) }, i * .085);
+      tl.fromTo(el, { yPercent: 110 }, { yPercent: 0, ease: 'power3.inOut', duration: .55 }, i * .12)
+        .fromTo(stati[i], { t: 1 }, { t: 0, ease: 'power2.inOut', duration: .55, onUpdate: () => forma(el, stati[i]) }, i * .12);
     });
     window.addEventListener('resize', () => lista.forEach((el, i) => forma(el, stati[i])));
     /* l'ultimo strato è il foglio stesso: entra subito dopo i teli e la sua punta si abbassa come la loro */
