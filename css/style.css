@@ -132,19 +132,11 @@ html.is-ridotto .manifesto__testo { color: var(--inchiostro); }
 
 /* ── il foglio che sale, e i due nidi ── */
 .foglio { position: relative; z-index: 2; margin-top: -100svh; background: var(--carta-2); clip-path: polygon(0 var(--tetto), 50% 0, 100% var(--tetto), 100% 100%, 0 100%); }
-.nidi { padding: calc(var(--tetto) + var(--tegole) + var(--sez) * .5) var(--gut) calc(var(--sez) * .7); }
-/* il tetto del foglio: due falde di tegole in cotto che seguono la punta, gronda in legno e coppo di colmo */
-.foglio { --tegole: clamp(40px, 5.8vw, 90px); --pendenza: atan2(var(--tetto), 50vw); }
-.tetto { position: absolute; inset: 0 0 auto 0; height: calc(var(--tetto) + var(--tegole)); pointer-events: none; z-index: 1; }
-.tetto__falda { position: absolute; top: var(--tetto); width: calc(50% + 1px); height: var(--tegole);
-  background:
-    linear-gradient(to bottom, transparent calc(100% - 15px), rgba(30, 12, 4, .55) calc(100% - 15px), transparent calc(100% - 11px)),
-    linear-gradient(to bottom, transparent calc(100% - 13px), #7A4A2A calc(100% - 13px), #D59A6A calc(100% - 11px), #B9783F calc(100% - 9px), #6B3E24 calc(100% - 7px), #8A5A36 calc(100% - 7px), var(--legno) calc(100% - 5px), #B5864F calc(100% - 1px), #6B4A2E calc(100% - 1px)),
-    url("../img/tegole.webp") 0 0 / clamp(240px, 26vw, 380px) auto repeat; }
-.tetto__falda--sx { left: 0; transform-origin: 0 0; transform: skewY(calc(-1 * var(--pendenza))); }
-.tetto__falda--dx { right: 0; transform-origin: 100% 0; transform: skewY(var(--pendenza)); background-position: 0 0, 0 0, right 0 top 0; }
-.tetto__colmo { position: absolute; left: 50%; top: 0; width: clamp(24px, 3.2vw, 48px); height: auto; transform: translateX(-50%); overflow: visible; }
-@supports not (transform: skewY(atan2(1px, 1px))) { .tetto { display: none; } .nidi { padding-top: calc(var(--tetto) + var(--sez) * .6); } }
+.nidi { padding: calc(var(--tetto) + var(--sez) * .6) var(--gut) calc(var(--sez) * .7); }
+/* la punta del foglio: tetto semplice, punta arrotondata e bordo nero un po' spesso (forma calcolata in JS, qui la versione di riserva) */
+.foglio { --bordo-tetto: 7px; }
+.foglio__bordo { position: absolute; left: 0; top: 0; width: 100%; height: calc(var(--tetto) + 20px); overflow: visible; pointer-events: none; z-index: 1; }
+.foglio__bordo path { fill: none; stroke: #111; stroke-width: calc(var(--bordo-tetto) * 2); stroke-linejoin: round; }
 .sezione__testa { max-width: 900px; margin-bottom: clamp(48px, 7vw, 96px); }
 .sezione__intro { margin-top: 1.4em; max-width: 58ch; font-size: 1.1rem; }
 .nidi__griglia { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 4vw, 64px); align-items: start; }

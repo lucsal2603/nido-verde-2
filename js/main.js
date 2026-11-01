@@ -87,6 +87,23 @@
     qa('a, button').forEach((el) => { el.addEventListener('pointerenter', () => html.classList.add('foglia-grande')); el.addEventListener('pointerleave', () => html.classList.remove('foglia-grande')); });
   }
 
+  /* ── la punta del foglio: tetto con la punta arrotondata e bordo nero, ricalcolato quando cambia la misura ── */
+  function puntaFoglio() {
+    const f = q('.foglio'), bordo = q('.foglio__bordo path'); if (!f || !bordo) return;
+    const svg = bordo.parentNode;
+    const disegna = () => {
+      const W = f.offsetWidth, H = f.offsetHeight, T = parseFloat(getComputedStyle(svg).height) - 20;
+      const L = Math.hypot(W / 2, T), d = Math.min(L * .3, Math.max(34, W * .045));   /* quanto della falda si piega nella curva */
+      const k = d / L, ax = W / 2 - (W / 2) * k, ay = T * k, bx = W / 2 + (W / 2) * k;
+      const bordoD = `M0 ${T} L${ax.toFixed(1)} ${ay.toFixed(1)} Q${W / 2} 0 ${bx.toFixed(1)} ${ay.toFixed(1)} L${W} ${T}`;
+      bordo.setAttribute('d', bordoD);
+      svg.setAttribute('viewBox', `0 0 ${W} ${T + 20}`);
+      f.style.clipPath = `path('${bordoD} L${W} ${H} L0 ${H} Z')`;
+    };
+    disegna();
+    if ('ResizeObserver' in window) new ResizeObserver(disegna).observe(f); else window.addEventListener('resize', disegna);
+  }
+
   /* ── rametti di ulivo: sempre attaccati a qualcosa (spuntano da dietro foto, carte e righe), mai fluttuanti ── */
   function rametto(seme) {
     /* gambo curvo dalla base (0,100) verso la punta, foglie a coppie sfalsate che si rimpiccioliscono, qualche oliva */
@@ -541,7 +558,7 @@
 
   /* ── avvio ── */
   const introHero = hero();
-  ramettiUlivo(); manifesto(); nidi(); family(); stelle(); nastro(); coccole(); dintorni(); voucher(); domande(); piede(); contatori(); carteVoci(); mappa(); popup(); reveal();
+  puntaFoglio(); ramettiUlivo(); manifesto(); nidi(); family(); stelle(); nastro(); coccole(); dintorni(); voucher(); domande(); piede(); contatori(); carteVoci(); mappa(); popup(); reveal();
   const tlVelo = velo();
   if (RIDOTTO || QA || RIPRISTINO) { html.classList.add('is-pronto'); if (RIPRISTINO) introHero?.progress(1); }
   else { tlVelo.add(() => introHero.play(), 2.0); tlVelo.add(() => html.classList.add('is-pronto'), 3.1); }
