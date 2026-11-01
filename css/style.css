@@ -187,15 +187,15 @@ html.is-ridotto .nido__anta { display: none; }
 .stelle__palco { position: sticky; top: 0; height: 100svh; overflow: hidden; background: var(--carta); }
 .stelle__cielo { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; }
 /* impaginazione: la casetta al centro, il titolo diviso ai due lati, il testo sotto la seconda metà */
-.stelle__palco { --casa: min(26vw, calc(64svh * .75)); --stacco: clamp(24px, 3vw, 56px); color: var(--inchiostro); }
-.stelle__occhiello { position: absolute; left: 0; right: 0; top: calc(var(--testata-h) + 4px); text-align: center; color: var(--salvia); z-index: 2; margin: 0; }
+.stelle__palco { --casa: min(24vw, calc(52svh * .75)); --stacco: clamp(24px, 3vw, 56px); color: var(--inchiostro); }
+.stelle__occhiello { position: absolute; left: 0; right: 0; top: var(--occ-top, calc(var(--testata-h) + 4px)); text-align: center; color: var(--salvia); z-index: 2; margin: 0; }
 /* il titolo in corsivo calligrafico, su una riga sola, passa dietro la casetta da un lato all'altro del cielo */
-.stelle__titolo { position: absolute; left: 0; right: 0; top: 54%; transform: translateY(-58%); margin: 0; font: 400 clamp(2.4rem, 6.6vw, 7.4rem)/1.1 "Pinyon Script", var(--serif); letter-spacing: 0; height: 1.1em; white-space: nowrap; pointer-events: none; z-index: 0; text-shadow: 0 0 28px rgba(247, 248, 243, .25); }
-.stelle__riga { position: absolute; top: 0; }
-.stelle__riga--a { right: calc(50% + var(--casa) * .47); }
-.stelle__riga--b { left: calc(50% + var(--casa) * .47); }
+/* il titolo ad arco sopra la casetta: lettere alte e strette, ognuna ruotata lungo l'arco (posizioni calcolate in JS) */
+.stelle__titolo { position: absolute; inset: 0; margin: 0; font: 300 clamp(2.6rem, 5.6vw, 6.4rem)/1 "Big Shoulders Display", var(--sans); text-transform: uppercase; letter-spacing: .04em; color: #F7F8F3; pointer-events: none; z-index: 2; text-shadow: 0 0 22px rgba(247, 248, 243, .35); }
+.stelle__riga { display: contents; }
+.stelle__titolo .posto { position: absolute; left: 0; top: 0; display: block; transform-origin: 50% 100%; white-space: pre; }
 .stelle__titolo .lettera { display: inline-block; will-change: opacity, filter, transform; }
-.stelle__casa { position: absolute; left: 50%; top: 54%; width: var(--casa); aspect-ratio: 3 / 4; transform: translate(-50%, -50%); z-index: 1; }
+.stelle__casa { position: absolute; left: 50%; top: 57%; width: var(--casa); aspect-ratio: 3 / 4; transform: translate(-50%, -50%); z-index: 1; }
 .stelle__foto { position: absolute; inset: 0; margin: 0; clip-path: var(--timpano); overflow: hidden; }
 .stelle__foto img { width: 100%; height: 100%; object-fit: cover; }
 .stelle__costellazione { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
@@ -211,7 +211,7 @@ html.js:not(.is-ridotto) .stella { transform: none; }
 @keyframes ruota { to { transform: rotate(90deg); } }
 .stelle__scintilla { position: absolute; width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px; border-radius: 50%; background: #fff; box-shadow: 0 0 8px 3px rgba(247, 248, 243, .9), 0 0 22px 8px rgba(160, 176, 40, .55); opacity: 0; }
 @media (prefers-reduced-motion: reduce) { .stella__dentro, .stella__luce { animation: none; } }
-.stelle__testo { position: absolute; left: calc(50% + var(--casa) / 2 + var(--stacco)); top: calc(54% + clamp(2.4rem, 6.6vw, 7.4rem) * .75); max-width: min(34ch, calc(50% - var(--casa) / 2 - var(--stacco) - var(--gut))); font-size: 1.05rem; z-index: 2; }
+.stelle__testo { position: absolute; left: 50%; top: calc(57% + var(--casa) * 2 / 3 + 26px); width: min(62ch, calc(100% - 2 * var(--gut))); transform: translateX(-50%); text-align: center; font-size: 1.02rem; z-index: 2; }
 
 
 /* ── nastro ── */
@@ -431,6 +431,8 @@ html.is-menu .wa { opacity: 0; pointer-events: none; }
   .stelle__casa { width: min(80vw, 360px); }
   .stelle__titolo, .stelle__testo { color: var(--carta); }
   .stelle__tratto { stroke-dashoffset: 0; opacity: .5; }
+  .stelle__titolo { position: static; text-align: center; }
+  .stelle__testo { width: auto; }
   .coccole__binario { transform: none; }
   .sentiero__barra i { transform: none; }
   .nastro__riga { width: auto; white-space: normal; flex-wrap: wrap; }
@@ -461,13 +463,10 @@ html.is-ridotto .dintorni__azioni { position: static; }
 /* ── telefono: la notte delle stelle a tutto schermo, foto centrata e più grande, nastro scuro per non spezzare la magia, tre recensioni ── */
 @media (max-width: 860px) {
   .stelle__palco { height: 100lvh; }
-  .stelle__palco { --casa: min(66vw, calc((100svh - 400px) * .75)); --fs-t: clamp(2.6rem, 12vw, 3.6rem); --t-top: calc(var(--testata-h) + 34px + var(--casa) * 4 / 3 + 22px); }
-  .stelle__occhiello { top: calc(var(--testata-h) - 6px); }
-  .stelle__casa { top: calc(var(--testata-h) + 34px); transform: translateX(-50%); }
-  .stelle__titolo { top: var(--t-top); transform: none; font-size: var(--fs-t); line-height: 1.05; white-space: normal; z-index: 2; }
-  .stelle__riga { position: static; display: block; text-align: center; }
-  .stelle__titolo { height: auto; text-align: center; }
-  .stelle__testo { left: var(--gut); right: var(--gut); top: calc(var(--t-top) + var(--fs-t) * 2.1 + 14px); max-width: none; text-align: center; font-size: .95rem; padding: 0 12px; }
+  .stelle__palco { --casa: min(64vw, calc((100svh - 450px) * .75)); --casa-top: calc(var(--testata-h) + 150px); }
+  .stelle__casa { top: var(--casa-top); transform: translateX(-50%); }
+  .stelle__titolo { font-size: clamp(2.1rem, 10vw, 3.2rem); }
+  .stelle__testo { top: calc(var(--casa-top) + var(--casa) * 4 / 3 + 26px); font-size: .95rem; padding: 0 6px; }
   .dintorni { margin-bottom: -100svh; }   /* la sezione dopo (voucher) sale sopra il blocco fermo e lo copre, invece di far scendere lo schermo */
   .voucher { z-index: 3; }
   .stelle, .nastro { background-color: var(--notte); background-image: url("../img/stelle-sfondo.png"); background-size: 512px 512px; }   /* cielo stellato fisso sotto tutto il pezzo notturno, anche oltre il blocco fermo */

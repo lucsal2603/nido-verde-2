@@ -319,15 +319,32 @@
     const POS = punti.map((p) => [parseFloat(p.style.left), parseFloat(p.style.top)]);
     /* il titolo diviso in lettere: si accendono una per una, in ordine sparso, come stelle */
     const lettere = [];
-    const spezza = (nodo) => [...nodo.childNodes].forEach((n) => {
-      if (n.nodeType === 3) {
-        const frag = document.createDocumentFragment();
-        [...n.textContent].forEach((ch) => { if (ch === ' ') { frag.append(' '); return; } const sp = document.createElement('span'); sp.className = 'lettera'; sp.textContent = ch; lettere.push(sp); frag.append(sp); });
-        n.replaceWith(frag);
-      } else spezza(n);
+    /* ogni lettera in un "posto" (posizione e rotazione lungo l'arco) con dentro la lettera che si accende */
+    const posti = [];
+    const testoTitolo = titolo.textContent.replace(/\s+/g, ' ').trim();
+    titolo.setAttribute('aria-label', testoTitolo); titolo.textContent = '';
+    [...testoTitolo].forEach((ch) => {
+      const posto = document.createElement('span'); posto.className = 'posto'; posto.setAttribute('aria-hidden', 'true');
+      const l = document.createElement('span'); l.className = 'lettera'; l.textContent = ch === ' ' ? '\u00a0' : ch;
+      posto.append(l); titolo.append(posto); posti.push(posto); if (ch !== ' ') lettere.push(l);
     });
-    titolo.setAttribute('aria-label', titolo.textContent.replace(/\s+/g, ' ').trim()); spezza(titolo);
-    qa('.lettera', titolo).forEach((l) => l.setAttribute('aria-hidden', 'true'));
+    /* l'arco: concentrico alla casetta, passa sopra la punta e scende ai lati */
+    const arco = () => {
+      const pr = palco.getBoundingClientRect(), cr = casa.getBoundingClientRect();
+      const cx = cr.left - pr.left + cr.width / 2, cy = cr.top - pr.top + cr.height / 2;
+      const fs = parseFloat(getComputedStyle(titolo).fontSize);
+      const R = cr.height / 2 + Math.max(50, fs * .7);
+      const larghe = posti.map((p) => p.offsetWidth), tot = larghe.reduce((a, b) => a + b, 0);
+      let acc = -tot / 2;
+      posti.forEach((p, i) => {
+        const a = -Math.PI / 2 + (acc + larghe[i] / 2) / R; acc += larghe[i];
+        const x = cx + Math.cos(a) * R, y = cy + Math.sin(a) * R;
+        p.style.transform = `translate(${(x - larghe[i] / 2).toFixed(1)}px, ${(y - p.offsetHeight).toFixed(1)}px) rotate(${((a + Math.PI / 2) * 180 / Math.PI).toFixed(2)}deg) scaleY(1.2)`;
+      });
+      /* "Look up" sotto l'arco, sopra la punta del tetto */
+      palco.style.setProperty("--occ-top", (cy - cr.height / 2 - Math.max(44, fs * .62)) + "px");
+    };
+    arco(); document.fonts?.ready.then(arco); window.addEventListener('resize', arco);
 
     const ctx = canvas.getContext('2d');
     let stelleArr = [], attivo = false, raf = 0, cadenti = [], prossima = 0, tPrima = 0, giro = 0;
