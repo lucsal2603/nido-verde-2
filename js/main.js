@@ -206,7 +206,7 @@
     qa('[data-conta]').forEach((el) => {
       const fine = Number(el.dataset.conta);
       if (RIDOTTO || QA) { el.textContent = fine; return; }
-      const o = { v: 0 };
+      const o = { v: 0 }; el.textContent = '0';
       ST.create({ trigger: el, start: 'top 88%', once: true, onEnter: () => gsap.to(o, { v: fine, duration: 1.4, ease: 'power3.out', onUpdate: () => { el.textContent = Math.round(o.v); } }) });
     });
   }
@@ -553,32 +553,7 @@
     });
   }
 
-  /* ── recensioni: le due casette sono due carte da gioco, inclinate in versi opposti, la destra sotto; in scroll cadono sul tavolo; col mouse la carta si solleva e passa sopra ── */
-  function carteVoci() {
-    const carte = qa('.voci__due .voce'); if (carte.length < 2 || RIDOTTO) return;
-    const mm = gsap.matchMedia();
-    mm.add({ desk: '(min-width: 861px)', mob: '(max-width: 860px)' }, (ctx) => {
-      const base = ctx.conditions.desk ? [-5, 5] : [-1.5, 1.5];
-      carte.forEach((n, i) => {
-        gsap.set(n, { rotation: base[i], transformOrigin: '50% 50%' });
-        if (!QA) gsap.from(n, { y: 90, rotation: base[i] * 3, autoAlpha: 0, duration: 1.2, ease: 'expo.out', delay: i * .15, scrollTrigger: { trigger: '.voci__due', start: 'top 82%', once: true } });
-        if (!ctx.conditions.desk || TOUCH) return;
-        const ombra = q('.voce__ombra', n);
-        const alza = () => {
-          carte.forEach((c) => c.classList.remove('is-alzata')); n.classList.add('is-alzata');
-          gsap.to(n, { scale: 1.06, rotation: base[i] / 2, duration: .45, ease: 'power3.out', overwrite: 'auto' });
-          gsap.to(ombra, { opacity: 1, duration: .45, ease: 'power2.out', overwrite: true });
-        };
-        const posa = () => {
-          n.classList.remove('is-alzata');
-          gsap.to(n, { scale: 1, rotation: base[i], duration: .55, ease: 'power3.out', overwrite: 'auto' });
-          gsap.to(ombra, { opacity: 0, duration: .5, ease: 'power2.out', overwrite: true });
-        };
-        n.addEventListener('mouseenter', alza); n.addEventListener('mouseleave', posa);
-        n.addEventListener('focusin', alza); n.addEventListener('focusout', posa);
-      });
-    });
-  }
+
 
   /* ── mappa: l'iframe di Google entra solo al clic sulla copertina ── */
   function mappa() {
@@ -656,6 +631,21 @@
     big.addEventListener('pointerleave', () => { rx(0); ry(0); });
   }
 
+  /* ── gli ospiti: le casette si alzano dal basso (prima i muri, poi il tetto), le stelle si riempiono ── */
+  function ospiti() {
+    const lista = qa('.ospite'); if (!lista.length || RIDOTTO || QA) return;
+    lista.forEach((o, i) => {
+      const casa = q('.ospite__casa', o), img = q('img', casa), dentro = q('.ospite__dentro', o), piene = q('.ospite__piene', o), vai = q('.ospite__vai', o);
+      gsap.timeline({ scrollTrigger: { trigger: o, start: 'top 85%', once: true }, delay: i * .15 })
+        .fromTo(casa, { clipPath: 'polygon(0% 100%, 50% 100%, 100% 100%, 100% 100%, 0% 100%)' }, { clipPath: 'polygon(0% 24%, 50% 24%, 100% 24%, 100% 100%, 0% 100%)', duration: .9, ease: 'power3.inOut' })
+        .to(casa, { clipPath: 'polygon(0% 24%, 50% 0%, 100% 24%, 100% 100%, 0% 100%)', duration: .6, ease: 'back.out(2.2)' })
+        .fromTo(img, { scale: 1.35 }, { scale: 1.06, duration: 1.6, ease: 'power3.out', clearProps: 'transform' }, 0)
+        .from(qa(':scope > *', dentro), { y: 30, opacity: 0, duration: .7, stagger: .08, ease: 'power3.out' }, .7)
+        .fromTo(piene, { width: '0%' }, { width: '98%', duration: 1.2, ease: 'power2.out' }, 1.1)
+        .from(vai, { y: 20, opacity: 0, duration: .6, ease: 'power3.out' }, .9);
+    });
+  }
+
   /* ── domande: fisarmonica ── */
   function domande() {
     qa('.fisarmonica__voce').forEach((v) => {
@@ -672,7 +662,7 @@
 
   /* ── avvio ── */
   const introHero = hero();
-  puntaFoglio(); teli(); ramettiUlivo(); manifesto(); nidi(); family(); stelle(); nastro(); coccole(); dintorni(); voucher(); domande(); piede(); contatori(); carteVoci(); giraRecensioni(); mappa(); popup(); reveal();
+  puntaFoglio(); teli(); ramettiUlivo(); manifesto(); nidi(); family(); stelle(); nastro(); coccole(); dintorni(); voucher(); domande(); piede(); contatori(); giraRecensioni(); ospiti(); mappa(); popup(); reveal();
   const tlVelo = velo();
   if (RIDOTTO || QA || RIPRISTINO) { html.classList.add('is-pronto'); if (RIPRISTINO) introHero?.progress(1); }
   else { tlVelo.add(() => introHero.play(), 2.0); tlVelo.add(() => html.classList.add('is-pronto'), 3.1); }

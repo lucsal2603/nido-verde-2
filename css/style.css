@@ -376,24 +376,31 @@ html.is-ridotto .biglietto { transform: translateY(-32%); z-index: 5; }
 .citazione__sotto { font-size: .85rem; letter-spacing: .08em; text-transform: uppercase; opacity: .85; }
 @media (max-width: 1024px) { .voci__griglia { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 640px) { .voci__griglia { grid-template-columns: 1fr; } }
-.voci__due { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(20px, 3vw, 48px); margin-top: clamp(84px, 9vw, 150px); }   /* le carte inclinate alzano gli angoli: più aria sopra */
-.voce { position: relative; display: grid; grid-template-columns: 1fr 1.2fr; gap: 22px; align-items: center; text-decoration: none; padding: 16px; border-radius: var(--r-m); border: 1px solid var(--salvia-chiara); background: var(--carta-2); box-shadow: 0 14px 34px -22px rgba(27, 42, 30, .35); will-change: transform; transition: background var(--d-base) var(--e-out); }
-.voce figure { margin: 0; aspect-ratio: 4 / 5; overflow: hidden; border-radius: var(--r-s); }
-.voce img { width: 100%; height: 100%; object-fit: cover; transition: transform 1s var(--e-out); }
-.voce h3 { font-size: 1.6rem; margin-bottom: .3em; }
-.voce p:last-child { font-size: .95rem; color: var(--oliva); }
-@media (hover: hover) { .voce:hover img { transform: scale(1.05); } }
-/* le due casette sono due carte posate sul foglio: la sinistra inclinata a sinistra sopra, la destra inclinata a destra più in basso e sotto (rotazioni e sollevamento in hover via GSAP) */
-.voci__due { grid-template-columns: 1fr; position: relative; }
-.voce { grid-area: 1 / 1; width: 58%; }
-.voce--sx { z-index: 2; }
-.voce--dx { justify-self: end; margin-top: 7%; z-index: 1; }
-.voce.is-alzata { z-index: 3; }
-.voce__ombra { position: absolute; inset: 0; border-radius: inherit; box-shadow: 0 34px 70px -22px rgba(27, 42, 30, .38), 0 12px 26px -12px rgba(27, 42, 30, .22); opacity: 0; pointer-events: none; }
-@media (max-width: 860px) { .voci__due { gap: 24px; } .voce { grid-area: auto; width: auto; } .voce--dx { justify-self: stretch; margin-top: 0; } }
-html.is-ridotto .voci__due { grid-template-columns: 1fr 1fr; }
-html.is-ridotto .voce { grid-area: auto; width: auto; margin-top: 0; }
-@media (max-width: 860px) { .voci__due { grid-template-columns: 1fr; } }
+/* gli ospiti: due casette affiancate, ognuna una finestra sul suo nido con il numero di recensioni, le stelle e il link */
+.ospiti { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(24px, 4vw, 72px); margin-top: clamp(72px, 8vw, 128px); align-items: start; }
+.ospiti__testa { grid-column: 1 / -1; font: italic 400 clamp(1.4rem, 2.2vw, 2rem) var(--serif); color: var(--salvia); text-align: center; margin-bottom: clamp(4px, 1vw, 16px); }
+.ospite { display: block; width: 100%; max-width: 460px; text-decoration: none; color: inherit; }
+.ospite--sx { justify-self: end; }
+.ospite--dx { margin-top: clamp(40px, 7vw, 120px); }
+.ospite__casa { --gronda: 24%; position: relative; aspect-ratio: 4 / 4.6; overflow: hidden; clip-path: polygon(0 var(--gronda), 50% 0, 100% var(--gronda), 100% 100%, 0 100%); background: var(--oliva); transition: --gronda .6s var(--e-out); }
+.ospite__casa img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scale(1.06); transition: transform 1.2s var(--e-out); }
+.ospite__velo { position: absolute; inset: 0; background: linear-gradient(to top, rgba(14, 26, 18, .85) 0%, rgba(14, 26, 18, .35) 45%, rgba(14, 26, 18, 0) 70%); transition: opacity .5s; }
+.ospite__dentro { position: absolute; left: 0; right: 0; bottom: 0; padding: clamp(20px, 3vw, 40px); color: var(--bianco); }
+.ospite__eti { font: italic 1.15rem var(--serif); color: var(--evidenzia); }
+.ospite__numero { font: 400 clamp(4.6rem, 8vw, 8rem)/.85 var(--serif); letter-spacing: -.04em; margin: .08em 0 .05em; }
+.ospite__cosa { font-size: 1rem; opacity: .9; }
+.ospite__voto { display: flex; align-items: center; gap: 10px; margin-top: 14px; font-size: .9rem; }
+.ospite__stelle { position: relative; display: inline-block; font-size: 1.15rem; letter-spacing: .12em; color: rgba(247, 248, 243, .3); line-height: 1; }
+.ospite__piene { position: absolute; left: 0; top: 0; width: var(--pieno, 98%); overflow: hidden; white-space: nowrap; color: var(--lime); }
+.ospite__vai { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: 18px; padding-bottom: 14px; border-bottom: 1px solid var(--salvia-chiara); font: 400 clamp(1.25rem, 1.8vw, 1.6rem) var(--serif); color: var(--inchiostro); }
+.ospite__vai span { display: inline-grid; place-items: center; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--oliva); color: var(--oliva); font-family: var(--sans); font-size: 1.1rem; transition: background .35s, color .35s, transform .45s var(--e-out); }
+@media (hover: hover) {
+  .ospite:hover .ospite__casa img { transform: scale(1.12); }
+  .ospite:hover .ospite__vai span { background: var(--oliva); color: var(--bianco); transform: rotate(45deg); }
+}
+.ospite:focus-visible { outline: none; }
+.ospite:focus-visible .ospite__vai { outline: 2px solid var(--oliva); outline-offset: 4px; }
+@media (max-width: 760px) { .ospiti { grid-template-columns: 1fr; justify-items: center; } .ospite--sx { justify-self: center; } .ospite--dx { margin-top: 0; } }
 
 /* ── domande: fisarmonica ── */
 .domande { padding: var(--sez) var(--gut); background: var(--carta-2); position: relative; z-index: 2; }
