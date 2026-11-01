@@ -121,10 +121,10 @@
     };
     gsap.set(lista, { yPercent: 110 });
     lista.forEach((el, i) => forma(el, stati[i]));
-    const tl = gsap.timeline({ scrollTrigger: { trigger: f, start: () => 'top bottom+=' + Math.round(innerHeight * .55), end: 'top 80%', scrub: .6, invalidateOnRefresh: true } });
+    const tl = gsap.timeline({ scrollTrigger: { trigger: f, start: () => 'top bottom+=' + Math.round(innerHeight * .62), end: 'top 80%', scrub: .6, invalidateOnRefresh: true } });
     lista.forEach((el, i) => {
-      tl.fromTo(el, { yPercent: 110 }, { yPercent: 0, ease: 'power3.inOut', duration: .55 }, i * .14)
-        .fromTo(stati[i], { t: 1 }, { t: 0, ease: 'power2.inOut', duration: .55, onUpdate: () => forma(el, stati[i]) }, i * .14);
+      tl.fromTo(el, { yPercent: 110 }, { yPercent: 0, ease: 'power3.inOut', duration: .5 }, i * .085)
+        .fromTo(stati[i], { t: 1 }, { t: 0, ease: 'power2.inOut', duration: .55, onUpdate: () => forma(el, stati[i]) }, i * .085);
     });
     window.addEventListener('resize', () => lista.forEach((el, i) => forma(el, stati[i])));
     /* l'ultimo strato è il foglio stesso: entra subito dopo i teli e la sua punta si abbassa come la loro */
@@ -274,7 +274,7 @@
     const totale = .5 + .04 * (parole.length - 1);
     /* ogni icona si sveglia quando l'evidenziazione raggiunge l'ultima parola della sua frase */
     const icone = qa('.icona', p).map((el) => { const ultime = qa('.parola', el.closest('.frase')); const idx = parole.indexOf(ultime[ultime.length - 1]); return { el, soglia: (.04 * idx + .25) / totale }; });
-    const tl = gsap.to(parole, { color: '#1B2A1E', ease: 'none', duration: .5, stagger: .04, scrollTrigger: { trigger: '.manifesto', start: 'top top', end: '56% bottom', scrub: true },
+    const tl = gsap.to(parole, { color: '#1B2A1E', ease: 'none', duration: .5, stagger: .04, scrollTrigger: { trigger: '.manifesto', start: 'top top', end: '45% bottom', scrub: true },
       onUpdate: () => { const pr = tl.progress(); icone.forEach(({ el, soglia }) => el.classList.toggle('is-viva', pr >= soglia)); } });
   }
 
