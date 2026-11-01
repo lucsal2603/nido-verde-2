@@ -535,60 +535,65 @@
       onRefresh: (e) => { const u = e.progress * (N + 1), k = Math.min(N - 1, Math.floor(u)); attiva(k); posiziona(u, k); },
     });
 
-    /* ── il risucchio: tutto viene tirato dentro la macchina (si stringe, gira e si sfoca verso di lei), il buio si chiude a cerchio sulla macchina, che alla fine sparisce con un ultimo scatto ── */
+    /* ── la fuga: la macchina scalda il motore, lancia una corda e si aggancia alla pagina, poi scappa a destra e la pagina le va dietro, trascinata fuori dallo schermo; sotto c'è il voucher ── */
     if (!sezione || !voucherSez) return;
     const auto = q('.passi__omino--auto img', root);
-    const tirati = [q('.passi__testi', root), q('.passi__tappe', root), q('.dintorni__testa', fisso)].filter(Boolean);
-    const easeIn = gsap.parseEase('power3.in'), easeIn2 = gsap.parseEase('power2.in'), easeInOut = gsap.parseEase('power2.inOut');
-    let origini = null, ultimo = -1;
+    const NS = 'http://www.w3.org/2000/svg';
+    const corda = document.createElementNS(NS, 'svg'); corda.setAttribute('class', 'passi__corda'); corda.setAttribute('aria-hidden', 'true');
+    corda.innerHTML = '<path class="passi__corda-filo"/><circle class="passi__corda-gancio" r="6"/>';
+    fisso.appendChild(corda);
+    const filo = q('.passi__corda-filo', corda), gancio = q('.passi__corda-gancio', corda);
+    const eOut = gsap.parseEase('power3.out'), eIn = gsap.parseEase('power2.in'), eInOut = gsap.parseEase('power2.inOut');
+    let ancora = null, ultimo = -1;
     const pulisci = () => {
-      tirati.forEach((el) => { el.style.scale = el.style.rotate = el.style.translate = el.style.filter = el.style.opacity = el.style.transformOrigin = ''; });
-      if (auto) auto.style.scale = auto.style.rotate = auto.style.translate = '';
-      sezione.style.clipPath = ''; voucherSez.style.translate = voucherSez.style.scale = ''; voucherSez.style.transformOrigin = '';
+      if (auto) auto.style.translate = auto.style.rotate = '';
+      sezione.style.translate = sezione.style.boxShadow = ''; fisso.style.transform = '';
+      corda.style.opacity = '0'; voucherSez.style.translate = voucherSez.style.scale = voucherSez.style.transformOrigin = '';
     };
-    const puntoAuto = () => {
-      const r = auto ? auto.getBoundingClientRect() : scena.getBoundingClientRect();
-      return [r.left + r.width * .5, r.top + r.height * .58];
-    };
+    pulisci();
+    /* la posizione esatta della pagina in funzione dello scroll (sv da 0 a 1) */
+    const pagina = (sv) => (innerWidth * 1.12) * eIn(clamp01((sv - .3) / .7));
     const disegna = (sv) => {
       if (sv === ultimo) return; ultimo = sv;
-      if (sv <= 0) { pulisci(); origini = null; return; }
-      const H = innerHeight;
-      if (!origini) {
-        tirati.forEach((el) => { el.style.scale = el.style.rotate = el.style.translate = el.style.filter = ''; });
-        const [px, py] = puntoAuto();
-        origini = tirati.map((el) => { const r = el.getBoundingClientRect(); return [px - r.left, py - r.top]; });
+      if (sv <= 0) { pulisci(); ancora = null; return; }
+      const W = innerWidth, H = innerHeight;
+      if (!ancora && auto) {
+        auto.style.translate = auto.style.rotate = ''; sezione.style.translate = ''; fisso.style.transform = '';
+        const r = auto.getBoundingClientRect(), f = fisso.getBoundingClientRect();
+        ancora = [r.left - f.left + r.width * .1, r.top - f.top + r.height * .64, r.width];
       }
-      /* 1. la pagina si tira verso la macchina: si stringe, gira a spirale, si sfoca */
-      const k = clamp01(sv / .66), pe = easeIn(k);
-      tirati.forEach((el, i) => {
-        el.style.transformOrigin = `${origini[i][0]}px ${origini[i][1]}px`;
-        el.style.scale = `${(1 - pe).toFixed(4)} ${(1 - pe * .92).toFixed(4)}`;
-        el.style.rotate = `${(pe * (i % 2 ? -38 : 46)).toFixed(2)}deg`;
-        el.style.filter = `blur(${(pe * 5).toFixed(2)}px)`;
-        el.style.opacity = String(1 - clamp01((k - .7) / .3));
-      });
-      /* 2. la macchina trema mentre aspira, poi si rimpicciolisce di colpo e sparisce nel punto */
+      /* 1. il motore si scalda: la macchina trema e si abbassa sul retro */
+      const trema = Math.sin(sv * 140) * 1.6 * clamp01(sv / .05) * (1 - clamp01((sv - .2) / .05));
+      /* 2. scatto in avanti: la macchina si stacca di una "corda" e la tende */
+      const corsaAuto = W * .2 * eInOut(clamp01((sv - .16) / .26));
+      /* 3. la pagina segue: scivola a destra accelerando, con la macchina sempre davanti */
+      const tx = pagina(sv);
+      const vel = (pagina(Math.min(1, sv + .01)) - tx) / (W * .02);   /* velocità normalizzata, per l'inclinazione */
       if (auto) {
-        const trema = Math.sin(sv * 90) * 2.2 * (1 - clamp01((sv - .72) / .18)) * clamp01(sv / .1);
-        const fine = easeIn2(clamp01((sv - .72) / .2));
-        auto.style.translate = `${trema.toFixed(2)}px ${(Math.cos(sv * 70) * 1.2 * clamp01(sv / .1)).toFixed(2)}px`;
-        auto.style.scale = String((1 + .06 * easeInOut(clamp01(sv / .72))) * (1 - fine));
-        auto.style.rotate = `${(-14 * fine).toFixed(2)}deg`;
+        auto.style.translate = `${(corsaAuto + trema).toFixed(1)}px ${(Math.cos(sv * 120) * .8 * clamp01(sv / .05)).toFixed(1)}px`;
+        auto.style.rotate = `${(-3.5 * Math.sin(Math.PI * clamp01((sv - .16) / .26))).toFixed(2)}deg`;   /* impennata allo scatto */
       }
-      /* 3. il buio si chiude a cerchio sulla macchina e scopre il voucher che sta sotto */
-      const [px, py] = puntoAuto(), sr = sezione.getBoundingClientRect();
-      const R0 = Math.hypot(Math.max(px, innerWidth - px), Math.max(py, H - py)) + 40;
-      const chiusura = gsap.parseEase('power2.inOut')(clamp01((sv - .04) / .88));
-      sezione.style.clipPath = `circle(${Math.max(0, R0 * (1 - chiusura)).toFixed(1)}px at ${(px - sr.left).toFixed(1)}px ${(py - sr.top).toFixed(1)}px)`;
-      /* il voucher resta fermo in alto mentre si scopre, e si assesta da appena più grande */
+      sezione.style.translate = `${tx.toFixed(1)}px 0`;
+      sezione.style.boxShadow = tx > 1 ? `-50px 0 90px -10px rgba(14, 26, 18, ${(.5 * clamp01(tx / 120)).toFixed(3)})` : '';
+      fisso.style.transform = `skewX(${(-Math.min(9, vel * 4)).toFixed(2)}deg)`;
+      /* la corda: parte dal gancio sul retro della macchina ferma, si allunga allo scatto, prima molle poi tesa */
+      if (ancora) {
+        const [ax, ay, aw] = ancora;
+        const appare = clamp01((sv - .08) / .08);
+        const coda = ax + corsaAuto, sag = 26 * (1 - clamp01((sv - .26) / .1)) * appare;
+        const x0 = ax - aw * .18 * appare;   /* il gancio cade un po' dietro la macchina */
+        filo.setAttribute('d', `M${x0.toFixed(1)} ${ay.toFixed(1)} Q${((x0 + coda) / 2).toFixed(1)} ${(ay + sag).toFixed(1)} ${coda.toFixed(1)} ${ay.toFixed(1)}`);
+        gancio.setAttribute('cx', x0.toFixed(1)); gancio.setAttribute('cy', ay.toFixed(1));
+        corda.style.opacity = String(appare);
+      }
+      /* il voucher sta fermo in alto mentre viene scoperto da sinistra, e si assesta da appena più piccolo */
       voucherSez.style.translate = `0 ${(-H * (1 - sv)).toFixed(1)}px`;
-      voucherSez.style.transformOrigin = '50% 0';
-      voucherSez.style.scale = String(1 + .05 * (1 - easeInOut(sv)));
-      testata.classList.toggle('is-scura', sv < .7);
+      voucherSez.style.transformOrigin = '0% 50%';
+      voucherSez.style.scale = String(.96 + .04 * eInOut(clamp01((sv - .4) / .6)));
+      testata.classList.toggle('is-scura', tx < W * .5);
     };
     ST.create({ trigger: voucherSez, start: 'top bottom', end: 'top top', invalidateOnRefresh: true,
-      onUpdate: (e) => disegna(e.progress), onRefresh: (e) => { origini = null; ultimo = -1; disegna(e.progress); },
+      onUpdate: (e) => disegna(e.progress), onRefresh: (e) => { ancora = null; ultimo = -1; disegna(e.progress); },
       onLeave: () => disegna(1), onLeaveBack: () => disegna(0) });
   }
 
