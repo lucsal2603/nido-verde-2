@@ -191,7 +191,7 @@ html.is-ridotto .nido__anta { display: none; }
 .stelle__occhiello { position: absolute; left: 0; right: 0; top: var(--occ-top, calc(var(--testata-h) + 4px)); text-align: center; color: var(--salvia); z-index: 2; margin: 0; }
 /* il titolo in corsivo calligrafico, su una riga sola, passa dietro la casetta da un lato all'altro del cielo */
 /* il titolo ad arco sopra la casetta: lettere alte e strette, ognuna ruotata lungo l'arco (posizioni calcolate in JS) */
-.stelle__titolo { position: absolute; inset: 0; margin: 0; font: 300 clamp(2.6rem, 5.6vw, 6.4rem)/1 "Big Shoulders Display", var(--sans); text-transform: uppercase; letter-spacing: .04em; color: #F7F8F3; pointer-events: none; z-index: 2; text-shadow: 0 0 22px rgba(247, 248, 243, .35); }
+.stelle__titolo { position: absolute; inset: 0; margin: 0; font: 300 clamp(2.6rem, 5.6vw, 6.4rem)/1 "Big Shoulders Display", var(--sans); text-transform: uppercase; letter-spacing: .04em; color: #F7F8F3; pointer-events: none; z-index: 0; text-shadow: 0 0 26px rgba(247, 248, 243, .3); }
 .stelle__riga { display: contents; }
 .stelle__titolo .posto { position: absolute; left: 0; top: 0; display: block; transform-origin: 50% 100%; white-space: pre; }
 .stelle__titolo .lettera { display: inline-block; will-change: opacity, filter, transform; }
@@ -211,7 +211,8 @@ html.js:not(.is-ridotto) .stella { transform: none; }
 @keyframes ruota { to { transform: rotate(90deg); } }
 .stelle__scintilla { position: absolute; width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px; border-radius: 50%; background: #fff; box-shadow: 0 0 8px 3px rgba(247, 248, 243, .9), 0 0 22px 8px rgba(160, 176, 40, .55); opacity: 0; }
 @media (prefers-reduced-motion: reduce) { .stella__dentro, .stella__luce { animation: none; } }
-.stelle__testo { position: absolute; left: 50%; top: calc(57% + var(--casa) * 2 / 3 + 26px); width: min(62ch, calc(100% - 2 * var(--gut))); transform: translateX(-50%); text-align: center; font-size: 1.02rem; z-index: 2; }
+/* la descrizione: grande, in corsivo, in basso a sinistra sotto l'arcobaleno */
+.stelle__testo { position: absolute; right: calc(50% + var(--casa) / 2 + var(--stacco)); bottom: clamp(36px, 7vh, 80px); width: min(30ch, calc(50% - var(--casa) / 2 - var(--stacco) - var(--gut))); font: italic 400 clamp(1.15rem, 1.55vw, 1.6rem)/1.35 var(--serif); text-align: right; z-index: 2; }
 
 
 /* ── nastro ── */
@@ -466,7 +467,8 @@ html.is-ridotto .dintorni__azioni { position: static; }
   .stelle__palco { --casa: min(64vw, calc((100svh - 450px) * .75)); --casa-top: calc(var(--testata-h) + 150px); }
   .stelle__casa { top: var(--casa-top); transform: translateX(-50%); }
   .stelle__titolo { font-size: clamp(2.1rem, 10vw, 3.2rem); }
-  .stelle__testo { top: calc(var(--casa-top) + var(--casa) * 4 / 3 + 26px); font-size: .95rem; padding: 0 6px; }
+  .stelle__testo { left: var(--gut); right: var(--gut); bottom: auto; width: auto; top: calc(var(--casa-top) + var(--casa) * 4 / 3 + 24px); font-size: 1.2rem; text-align: center; padding: 0 6px; }
+  .stelle__titolo { z-index: 2; }
   .dintorni { margin-bottom: -100svh; }   /* la sezione dopo (voucher) sale sopra il blocco fermo e lo copre, invece di far scendere lo schermo */
   .voucher { z-index: 3; }
   .stelle, .nastro { background-color: var(--notte); background-image: url("../img/stelle-sfondo.png"); background-size: 512px 512px; }   /* cielo stellato fisso sotto tutto il pezzo notturno, anche oltre il blocco fermo */

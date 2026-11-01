@@ -331,18 +331,28 @@
     /* l'arco: concentrico alla casetta, passa sopra la punta e scende ai lati */
     const arco = () => {
       const pr = palco.getBoundingClientRect(), cr = casa.getBoundingClientRect();
-      const cx = cr.left - pr.left + cr.width / 2, cy = cr.top - pr.top + cr.height / 2;
-      const fs = parseFloat(getComputedStyle(titolo).fontSize);
-      const R = cr.height / 2 + Math.max(50, fs * .7);
-      const larghe = posti.map((p) => p.offsetWidth), tot = larghe.reduce((a, b) => a + b, 0);
+      const cx = cr.left - pr.left + cr.width / 2, casaSu = cr.top - pr.top;
+      const largo = innerWidth > 860;
+      titolo.style.fontSize = '';
+      let fs = parseFloat(getComputedStyle(titolo).fontSize);
+      /* desktop: un arcobaleno grande alle spalle della casetta, centrato sulla sua base; telefono: arco stretto intorno al tetto */
+      const cy = largo ? casaSu + cr.height : casaSu + cr.height / 2;
+      const R = largo ? cr.height * .86 : cr.height / 2 + Math.max(50, fs * .7);
+      let larghe = posti.map((p) => p.offsetWidth), tot = larghe.reduce((x, y) => x + y, 0);
+      if (largo) {
+        const voluto = R * 2.75;   /* circa 158 gradi di arco */
+        fs = Math.min(fs * voluto / tot, innerWidth * .085);
+        titolo.style.fontSize = fs + 'px';
+        larghe = posti.map((p) => p.offsetWidth); tot = larghe.reduce((x, y) => x + y, 0);
+      }
       let acc = -tot / 2;
       posti.forEach((p, i) => {
-        const a = -Math.PI / 2 + (acc + larghe[i] / 2) / R; acc += larghe[i];
-        const x = cx + Math.cos(a) * R, y = cy + Math.sin(a) * R;
-        p.style.transform = `translate(${(x - larghe[i] / 2).toFixed(1)}px, ${(y - p.offsetHeight).toFixed(1)}px) rotate(${((a + Math.PI / 2) * 180 / Math.PI).toFixed(2)}deg) scaleY(1.2)`;
+        const ang = -Math.PI / 2 + (acc + larghe[i] / 2) / R; acc += larghe[i];
+        const x = cx + Math.cos(ang) * R, y = cy + Math.sin(ang) * R;
+        p.style.transform = `translate(${(x - larghe[i] / 2).toFixed(1)}px, ${(y - p.offsetHeight).toFixed(1)}px) rotate(${((ang + Math.PI / 2) * 180 / Math.PI).toFixed(2)}deg) scaleY(1.2)`;
       });
-      /* "Look up" sotto l'arco, sopra la punta del tetto */
-      palco.style.setProperty("--occ-top", (cy - cr.height / 2 - Math.max(44, fs * .62)) + "px");
+      /* "Look up" appena sopra la punta del tetto */
+      if (largo) palco.style.removeProperty('--occ-top'); else palco.style.setProperty('--occ-top', (casaSu - 44) + 'px');
     };
     arco(); document.fonts?.ready.then(arco); window.addEventListener('resize', arco);
 
