@@ -17,12 +17,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Big+Shoulders+Display:wght@300;400&family=Albert+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=2026110121">
+  <link rel="stylesheet" href="css/style.css?v=2026110122">
   <script>if ('scrollRestoration' in history) history.scrollRestoration = 'manual';</script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.4/dist/lenis.min.js"></script>
-  <script src="js/main.js?v=2026110121" defer></script>
+  <script src="js/main.js?v=2026110122" defer></script>
 </head>
 <body>
 
@@ -200,6 +200,7 @@
 
   <!-- le stelle: la pagina si fa notte -->
   <section class="stelle" id="stelle">
+    <div class="stelle__pin">
     <div class="stelle__palco">
       <canvas class="stelle__cielo" aria-hidden="true"></canvas>
       <p class="occhiello stelle__occhiello">Look up</p>
@@ -209,6 +210,9 @@
 <svg class="stelle__costellazione" viewBox="0 0 300 400" preserveAspectRatio="none" aria-hidden="true"><line class="stelle__tratto" x1="150" y1="0" x2="300" y2="128" pathLength="1"/><line class="stelle__tratto" x1="300" y1="128" x2="300" y2="400" pathLength="1"/><line class="stelle__tratto" x1="300" y1="400" x2="0" y2="400" pathLength="1"/><line class="stelle__tratto" x1="0" y1="400" x2="0" y2="128" pathLength="1"/><line class="stelle__tratto" x1="0" y1="128" x2="150" y2="0" pathLength="1"/></svg>
         <div class="stelle__punti" aria-hidden="true"><span class="stella" style="left:50%;top:0%;--g:0"><span class="stella__dentro"><span class="stella__alone"></span><svg class="stella__luce" viewBox="-50 -50 100 100"><path d="M0-50C2-14 4-4 50 0 4 4 2 14 0 50-2 14-4 4-50 0-4-4-2-14 0-50z" fill="#F7F8F3"/><path d="M0-50C2-14 4-4 50 0 4 4 2 14 0 50-2 14-4 4-50 0-4-4-2-14 0-50z" fill="#F7F8F3" opacity=".55" transform="rotate(45) scale(.42)"/><circle r="5.5" fill="#fff"/></svg></span></span><span class="stella" style="left:100%;top:32%;--g:1"><span class="stella__dentro"><span class="stella__alone"></span><svg class="stella__luce" viewBox="-50 -50 100 100"><path d="M0-50C2-14 4-4 50 0 4 4 2 14 0 50-2 14-4 4-50 0-4-4-2-14 0-50z" fill="#F7F8F3"/><path d="M0-50C2-14 4-4 50 0 4 4 2 14 0 50-2 14-4 4-50 0-4-4-2-14 0-50z" fill="#F7F8F3" opacity=".55" transform="rotate(45) scale(.42)"/><circle r="5.5" fill="#fff"/></svg></span></span><span class="stella" style="left:100%;top:100%;--g:2"><span class="stella__dentro"><span class="stella__alone"></span><svg class="stella__luce" viewBox="-50 -50 100 100"><path d="M0-50C2-14 4-4 50 0 4 4 2 14 0 50-2 14-4 4-50 0-4-4-2-14 0-50z" fill="#F7F8F3"/><path d="M0-50C2-14 4-4 50 0 4 4 2 14 0 50-2 14-4 4-50 0-4-4-2-14 0-50z" fill="#F7F8F3" opacity=".55" transform="rotate(45) scale(.42)"/><circle r="5.5" fill="#fff"/></svg></span></span><span class="stella" style="left:0%;top:100%;--g:3"><span class="stella__dentro"><span class="stella__alone"></span><svg class="stella__luce" viewBox="-50 -50 100 100"><path d="M0-50C2-14 4-4 50 0 4 4 2 14 0 50-2 14-4 4-50 0-4-4-2-14 0-50z" fill="#F7F8F3"/><path d="M0-50C2-14 4-4 50 0 4 4 2 14 0 50-2 14-4 4-50 0-4-4-2-14 0-50z" fill="#F7F8F3" opacity=".55" transform="rotate(45) scale(.42)"/><circle r="5.5" fill="#fff"/></svg></span></span><span class="stella" style="left:0%;top:32%;--g:4"><span class="stella__dentro"><span class="stella__alone"></span><svg class="stella__luce" viewBox="-50 -50 100 100"><path d="M0-50C2-14 4-4 50 0 4 4 2 14 0 50-2 14-4 4-50 0-4-4-2-14 0-50z" fill="#F7F8F3"/><path d="M0-50C2-14 4-4 50 0 4 4 2 14 0 50-2 14-4 4-50 0-4-4-2-14 0-50z" fill="#F7F8F3" opacity=".55" transform="rotate(45) scale(.42)"/><circle r="5.5" fill="#fff"/></svg></span></span><span class="stelle__scintilla"></span></div>
       </div>
+    </div>
+    </div>
+    <div class="stelle__dopo">
       <p class="stelle__testo">Di notte il tetto si apre e il cielo entra nella stanza: il silenzio, le luci del lago in fondo, le stelle sopra il letto. Nessuna tecnologia, solo l’energia della terra e il tempo che rallenta.</p>
     </div>
   </section>

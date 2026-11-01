@@ -183,11 +183,12 @@ html.is-ridotto .nido__anta { display: none; }
 @media (max-width: 860px) { .family { grid-template-columns: 1fr; } .family__foto { aspect-ratio: 4 / 3; } }
 
 /* ── le stelle ── */
-.stelle { height: 250svh; position: relative; z-index: 2; }
+.stelle { position: relative; z-index: 2; }
+.stelle__pin { height: 250svh; position: relative; }
 .stelle__palco { position: sticky; top: 0; height: 100svh; overflow: hidden; background: var(--carta); }
 .stelle__cielo { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; }
 /* impaginazione: la casetta al centro, il titolo diviso ai due lati, il testo sotto la seconda metà */
-.stelle__palco { --casa: min(24vw, calc(52svh * .75)); --stacco: clamp(24px, 3vw, 56px); color: var(--inchiostro); }
+.stelle__palco { --casa: min(26vw, calc(64svh * .75)); --stacco: clamp(24px, 3vw, 56px); color: var(--inchiostro); }
 .stelle__occhiello { position: absolute; left: 0; right: 0; top: var(--occ-top, calc(var(--testata-h) + 4px)); text-align: center; color: var(--salvia); z-index: 2; margin: 0; }
 /* il titolo in corsivo calligrafico, su una riga sola, passa dietro la casetta da un lato all'altro del cielo */
 /* il titolo ad arco sopra la casetta: lettere alte e strette, ognuna ruotata lungo l'arco (posizioni calcolate in JS) */
@@ -211,8 +212,10 @@ html.js:not(.is-ridotto) .stella { transform: none; }
 @keyframes ruota { to { transform: rotate(90deg); } }
 .stelle__scintilla { position: absolute; width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px; border-radius: 50%; background: #fff; box-shadow: 0 0 8px 3px rgba(247, 248, 243, .9), 0 0 22px 8px rgba(160, 176, 40, .55); opacity: 0; }
 @media (prefers-reduced-motion: reduce) { .stella__dentro, .stella__luce { animation: none; } }
-/* la descrizione: grande, in corsivo, in basso a sinistra sotto l'arcobaleno */
-.stelle__testo { position: absolute; right: calc(50% + var(--casa) / 2 + var(--stacco)); bottom: clamp(36px, 7vh, 80px); width: min(30ch, calc(50% - var(--casa) / 2 - var(--stacco) - var(--gut))); font: italic 400 clamp(1.15rem, 1.55vw, 1.6rem)/1.35 var(--serif); text-align: right; z-index: 2; }
+/* la descrizione: dopo il blocco fermo, sotto la casetta, sul cielo notturno; le parole si accendono allo scroll */
+.stelle__dopo { background: var(--notte) url("../img/stelle-sfondo.png") 0 0 / 512px 512px; color: #DCE3D0; padding: clamp(24px, 4vw, 56px) var(--gut) clamp(96px, 14vw, 180px); }
+.stelle__testo { max-width: 24ch; margin: 0 auto; font: italic 400 clamp(1.7rem, 3.4vw, 3.2rem)/1.22 var(--serif); text-align: center; }
+.stelle__testo .parola-t { display: inline-block; }
 
 
 /* ── nastro ── */
@@ -421,7 +424,7 @@ html.is-menu .wa { opacity: 0; pointer-events: none; }
 
 /* ── moto ridotto ── */
 @media (prefers-reduced-motion: reduce) {
-  .hero, .manifesto, .stelle { height: auto; }
+  .hero, .manifesto, .stelle, .stelle__pin { height: auto; }
   .hero__palco, .manifesto__palco, .stelle__palco { position: relative; height: auto; }
   .hero__palco { min-height: 100svh; }
   .manifesto__palco { padding: var(--sez) var(--gut); }
@@ -433,7 +436,7 @@ html.is-menu .wa { opacity: 0; pointer-events: none; }
   .stelle__titolo, .stelle__testo { color: var(--carta); }
   .stelle__tratto { stroke-dashoffset: 0; opacity: .5; }
   .stelle__titolo { position: static; text-align: center; }
-  .stelle__testo { width: auto; }
+  .stelle__pin { height: auto; }
   .coccole__binario { transform: none; }
   .sentiero__barra i { transform: none; }
   .nastro__riga { width: auto; white-space: normal; flex-wrap: wrap; }
@@ -464,10 +467,9 @@ html.is-ridotto .dintorni__azioni { position: static; }
 /* ── telefono: la notte delle stelle a tutto schermo, foto centrata e più grande, nastro scuro per non spezzare la magia, tre recensioni ── */
 @media (max-width: 860px) {
   .stelle__palco { height: 100lvh; }
-  .stelle__palco { --casa: min(64vw, calc((100svh - 450px) * .75)); --casa-top: calc(var(--testata-h) + 150px); }
+  .stelle__palco { --casa: min(74vw, calc((100svh - 300px) * .75)); --casa-top: calc(var(--testata-h) + 150px); }
   .stelle__casa { top: var(--casa-top); transform: translateX(-50%); }
   .stelle__titolo { font-size: clamp(2.1rem, 10vw, 3.2rem); }
-  .stelle__testo { left: var(--gut); right: var(--gut); bottom: auto; width: auto; top: calc(var(--casa-top) + var(--casa) * 4 / 3 + 24px); font-size: 1.2rem; text-align: center; padding: 0 6px; }
   .stelle__titolo { z-index: 2; }
   .dintorni { margin-bottom: -100svh; }   /* la sezione dopo (voucher) sale sopra il blocco fermo e lo copre, invece di far scendere lo schermo */
   .voucher { z-index: 3; }
