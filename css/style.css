@@ -139,10 +139,7 @@ html.is-ridotto .manifesto__testo { color: var(--inchiostro); }
 .telo { position: absolute; inset: 0; filter: drop-shadow(0 -10px 22px rgba(14, 26, 18, .22)); will-change: transform; }
 .telo span { position: absolute; inset: 0; background: var(--c); }
 html.is-ridotto .teli, html:not(.js) .teli { display: none; }
-/* la punta del foglio: tetto semplice, punta arrotondata e bordo nero un po' spesso (forma calcolata in JS, qui la versione di riserva) */
-.foglio { --bordo-tetto: 7px; }
-.foglio__bordo { position: absolute; left: 0; top: 0; width: 100%; height: calc(var(--tetto) + 20px); overflow: visible; pointer-events: none; z-index: 1; }
-.foglio__bordo path { fill: none; stroke: #111; stroke-width: calc(var(--bordo-tetto) * 2); stroke-linejoin: round; }
+/* la punta del foglio: tetto semplice con la punta arrotondata; è l'ultimo dei teli e sale con tutto il contenuto (forma calcolata in JS) */
 .sezione__testa { max-width: 900px; margin-bottom: clamp(48px, 7vw, 96px); }
 .sezione__intro { margin-top: 1.4em; max-width: 58ch; font-size: 1.1rem; }
 .nidi__griglia { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 4vw, 64px); align-items: start; }

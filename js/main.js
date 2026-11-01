@@ -94,28 +94,29 @@
     const k = d / L, ax = W / 2 - (W / 2) * k, ay = T * k, bx = W / 2 + (W / 2) * k;
     return `M0 ${T.toFixed(1)} L${ax.toFixed(1)} ${ay.toFixed(1)} Q${W / 2} 0 ${bx.toFixed(1)} ${ay.toFixed(1)} L${W} ${T.toFixed(1)}`;
   };
+  /* il foglio dei nidi è l'ultimo telo: sale con tutto il contenuto, la punta parte alta e si abbassa fino al tetto normale */
+  const altezzaTetto = () => { const v = getComputedStyle(document.documentElement).getPropertyValue('--tetto').trim(); const t = document.createElement('div'); t.style.cssText = `position:absolute;visibility:hidden;height:${v}`; document.body.appendChild(t); const h = t.offsetHeight; t.remove(); return h; };
+  const statoFoglio = { t: 0 };
+  let disegnaFoglio = () => {};
   function puntaFoglio() {
-    const f = q('.foglio'), bordo = q('.foglio__bordo path'); if (!f || !bordo) return;
-    const svg = bordo.parentNode;
-    const disegna = () => {
-      const W = f.offsetWidth, H = f.offsetHeight, T = parseFloat(getComputedStyle(svg).height) - 20;
-      const bordoD = profiloTetto(W, T);
-      bordo.setAttribute('d', bordoD);
-      svg.setAttribute('viewBox', `0 0 ${W} ${T + 20}`);
-      f.style.clipPath = `path('${bordoD} L${W} ${H} L0 ${H} Z')`;
+    const f = q('.foglio'); if (!f) return;
+    let Tf = altezzaTetto();
+    disegnaFoglio = () => {
+      const W = f.offsetWidth, H = f.offsetHeight, T = Tf + (innerHeight * .5 - Tf) * statoFoglio.t;
+      f.style.clipPath = `path('${profiloTetto(W, T)} L${W} ${H} L0 ${H} Z')`;
     };
-    disegna();
-    if ('ResizeObserver' in window) new ResizeObserver(disegna).observe(f); else window.addEventListener('resize', disegna);
+    disegnaFoglio();
+    const ricalcola = () => { Tf = altezzaTetto(); disegnaFoglio(); };
+    if ('ResizeObserver' in window) new ResizeObserver(ricalcola).observe(f); else window.addEventListener('resize', ricalcola);
   }
 
   /* ── teli: prima che il foglio dei nidi salga, tre teli a forma di tetto salgono dal basso uno dopo l'altro; la punta parte alta e si abbassa mentre salgono ── */
   function teli() {
     const f = q('.foglio'), palco = q('.manifesto__palco'), lista = qa('.telo'); if (!f || !palco || !lista.length || RIDOTTO) return;
-    const svg = q('.foglio__bordo');
     const stati = lista.map(() => ({ t: .5 }));
     const forma = (el, st) => {
-      const W = palco.offsetWidth, H = palco.offsetHeight, Tf = svg ? parseFloat(getComputedStyle(svg).height) - 20 : H * .15;
-      const T = Tf + (H * .55 - Tf) * st.t;
+      const W = palco.offsetWidth, H = palco.offsetHeight, Tf = altezzaTetto();
+      const T = Tf + (innerHeight * .5 - Tf) * st.t;
       q('span', el).style.clipPath = `path('${profiloTetto(W, T)} L${W} ${H + T} L0 ${H + T} Z')`;
     };
     gsap.set(lista, { yPercent: 110 });
@@ -126,6 +127,8 @@
         .fromTo(stati[i], { t: 1 }, { t: 0, ease: 'power2.inOut', duration: .55, onUpdate: () => forma(el, stati[i]) }, i * .14);
     });
     window.addEventListener('resize', () => lista.forEach((el, i) => forma(el, stati[i])));
+    /* l'ultimo strato è il foglio stesso: entra subito dopo i teli e la sua punta si abbassa come la loro */
+    gsap.fromTo(statoFoglio, { t: 1 }, { t: 0, ease: 'power2.inOut', onUpdate: () => disegnaFoglio(), scrollTrigger: { trigger: f, start: 'top bottom', end: 'top 20%', scrub: .6 } });
   }
 
   /* ── rametti di ulivo: sempre attaccati a qualcosa (spuntano da dietro foto, carte e righe), mai fluttuanti ── */
