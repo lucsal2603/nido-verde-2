@@ -526,6 +526,33 @@
     });
   }
 
+  /* ── recensioni: al passaggio la carta gira su se stessa da sinistra a destra, mostra per un attimo sul retro in quale nido ha dormito chi scrive, poi torna com'era ── */
+  function giraRecensioni() {
+    const NIDI = {
+      skyroom: { nome: 'Skyroom', sotto: 'Nido 1 · due cuori e un nido', foto: 'img/skyroom-fronte.webp' },
+      starsbox: { nome: 'Starsbox', sotto: 'Nido 2 · mille stelle e coccole', foto: 'img/starsbox-aperta.webp' },
+    };
+    qa('.citazione').forEach((c) => {
+      const chiave = (q('.nido', c)?.textContent || '').trim().toLowerCase(), n = NIDI[chiave]; if (!n) return;
+      const giro = document.createElement('div'); giro.className = 'citazione__giro';
+      const fronte = document.createElement('div'); fronte.className = 'citazione__fronte';
+      while (c.firstChild) fronte.append(c.firstChild);
+      const retro = document.createElement('div'); retro.className = 'citazione__retro'; retro.setAttribute('aria-hidden', 'true');
+      retro.innerHTML = `<img src="${n.foto}" alt="" loading="lazy"><span class="citazione__casa"></span><p class="citazione__dove">Ha dormito nella</p><p class="citazione__nome">${n.nome}</p><p class="citazione__sotto">${n.sotto}</p>`;
+      giro.append(fronte, retro); c.append(giro); c.classList.add('is-girevole');
+      if (RIDOTTO) return;
+      let gira = null;
+      const via = () => {
+        if (gira?.isActive()) return;
+        gira = gsap.timeline({ onComplete: () => gsap.set(giro, { rotateY: 0 }) })
+          .to(giro, { rotateY: 180, duration: .7, ease: 'power3.inOut' })
+          .to(giro, { rotateY: 360, duration: .7, ease: 'power3.inOut' }, '+=1');
+      };
+      c.addEventListener('mouseenter', via);
+      if (TOUCH) c.addEventListener('click', via);
+    });
+  }
+
   /* ── recensioni: le due casette sono due carte da gioco, inclinate in versi opposti, la destra sotto; in scroll cadono sul tavolo; col mouse la carta si solleva e passa sopra ── */
   function carteVoci() {
     const carte = qa('.voci__due .voce'); if (carte.length < 2 || RIDOTTO) return;
@@ -645,7 +672,7 @@
 
   /* ── avvio ── */
   const introHero = hero();
-  puntaFoglio(); teli(); ramettiUlivo(); manifesto(); nidi(); family(); stelle(); nastro(); coccole(); dintorni(); voucher(); domande(); piede(); contatori(); carteVoci(); mappa(); popup(); reveal();
+  puntaFoglio(); teli(); ramettiUlivo(); manifesto(); nidi(); family(); stelle(); nastro(); coccole(); dintorni(); voucher(); domande(); piede(); contatori(); carteVoci(); giraRecensioni(); mappa(); popup(); reveal();
   const tlVelo = velo();
   if (RIDOTTO || QA || RIPRISTINO) { html.classList.add('is-pronto'); if (RIPRISTINO) introHero?.progress(1); }
   else { tlVelo.add(() => introHero.play(), 2.0); tlVelo.add(() => html.classList.add('is-pronto'), 3.1); }

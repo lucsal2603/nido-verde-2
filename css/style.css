@@ -362,6 +362,18 @@ html.is-ridotto .biglietto { transform: translateY(-32%); z-index: 5; }
 .citazione footer { margin-top: auto; display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: baseline; font-size: .92rem; color: var(--oliva); }
 .citazione footer b { font-weight: 600; color: var(--inchiostro); }
 .citazione footer .nido { font: italic 1.05rem var(--serif); color: var(--salvia); }
+/* la carta che gira: fronte con la recensione, retro con il nido */
+.citazione.is-girevole { padding: 0; background: none; border: 0; perspective: 1400px; display: block; }
+.citazione__giro { position: relative; height: 100%; transform-style: preserve-3d; }
+.citazione__fronte { height: 100%; display: flex; flex-direction: column; gap: 18px; padding: clamp(20px, 2.4vw, 32px); border-radius: var(--r-m); background: var(--carta-2); border: 1px solid var(--salvia-chiara); backface-visibility: hidden; -webkit-backface-visibility: hidden; }
+.citazione__retro { position: absolute; inset: 0; border-radius: var(--r-m); overflow: hidden; transform: rotateY(180deg); backface-visibility: hidden; -webkit-backface-visibility: hidden; background: var(--oliva); color: var(--bianco); display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 24px; }
+.citazione__retro img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.citazione__retro::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(14, 26, 18, .82), rgba(14, 26, 18, .35)); }
+.citazione__retro > :not(img) { position: relative; z-index: 1; }
+.citazione__casa { width: 44px; height: 40px; background: var(--lime); clip-path: var(--timpano); margin-bottom: 14px; }
+.citazione__dove { font: italic 1.05rem var(--serif); opacity: .85; }
+.citazione__nome { font: 400 clamp(2.4rem, 3.6vw, 3.4rem)/1 var(--serif); letter-spacing: -.02em; margin: .1em 0 .2em; }
+.citazione__sotto { font-size: .85rem; letter-spacing: .08em; text-transform: uppercase; opacity: .85; }
 @media (max-width: 1024px) { .voci__griglia { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 640px) { .voci__griglia { grid-template-columns: 1fr; } }
 .voci__due { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(20px, 3vw, 48px); margin-top: clamp(84px, 9vw, 150px); }   /* le carte inclinate alzano gli angoli: più aria sopra */
