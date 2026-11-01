@@ -543,16 +543,30 @@
     corda.innerHTML = '<path class="passi__corda-filo"/><circle class="passi__corda-gancio" r="6"/>';
     fisso.appendChild(corda);
     const filo = q('.passi__corda-filo', corda), gancio = q('.passi__corda-gancio', corda);
+    /* gli strati: come i teli sopra i nidi, ma in orizzontale. Il primo (oliva) sta fermo sotto la pagina e si scopre mentre lei se ne va;
+       gli altri entrano da sinistra uno dopo l'altro con la punta a tetto rivolta a destra, e l'ultimo strato è il voucher stesso */
+    const strati = document.createElement('div'); strati.className = 'strati-fuga'; strati.setAttribute('aria-hidden', 'true');
+    const COLORI = ['var(--oliva)', '#4E6C50', 'var(--salvia)', 'var(--salvia-chiara)'];
+    const fogli = COLORI.map((c) => { const d = document.createElement('div'); d.className = 'strati-fuga__foglio'; const t = document.createElement('span'); t.style.background = c; d.append(t); strati.append(d); return d; });
+    voucherSez.parentNode.insertBefore(strati, voucherSez);
+    /* il bordo destro a tetto: la punta arrotondata è al centro del bordo, profondità T dentro il foglio largo W e alto H */
+    const bordoTetto = (W, H, T, altezza = H) => {
+      if (T < .5) return `M0 0 L${W} 0 L${W} ${altezza} L0 ${altezza} Z`;
+      const L = Math.hypot(H / 2, T), d = Math.min(L * .3, Math.max(34, H * .045)), k = d / L;
+      const ax = W - T * k, ay = H / 2 - (H / 2) * k, by = H / 2 + (H / 2) * k;
+      return `M0 0 L${(W - T).toFixed(1)} 0 L${ax.toFixed(1)} ${ay.toFixed(1)} Q${W} ${H / 2} ${ax.toFixed(1)} ${by.toFixed(1)} L${(W - T).toFixed(1)} ${H} L${(W - T).toFixed(1)} ${altezza} L0 ${altezza} Z`;
+    };
     const eOut = gsap.parseEase('power3.out'), eIn = gsap.parseEase('power2.in'), eInOut = gsap.parseEase('power2.inOut');
     let ancora = null, ultimo = -1;
     const pulisci = () => {
       if (auto) auto.style.translate = auto.style.rotate = '';
       sezione.style.translate = sezione.style.boxShadow = ''; fisso.style.transform = '';
-      corda.style.opacity = '0'; voucherSez.style.translate = voucherSez.style.scale = voucherSez.style.transformOrigin = '';
+      corda.style.opacity = '0'; voucherSez.style.translate = voucherSez.style.scale = voucherSez.style.transformOrigin = voucherSez.style.clipPath = '';
+      strati.style.display = 'none';
     };
     pulisci();
     /* la posizione esatta della pagina in funzione dello scroll (sv da 0 a 1) */
-    const pagina = (sv) => (innerWidth * 1.12) * eIn(clamp01((sv - .3) / .7));
+    const pagina = (sv) => (innerWidth * 1.12) * eIn(clamp01((sv - .3) / .34));
     const disegna = (sv) => {
       if (sv === ultimo) return; ultimo = sv;
       if (sv <= 0) { pulisci(); ancora = null; return; }
@@ -586,10 +600,21 @@
         gancio.setAttribute('cx', x0.toFixed(1)); gancio.setAttribute('cy', ay.toFixed(1));
         corda.style.opacity = String(appare);
       }
-      /* il voucher sta fermo in alto mentre viene scoperto da sinistra, e si assesta da appena più piccolo */
-      voucherSez.style.translate = `0 ${(-H * (1 - sv)).toFixed(1)}px`;
-      voucherSez.style.transformOrigin = '0% 50%';
-      voucherSez.style.scale = String(.96 + .04 * eInOut(clamp01((sv - .4) / .6)));
+      /* gli strati: il primo è fermo sotto la pagina, gli altri e poi il voucher entrano da sinistra con la punta che si appiattisce */
+      strati.style.display = sv > 0 && sv < 1 ? 'block' : 'none';
+      const entra = (i) => eInOut(clamp01((sv - (.5 + i * .1)) / .26));   /* i = 0..2 per gli strati, 3 per il voucher */
+      fogli.forEach((f, i) => {
+        if (i === 0) { f.style.translate = '0 0'; return; }
+        const p = entra(i - 1), T = W * (.28 - .2 * p);
+        f.style.translate = `${(-W * (1 - p)).toFixed(1)}px 0`;
+        f.firstChild.style.clipPath = `path('${bordoTetto(W, H, T)}')`;
+      });
+      const pv = entra(3);
+      if (sv >= 1) { voucherSez.style.translate = voucherSez.style.clipPath = ''; }
+      else {
+        voucherSez.style.translate = `${(-W * (1 - pv)).toFixed(1)}px ${(-H * (1 - sv)).toFixed(1)}px`;
+        voucherSez.style.clipPath = `path('${bordoTetto(W, H, W * .28 * (1 - pv), voucherSez.offsetHeight)}')`;
+      }
       testata.classList.toggle('is-scura', tx < W * .5);
     };
     ST.create({ trigger: voucherSez, start: 'top bottom', end: 'top top', invalidateOnRefresh: true,
@@ -681,8 +706,8 @@
     if (!RIDOTTO) {
       /* la busta arriva, il sigillo salta, il lembo si apre e diventa il tetto, il biglietto esce, passa davanti e si posa */
       gsap.set(big, { transformPerspective: 1200 });
-      /* il voucher viene scoperto dal risucchio dei dintorni: il sigillo salta mentre il cerchio si chiude e la busta finisce di aprirsi poco dopo */
-      gsap.timeline({ scrollTrigger: { trigger: '.voucher', start: 'top 20%', end: () => '+=' + Math.round(innerHeight * .55), scrub: .6 } })
+      /* il voucher arriva come ultimo strato; poi resta fermo sullo schermo e lo scroll apre la busta: si va avanti solo quando il biglietto è posato */
+      gsap.timeline({ scrollTrigger: { trigger: '.voucher', start: 'top top', end: () => '+=' + Math.round(innerHeight * 1.1), scrub: .6, pin: true, anticipatePin: 1, invalidateOnRefresh: true } })
         .to(sigillo, { scale: 1.25, ease: 'power2.out', duration: .06 }, 0)
         .to(sigillo, { scale: 0, rotate: 140, opacity: 0, ease: 'power2.in', duration: .08 }, .06)
         .to(lembo, { rotateX: 180, ease: 'power2.inOut', duration: .26 }, .1)
