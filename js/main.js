@@ -115,10 +115,13 @@
   function teli() {
     const f = q('.foglio'), palco = q('.manifesto__palco'), lista = qa('.telo'); if (!f || !palco || !lista.length || RIDOTTO) return;
     const stati = lista.map(() => ({ t: .5 }));
+    /* l'ombra è un secondo telo scuro con la stessa forma, spostato un po' più su: nessun filtro sfocato, che rallentava tutto */
+    lista.forEach((el) => { if (!q('.telo__ombra', el)) { const o = document.createElement('i'); o.className = 'telo__ombra'; el.prepend(o); } });
     const forma = (el, st) => {
       const W = palco.offsetWidth, H = palco.offsetHeight, Tf = altezzaTetto();
       const T = Tf + (innerHeight * .5 - Tf) * st.t;
-      q('span', el).style.clipPath = `path('${profiloTetto(W, T)} L${W} ${H + T} L0 ${H + T} Z')`;
+      const forma = `path('${profiloTetto(W, T)} L${W} ${H + T} L0 ${H + T} Z')`;
+      q('span', el).style.clipPath = forma; q('.telo__ombra', el).style.clipPath = forma;
     };
     gsap.set(lista, { yPercent: 110 });
     lista.forEach((el, i) => forma(el, stati[i]));
@@ -547,7 +550,7 @@
        gli altri entrano da sinistra uno dopo l'altro con il bordo ad arco e vanno oltre lo schermo; l'ultimo strato è il voucher stesso */
     const strati = document.createElement('div'); strati.className = 'strati-fuga'; strati.setAttribute('aria-hidden', 'true');
     const COLORI = ['var(--oliva)', '#4E6C50', 'var(--salvia)', 'var(--salvia-chiara)'];
-    const fogli = COLORI.map((c) => { const d = document.createElement('div'); d.className = 'strati-fuga__foglio'; const t = document.createElement('span'); t.style.background = c; d.append(t); strati.append(d); return d; });
+    const fogli = COLORI.map((c) => { const d = document.createElement('div'); d.className = 'strati-fuga__foglio'; const o = document.createElement('i'); const t = document.createElement('span'); t.style.background = c; d.append(o, t); strati.append(d); return d; });
     voucherSez.parentNode.insertBefore(strati, voucherSez);
     /* il bordo destro ad arco, curvato verso sinistra: gli angoli vanno avanti e il centro resta indietro di T */
     const bordoArco = (W, H, T, altezza = H) => (T < .5
@@ -606,7 +609,8 @@
         /* ogni strato entra da sinistra e va oltre il bordo destro: alla fine il suo arco è fuori dallo schermo */
         const p = entra(i - 1), EW = f.offsetWidth;
         f.style.translate = `${(-EW + (EW + T) * p).toFixed(1)}px 0`;
-        f.firstChild.style.clipPath = `path('${bordoArco(EW, H, T)}')`;
+        const arco = `path('${bordoArco(EW, H, T)}')`;
+        f.lastChild.style.clipPath = arco; f.firstChild.style.clipPath = arco;
       });
       const pv = entra(3);
       if (sv >= 1) { voucherSez.style.translate = voucherSez.style.clipPath = ''; }

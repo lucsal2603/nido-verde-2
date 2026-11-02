@@ -136,7 +136,8 @@ html.is-ridotto .manifesto__testo { color: var(--inchiostro); }
 /* tre teli a forma di tetto che salgono dal basso, uno dopo l'altro, prima del foglio dei nidi */
 .manifesto__palco { overflow: hidden; }
 .teli { position: absolute; inset: 0; pointer-events: none; z-index: 3; }
-.telo { position: absolute; inset: 0; filter: drop-shadow(0 -10px 22px rgba(14, 26, 18, .22)); will-change: transform; }
+.telo { position: absolute; inset: 0; will-change: transform; }
+.telo__ombra { position: absolute; inset: 0 0 calc(var(--tetto) * -1 - 24px) 0; background: rgba(14, 26, 18, .2); transform: translateY(-9px); }   /* ombra piatta: niente drop-shadow, che pesava moltissimo */
 .telo span { position: absolute; inset: 0 0 calc(var(--tetto) * -1 - 24px) 0; background: var(--c); }
 html.is-ridotto .teli, html:not(.js) .teli { display: none; }
 /* la punta del foglio: tetto semplice con la punta arrotondata; è l'ultimo dei teli e sale con tutto il contenuto (forma calcolata in JS) */
@@ -278,8 +279,9 @@ html.is-ridotto .dintorni { padding-bottom: clamp(96px, 11vw, 156px); }
 .passi__omino--panchina img, .passi__omino--barca img, .passi__omino--auto img { max-height: 70%; max-width: 72%; }
 .passi__omino--bici img { max-width: 80%; }
 .strati-fuga { position: fixed; inset: 0; z-index: 3; pointer-events: none; display: none; overflow: hidden; }
-.strati-fuga__foglio { position: absolute; top: 0; bottom: 0; left: -60vw; right: 0; will-change: translate; filter: drop-shadow(12px 0 20px rgba(14, 26, 18, .25)); }
-.strati-fuga__foglio span { position: absolute; inset: 0; }
+.strati-fuga__foglio { position: absolute; top: 0; bottom: 0; left: -60vw; right: 0; will-change: translate; }
+.strati-fuga__foglio span, .strati-fuga__foglio i { position: absolute; inset: 0; }
+.strati-fuga__foglio i { background: rgba(14, 26, 18, .2); transform: translateX(10px); }
 .passi__corda { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; z-index: 2; opacity: 0; }
 .passi__corda-filo { fill: none; stroke: var(--legno); stroke-width: 3; stroke-linecap: round; stroke-dasharray: 7 4; }
 .passi__corda-gancio { fill: var(--lime); stroke: var(--notte); stroke-width: 2; }
