@@ -715,8 +715,15 @@
       /* durante l'apertura la busta (con il lembo aperto sopra e il biglietto che esce) sta al centro dello schermo:
          se è troppo in basso il blocco si ferma un po' dopo, se è troppo in alto si aggiunge spazio sopra */
       let ritardo = 0;
+      const testoV = q('.voucher__testo', vSez);
       const centra = () => {
-        vSez.style.paddingTop = '';
+        vSez.style.paddingTop = ''; scena.style.width = '';
+        /* telefono: busta sopra e testo sotto devono stare insieme nello schermo mentre la sezione è ferma, quindi la busta si rimpicciolisce quanto serve */
+        if (innerWidth <= 860) {
+          const cs = getComputedStyle(vSez), libero = innerHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom) - parseFloat(cs.rowGap || 0) - testoV.offsetHeight;
+          scena.style.width = `${Math.round(Math.max(140, Math.min(scena.parentElement.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight), libero / 1.02)))}px`;
+          ritardo = 0; return;
+        }
         let y = 0, el = busta; while (el && el !== vSez) { y += el.offsetTop; el = el.offsetParent; }
         const bh = busta.offsetHeight, centroGruppo = y + bh * .2;   /* dal lembo aperto al fondo della busta */
         const scarto = centroGruppo - innerHeight * .5;

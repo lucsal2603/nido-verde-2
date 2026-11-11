@@ -358,7 +358,20 @@ html.is-ridotto .busta__sigillo { display: none; }
 html.is-ridotto .biglietto { transform: translateY(-32%); z-index: 5; }
 .voucher__testo > p { max-width: 48ch; margin: 1.2em 0 1.4em; }
 .voucher__azioni { display: flex; flex-wrap: wrap; gap: 12px; }
-@media (max-width: 860px) { .voucher { grid-template-columns: 1fr; } }
+@media (max-width: 860px) {
+  .voucher { grid-template-columns: 1fr; min-height: 100svh; align-content: center; gap: 14px; padding: calc(var(--testata-h) + 4px) var(--gut) 20px; }
+  .voucher__testo .titolo-l { font-size: clamp(1.8rem, 8vw, 2.4rem); }
+  .voucher__testo .occhiello { margin-bottom: .3em; }
+  .voucher__testo > p { font-size: .92rem; line-height: 1.45; margin: .7em 0 .9em; }
+  .voucher__azioni { gap: 8px; }
+  .voucher__azioni .bottone { height: 42px; padding: 0 18px; font-size: .88rem; }
+}
+/* telefoni bassi: i due bottoni stanno sulla stessa riga, così busta e testo restano dentro lo schermo */
+@media (max-width: 860px) and (max-height: 760px) {
+  .voucher__azioni { flex-wrap: nowrap; }
+  .voucher__azioni .bottone { flex: 0 1 auto; padding: 0 14px; font-size: .84rem; }
+  .voucher__lungo { display: none; }
+}
 
 /* ── recensioni ── */
 .voci { padding: var(--sez) var(--gut); background: var(--carta); position: relative; z-index: 2; }
