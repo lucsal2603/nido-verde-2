@@ -17,12 +17,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Big+Shoulders+Display:wght@300;400&family=Albert+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=2026110142">
+  <link rel="stylesheet" href="css/style.css?v=2026110143">
   <script>if ('scrollRestoration' in history) history.scrollRestoration = 'manual';</script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.4/dist/lenis.min.js"></script>
-  <script src="js/main.js?v=2026110142" defer></script>
+  <script src="js/main.js?v=2026110143" defer></script>
 </head>
 <body>
 
@@ -169,17 +169,32 @@
         </div>
       </article>
 
-      <article class="nido nido--arrivo" id="nido3">
+      <article class="nido nido--arrivo" id="nido3" data-nido3>
         <div class="nido__tetto">
           <figure class="nido__foto"><img src="img/skyroom-vista.webp" alt="" loading="lazy"></figure>
-          <span class="nido__presto">Presto</span>
+          <figure class="nido__sbircia" aria-hidden="true"><img src="img/skyroom-vista.webp" alt="" loading="lazy"></figure>
+          <div class="nido__presto" aria-hidden="true">
+            <span class="nido__presto-eti">Lavori in corso</span>
+            <span class="nido__presto-titolo">Presto</span>
+            <span class="nido__presto-aiuto">passa sopra per sbirciare</span>
+          </div>
         </div>
         <div class="nido__corpo">
-          <p class="occhiello">Nido 3, in arrivo</p>
-          <h3 class="nido__nome">La nuova <em>Skyroom</em></h3>
-          <p class="nido__motto">Un’altra finestra sul lago.</p>
-          <p>Il terzo nido è gemello della Skyroom: la stessa casetta in legno con il tetto trasparente, lo stesso spazio privato, la stessa colazione e le stesse coccole. Stiamo finendo di prepararlo: le foto arrivano presto.</p>
-          <a class="bottone" href="#prenota">Chiedi a Federica</a>
+          <p class="occhiello">Nido 3, in arrivo con la nuova stagione</p>
+          <h3 class="nido__nome">Il nido <em>segreto</em></h3>
+          <p class="nido__motto">Un’altra finestra sul lago. Ma dove guarderà?</p>
+          <p>Fra gli ulivi sta nascendo il terzo nido. Non possiamo ancora mostrarvelo, solo qualche indizio:</p>
+          <ul class="nido__indizi">
+            <li><span class="nido__spunta" aria-hidden="true"></span>Il tetto trasparente della Skyroom, per addormentarsi sotto le stelle</li>
+            <li><span class="nido__spunta" aria-hidden="true"></span>Il suo angolo privato, lontano dagli altri due nidi</li>
+            <li><span class="nido__spunta" aria-hidden="true"></span>La stessa colazione del Nido, le stesse coccole</li>
+            <li><span class="nido__spunta nido__spunta--chiusa" aria-hidden="true"></span>Il nome: <span class="nido__censura" aria-label="ancora segreto">ancora segreto</span></li>
+            <li><span class="nido__spunta nido__spunta--chiusa" aria-hidden="true"></span>La vista: <span class="nido__censura" aria-label="ancora segreta">ancora segreta</span></li>
+          </ul>
+          <p class="nido__primi">Chi lo chiede adesso lo vede per primo, e si prende le prime notti.</p>
+          <div class="nido__azioni">
+            <a class="bottone bottone--pieno" href="https://wa.me/393515987323?text=Ciao%20Federica%2C%20avvisami%20appena%20apre%20il%20Nido%203!" target="_blank" rel="noreferrer">Avvisami quando apre</a>
+          </div>
         </div>
       </article>
     </div>

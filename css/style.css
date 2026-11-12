@@ -165,13 +165,31 @@ html.is-ridotto .nido__anta { display: none; }
 .prezzo small { display: block; font-size: .85rem; color: var(--salvia); max-width: 14ch; line-height: 1.3; }
 .nidi__nota { margin-top: clamp(36px, 5vw, 64px); max-width: 60ch; font-size: .95rem; color: var(--salvia); }
 @media (max-width: 860px) { .nidi__griglia { grid-template-columns: 1fr; gap: 56px; } }
-/* il terzo nido, ancora in arrivo: largo quanto gli altri due, con la foto oscurata e la scritta «Presto» */
+/* il terzo nido, ancora in arrivo: foto oscurata da sbirciare con il cursore (o con una luce che passa da sola), indizi e due voci censurate */
 .nido--arrivo { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 4vw, 64px); align-items: center; margin-top: clamp(24px, 4vw, 56px); }
 .nido--arrivo .nido__corpo { padding: 0; }
-.nido--arrivo .nido__foto img { filter: blur(10px) grayscale(.7) brightness(.45); transform: scale(1.12); }
+.nido--arrivo .nido__foto img { filter: blur(12px) grayscale(.75) brightness(.38); transform: scale(1.12); }
 @media (hover: hover) { .nido--arrivo:hover .nido__foto img { transform: scale(1.12); } }
-.nido__presto { position: absolute; left: 0; right: 0; top: 56%; transform: translateY(-50%); text-align: center; font: italic 400 clamp(2.4rem, 5vw, 4.4rem)/1 var(--serif); color: var(--bianco); letter-spacing: -.01em; }
+.nido__sbircia { position: absolute; inset: 0; margin: 0; --r: 0px; -webkit-mask: radial-gradient(circle var(--r) at var(--mx, 50%) var(--my, 50%), #000 35%, transparent 100%); mask: radial-gradient(circle var(--r) at var(--mx, 50%) var(--my, 50%), #000 35%, transparent 100%); }
+.nido__sbircia img { width: 100%; height: 100%; object-fit: cover; filter: blur(2.5px) saturate(.85) brightness(.85); transform: scale(1.12); }
+.nido__presto { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding-top: 14%; gap: 6px; color: var(--bianco); text-align: center; pointer-events: none; transition: opacity .5s; }
+.nido__presto-eti { font: 600 .72rem/1 var(--sans); letter-spacing: .24em; text-transform: uppercase; color: var(--evidenzia); }
+.nido__presto-titolo { font: italic 400 clamp(2.6rem, 5.4vw, 4.8rem)/1 var(--serif); letter-spacing: -.01em; }
+.nido__presto-aiuto { font-size: .82rem; opacity: .75; }
+.nido--arrivo.is-sbirciato .nido__presto { opacity: .25; }
+@media (hover: none) { .nido__presto-aiuto { display: none; } }
 .nido--arrivo .nido__nome em { font-style: italic; color: var(--oliva); }
+.nido__indizi { list-style: none; padding: 0; margin: 1.2em 0 1.4em; max-width: 52ch; }
+.nido__indizi li { display: flex; align-items: baseline; gap: 12px; padding: .55em 0; border-top: 1px solid var(--salvia-chiara); }
+.nido__indizi li:last-child { border-bottom: 1px solid var(--salvia-chiara); }
+.nido__spunta { flex: none; width: 14px; height: 14px; border-radius: 50%; background: var(--lime); position: relative; top: 2px; }
+.nido__spunta--chiusa { background: transparent; border: 1.5px dashed var(--salvia); }
+.nido__censura { display: inline-block; padding: 0 .4em; border-radius: 3px; background: var(--inchiostro); color: transparent; user-select: none; position: relative; overflow: hidden; }
+.nido__censura::after { content: ""; position: absolute; inset: 0; background: linear-gradient(100deg, transparent 30%, rgba(201, 214, 122, .45) 50%, transparent 70%); transform: translateX(-100%); animation: luccica 3.2s ease-in-out infinite; }
+.nido__indizi li:nth-child(5) .nido__censura::after { animation-delay: 1.1s; }
+@keyframes luccica { 0%, 40% { transform: translateX(-100%); } 70%, 100% { transform: translateX(100%); } }
+.nido__primi { font: italic 1.15rem var(--serif); color: var(--oliva); margin-bottom: 1.1em; }
+@media (prefers-reduced-motion: reduce) { .nido__censura::after { animation: none; } }
 @media (max-width: 860px) { .nido--arrivo { grid-template-columns: 1fr; margin-top: 0; } .nido--arrivo .nido__corpo { padding-top: clamp(24px, 3vw, 44px); } }
 
 /* ── la magia è la stessa ── */
