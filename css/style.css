@@ -246,13 +246,25 @@ html.js:not(.is-ridotto) .stella { transform: none; }
 .stelle__testo .parola-t { display: inline-block; }
 
 
-/* ── nastro ── */
-.stelle .nastro { background: transparent; color: var(--carta); border-color: rgba(247, 248, 243, .18); }
-.stelle .nastro__riga--contro { color: var(--salvia-chiara); }
-.nastro { overflow: hidden; padding: clamp(28px, 4vw, 56px) 0; background: var(--carta); position: relative; z-index: 2; border-top: 1px solid var(--salvia-chiara); border-bottom: 1px solid var(--salvia-chiara); }
-.nastro__riga { display: flex; align-items: center; gap: 36px; white-space: nowrap; width: max-content; font: clamp(1.6rem, 3.4vw, 3rem)/1.1 var(--serif); padding: 4px 0; will-change: transform; }
-.nastro__riga i { font-style: normal; color: var(--lime); font-size: .6em; }
-.nastro__riga--contro { color: var(--salvia); }
+/* ── nastro: due fasce di stoffa che si incrociano sul cielo; davanti la fascia lime con le scritte alte e strette, dietro quella oliva in corsivo; cuciture tratteggiate sui bordi ── */
+.nastro { position: relative; z-index: 2; overflow: hidden; height: clamp(230px, 26vw, 380px); display: grid; place-items: center; }
+.nastro__fascia { grid-area: 1 / 1; width: 130vw; position: relative; display: flex; align-items: center; padding: clamp(14px, 1.6vw, 24px) 0; box-shadow: 0 18px 40px -18px rgba(0, 0, 0, .55); }
+.nastro__fascia::before, .nastro__fascia::after { content: ""; position: absolute; left: 0; right: 0; height: 0; border-top: 1.5px dashed currentColor; opacity: .45; }
+.nastro__fascia::before { top: 7px; }
+.nastro__fascia::after { bottom: 7px; }
+.nastro__fascia--davanti { background: var(--lime); color: var(--notte); transform: rotate(-4deg); z-index: 2; }
+.nastro__fascia--dietro { background: #22372A; color: var(--carta); transform: rotate(3.2deg); z-index: 1; }
+.nastro__riga { display: flex; align-items: center; gap: clamp(22px, 2.6vw, 40px); white-space: nowrap; width: max-content; will-change: transform; }
+.nastro__fascia--davanti .nastro__riga { font: 400 clamp(1.9rem, 4vw, 3.6rem)/1 "Big Shoulders Display", var(--sans); text-transform: uppercase; letter-spacing: .03em; }
+.nastro__fascia--dietro .nastro__riga { font: italic 400 clamp(1.5rem, 2.9vw, 2.6rem)/1.05 var(--serif); }
+.nastro__sep { display: inline-grid; place-items: center; flex: none; width: .78em; height: .78em; }
+.nastro__fascia--dietro .nastro__sep { color: var(--lime); width: .9em; height: .9em; }
+.nastro__sep svg { width: 100%; height: 100%; }
+@media (max-width: 760px) {
+  .nastro { height: 250px; }
+  .nastro__fascia--davanti { transform: translateY(26px) rotate(-6deg); }
+  .nastro__fascia--dietro { transform: translateY(-34px) rotate(5deg); }
+}
 
 /* ── le coccole: l'indice di traverso (parole a 33°, binari, foto sfalsate) ── */
 .coccole { position: relative; z-index: 2; background: var(--notte); color: var(--carta); padding: clamp(72px, 10vw, 150px) 0 clamp(30px, 5vw, 80px); overflow: hidden; }
@@ -535,6 +547,7 @@ html.is-menu .wa { opacity: 0; pointer-events: none; }
   .coccole__binario { transform: none; }
   .sentiero__barra i { transform: none; }
   .nastro__riga { width: auto; white-space: normal; flex-wrap: wrap; }
+  .nastro { height: auto; padding: 40px 0; gap: 10px; } .nastro__fascia { grid-area: auto; width: 100%; transform: none; }
   .bottone, .bottone::before, .testata, .voce, .voce img, .nido__foto img, .fisarmonica__pannello { transition: none; }
 }
 
