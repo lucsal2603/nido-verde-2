@@ -131,8 +131,6 @@
         .fromTo(stati[i], { t: 1 }, { t: 0, ease: 'power2.inOut', duration: .55, onUpdate: () => forma(el, stati[i]) }, i * .12);
     });
     window.addEventListener('resize', () => lista.forEach((el, i) => forma(el, stati[i])));
-    /* l'ultimo strato è il foglio stesso: entra subito dopo i teli e la sua punta si abbassa come la loro */
-    gsap.fromTo(statoFoglio, { t: 1 }, { t: 0, ease: 'power2.inOut', onUpdate: () => disegnaFoglio(), scrollTrigger: { trigger: f, start: 'top bottom', end: 'top 20%', scrub: .6 } });
   }
 
   /* ── rametti di ulivo: sempre attaccati a qualcosa (spuntano da dietro foto, carte e righe), mai fluttuanti ── */
