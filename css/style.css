@@ -192,10 +192,11 @@ html.is-ridotto .nido__anta { display: none; }
 @media (max-width: 860px) { .family { grid-template-columns: 1fr; } .family__foto { aspect-ratio: 4 / 3; } }
 
 /* ── le stelle ── */
-.stelle { position: relative; z-index: 2; }
+.stelle { position: relative; z-index: 2; background: var(--carta); clip-path: inset(0); }   /* il ritaglio tiene il cielo fisso dentro la sezione */
+.stelle__pin, .stelle__dopo, .stelle .nastro { position: relative; z-index: 1; }
 .stelle__pin { height: 250svh; position: relative; }
-.stelle__palco { position: sticky; top: 0; height: 100svh; overflow: hidden; background: var(--carta); }
-.stelle__cielo { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; }
+.stelle__palco { position: sticky; top: 0; height: 100svh; overflow: hidden; }
+.stelle__cielo { position: fixed; left: 0; top: 0; width: 100vw; height: 100lvh; z-index: 0; opacity: 0; pointer-events: none; }   /* un solo cielo per tutta la notte: blocco fermo, descrizione e nastro */
 /* impaginazione: la casetta al centro, il titolo diviso ai due lati, il testo sotto la seconda metà */
 .stelle__palco { --casa: min(26vw, calc(64svh * .75)); --stacco: clamp(24px, 3vw, 56px); color: var(--inchiostro); }
 .stelle__occhiello { position: absolute; left: 0; right: 0; top: var(--occ-top, calc(var(--testata-h) + 4px)); text-align: center; color: var(--salvia); z-index: 2; margin: 0; }
@@ -222,12 +223,14 @@ html.js:not(.is-ridotto) .stella { transform: none; }
 .stelle__scintilla { position: absolute; width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px; border-radius: 50%; background: #fff; box-shadow: 0 0 8px 3px rgba(247, 248, 243, .9), 0 0 22px 8px rgba(160, 176, 40, .55); opacity: 0; }
 @media (prefers-reduced-motion: reduce) { .stella__dentro, .stella__luce { animation: none; } }
 /* la descrizione: dopo il blocco fermo, sotto la casetta, sul cielo notturno; le parole si accendono allo scroll */
-.stelle__dopo { background: var(--notte) url("../img/stelle-sfondo.png") 0 0 / 512px 512px; color: #DCE3D0; padding: clamp(24px, 4vw, 56px) var(--gut) clamp(96px, 14vw, 180px); }
+.stelle__dopo { color: #DCE3D0; padding: clamp(24px, 4vw, 56px) var(--gut) clamp(96px, 14vw, 180px); }
 .stelle__testo { max-width: 24ch; margin: 0 auto; font: italic 400 clamp(1.7rem, 3.4vw, 3.2rem)/1.22 var(--serif); text-align: center; }
 .stelle__testo .parola-t { display: inline-block; }
 
 
 /* ── nastro ── */
+.stelle .nastro { background: transparent; color: var(--carta); border-color: rgba(247, 248, 243, .18); }
+.stelle .nastro__riga--contro { color: var(--salvia-chiara); }
 .nastro { overflow: hidden; padding: clamp(28px, 4vw, 56px) 0; background: var(--carta); position: relative; z-index: 2; border-top: 1px solid var(--salvia-chiara); border-bottom: 1px solid var(--salvia-chiara); }
 .nastro__riga { display: flex; align-items: center; gap: 36px; white-space: nowrap; width: max-content; font: clamp(1.6rem, 3.4vw, 3rem)/1.1 var(--serif); padding: 4px 0; will-change: transform; }
 .nastro__riga i { font-style: normal; color: var(--lime); font-size: .6em; }
@@ -502,7 +505,8 @@ html.is-menu .wa { opacity: 0; pointer-events: none; }
   .hero__palco { min-height: 100svh; }
   .manifesto__palco { padding: var(--sez) var(--gut); }
   .foglio { margin-top: 0; }
-  .stelle__palco { background: var(--notte); color: var(--carta); padding: var(--sez) var(--gut); min-height: 0; }
+  .stelle { background: var(--notte); }
+  .stelle__palco { color: var(--carta); padding: var(--sez) var(--gut); min-height: 0; }
   .stelle__palco { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 28px; }
   .stelle__occhiello, .stelle__titolo, .stelle__riga, .stelle__testo, .stelle__casa { position: static; transform: none; max-width: 46ch; }
   .stelle__casa { width: min(80vw, 360px); }
@@ -544,9 +548,6 @@ html.is-ridotto .dintorni__azioni { position: static; }
   .stelle__casa { top: var(--casa-top); transform: translateX(-50%); }
   .stelle__titolo { font-size: clamp(2.1rem, 10vw, 3.2rem); }
   .stelle__titolo { z-index: 2; }
-  .stelle, .nastro { background-color: var(--notte); background-image: url("../img/stelle-sfondo.png"); background-size: 512px 512px; }   /* cielo stellato fisso sotto tutto il pezzo notturno, anche oltre il blocco fermo */
-  .nastro { color: var(--carta); border-color: rgba(247, 248, 243, .18); }
-  .nastro__riga--contro { color: var(--salvia-chiara); }
   .citazione:nth-child(n + 4) { display: none; }
 }
 
