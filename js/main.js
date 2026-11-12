@@ -133,25 +133,6 @@
     window.addEventListener('resize', () => lista.forEach((el, i) => forma(el, stati[i])));
   }
 
-  /* ── il nido 3: col cursore si sbircia dentro la foto oscurata; su telefono (o senza cursore) una luce la attraversa da sola ── */
-  function nidoSegreto() {
-    const n = q('[data-nido3]'); if (!n) return;
-    const tetto = q('.nido__tetto', n), sb = q('.nido__sbircia', n);
-    const r = { v: 0 }, pos = { x: 50, y: 50 };
-    const metti = () => { sb.style.setProperty('--r', r.v + 'px'); sb.style.setProperty('--mx', pos.x + '%'); sb.style.setProperty('--my', pos.y + '%'); };
-    if (RIDOTTO) return;
-    if (!TOUCH) {
-      tetto.addEventListener('pointerenter', () => { n.classList.add('is-sbirciato'); gsap.to(r, { v: Math.max(80, tetto.offsetWidth * .24), duration: .5, ease: 'power3.out', onUpdate: metti, overwrite: true }); });
-      tetto.addEventListener('pointermove', (e) => { const b = tetto.getBoundingClientRect(); gsap.to(pos, { x: (e.clientX - b.left) / b.width * 100, y: (e.clientY - b.top) / b.height * 100, duration: .35, ease: 'power3.out', onUpdate: metti, overwrite: 'auto' }); });
-      tetto.addEventListener('pointerleave', () => { n.classList.remove('is-sbirciato'); gsap.to(r, { v: 0, duration: .5, ease: 'power3.out', onUpdate: metti, overwrite: true }); });
-    } else {
-      /* una piccola luce che vaga dentro la casetta, come una torcia */
-      gsap.set(r, { v: Math.max(50, tetto.offsetWidth * .2) }); metti();
-      gsap.timeline({ repeat: -1, yoyo: true, defaults: { ease: 'sine.inOut', duration: 2.6, onUpdate: metti } })
-        .fromTo(pos, { x: 22, y: 70 }, { x: 70, y: 45 }).to(pos, { x: 40, y: 78 }).to(pos, { x: 78, y: 68 });
-    }
-  }
-
   /* ── rametti di ulivo: sempre attaccati a qualcosa (spuntano da dietro foto, carte e righe), mai fluttuanti ── */
   function rametto(seme) {
     /* gambo curvo dalla base (0,100) verso la punta, foglie a coppie sfalsate che si rimpiccioliscono, qualche oliva */
@@ -800,7 +781,7 @@
 
   /* ── avvio ── */
   const introHero = hero();
-  puntaFoglio(); teli(); nidoSegreto(); ramettiUlivo(); manifesto(); nidi(); family(); stelle(); nastro(); coccole(); dintorni(); voucher(); domande(); piede(); contatori(); giraRecensioni(); ospiti(); mappa(); popup(); reveal();
+  puntaFoglio(); teli(); ramettiUlivo(); manifesto(); nidi(); family(); stelle(); nastro(); coccole(); dintorni(); voucher(); domande(); piede(); contatori(); giraRecensioni(); ospiti(); mappa(); popup(); reveal();
   const tlVelo = velo();
   if (RIDOTTO || QA || RIPRISTINO) { html.classList.add('is-pronto'); if (RIPRISTINO) introHero?.progress(1); }
   else { tlVelo.add(() => introHero.play(), 2.0); tlVelo.add(() => html.classList.add('is-pronto'), 3.1); }
