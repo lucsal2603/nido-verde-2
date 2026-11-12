@@ -53,13 +53,12 @@ html.is-statico .riga i, html.is-statico [data-sale] { opacity: 1; transform: no
 .bottone:active { transform: scale(.97); }
 .bottone[aria-disabled="true"] { opacity: .5; pointer-events: none; }
 
-/* ── velo: il tetto che si apre ── */
-.velo { position: fixed; inset: 0; z-index: 100; perspective: 1400px; perspective-origin: 50% 50%; pointer-events: none; }
-.velo__anta { position: absolute; top: 0; bottom: 0; width: 50.5%; background: var(--oliva); will-change: transform; }
-.velo__anta--sx { left: 0; transform-origin: 0 50%; }
-.velo__anta--dx { right: 0; transform-origin: 100% 50%; }
-.velo__marchio { position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: 14px; color: var(--carta); }
-.velo__casa { width: clamp(96px, 14vw, 150px); height: auto; }
+/* ── velo: l'intro, il logo che nasce dall'oliva ── */
+.velo { position: fixed; inset: 0; z-index: 100; pointer-events: none; background: var(--carta); }
+.velo__marchio { position: absolute; inset: 0; display: grid; place-items: center; }
+.velo__logo { width: min(300px, 56vw, 42svh); height: auto; overflow: visible; will-change: transform; }
+html.is-velato .testata__logo img { opacity: 0; }
+.testata__logo img { transition: opacity .45s var(--e-out); }
 html.is-statico .velo { display: none; }
 
 /* ── foglia: il puntatore ── */

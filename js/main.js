@@ -212,22 +212,62 @@
     });
   }
 
-  /* ── velo: il tetto della casetta si apre ── */
+  /* ── velo: l'intro. Al centro dello schermo un'oliva nasce, gira su se stessa e rimbalza, poi va al suo posto;
+       da lì parte una piccola oliva-penna che disegna la casetta, il rametto cresce dal picciolo, la stella si accende, la scritta sale lettera per lettera.
+       Alla fine il logo vola al posto del logo nella testata e il velo si apre sul sito. ── */
+  const INTRO = { hero: 4.55, fine: 5.35 };
   function velo() {
     const v = q('#velo');
     const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
     if (!v || RIDOTTO || QA || RIPRISTINO) { v?.remove(); return tl; }   /* chi ricarica non rivede il velo */
     lenis?.stop(); html.classList.add('is-velato');
-    const tratti = qa('.velo__tratto', v);
-    tratti.forEach((p) => { const l = p.getTotalLength(); p.style.strokeDasharray = l; p.style.strokeDashoffset = l; });
-    /* solo la casetta bianca che si disegna, poi il tetto si apre */
-    tl.to(tratti, { strokeDashoffset: 0, duration: 1.1, ease: 'power2.inOut', stagger: .18 }, .15)
-      .to(q('.velo__marchio', v), { opacity: 0, duration: .35, ease: 'power2.in' }, 1.7)
-      .to(q('.velo__anta--sx', v), { rotateY: -96, duration: 1.2, ease: 'power3.inOut' }, 1.85)
-      .to(q('.velo__anta--dx', v), { rotateY: 96, duration: 1.2, ease: 'power3.inOut' }, 1.85)
-      .add(() => { v.remove(); html.classList.remove('is-velato'); lenis?.start(); }, 3.1);
-    /* rete di sicurezza: se il browser si inceppa, dopo 6 s il velo sparisce comunque */
-    setTimeout(() => { if (v.isConnected) { v.remove(); html.classList.remove('is-velato'); lenis?.start(); } }, 6000);
+    const svg = q('.velo__logo', v), oliva = q('.velo__oliva', v), penna = q('.velo__penna', v), traccia = q('.velo__traccia', v);
+    const seme = q('.velo__seme', v), ramo = q('.velo__ramo', v), stella = q('.velo__stella', v), lettere = qa('.velo__scritta path', v);
+    const L = traccia.getTotalLength();
+    gsap.set(traccia, { strokeDasharray: L, strokeDashoffset: L });
+    /* l'oliva parte dal centro del logo (che è il centro dello schermo), più grande */
+    const OC = [170.5, 312.5], dx = 257.5 - OC[0], dy = 300 - OC[1];
+    gsap.set(oliva, { x: dx, y: dy, scale: 0, rotate: -160, transformOrigin: '50% 50%' });
+    gsap.set(penna, { attr: { r: 0 } });
+    gsap.set(ramo, { rotate: -10, transformOrigin: '0% 100%' });
+    gsap.set(stella, { scale: 0, rotate: -220, transformOrigin: '50% 50%' });
+    gsap.set(lettere, { opacity: 0, y: 26 });
+    const p0 = traccia.getPointAtLength(0);
+    const sullaTraccia = (o) => () => { const pt = traccia.getPointAtLength(o.l); gsap.set(penna, { attr: { cx: pt.x, cy: pt.y } }); };
+    const corsa = { l: 0 };
+    tl
+      /* 1. l'oliva nasce e fa la sua giravolta: scatto, schiacciata, rimbalzo */
+      .to(oliva, { scale: 1.9, rotate: 0, duration: .7, ease: 'back.out(2)' }, .15)
+      .to(oliva, { keyframes: [{ scaleX: 2.15, scaleY: 1.6, duration: .14 }, { scaleX: 1.7, scaleY: 2.1, y: dy - 26, duration: .18 }, { scaleX: 1.9, scaleY: 1.9, y: dy, duration: .22, ease: 'bounce.out' }], ease: 'power2.inOut' }, .85)
+      .to(oliva, { rotate: 360, duration: .75, ease: 'power3.inOut' }, 1.1)
+      /* 2. va al suo posto nel logo */
+      .to(oliva, { x: 0, y: 0, scale: 1, rotate: 360, duration: .7, ease: 'power3.inOut' }, 1.75)
+      /* 3. dall'oliva si stacca la penna, rotola fino all'angolo della casetta e la disegna */
+      .set(penna, { attr: { cx: OC[0], cy: OC[1] } }, 2.3)
+      .to(penna, { attr: { r: 9 }, duration: .2, ease: 'back.out(3)' }, 2.3)
+      .to(penna, { attr: { cx: p0.x, cy: p0.y }, duration: .35, ease: 'power2.inOut' }, 2.4)
+      .to(corsa, { l: L, duration: 1.35, ease: 'power1.inOut', onUpdate: sullaTraccia(corsa) }, 2.75)
+      .to(traccia, { strokeDashoffset: 0, duration: 1.35, ease: 'power1.inOut' }, 2.75)
+      .to(penna, { attr: { r: 0 }, duration: .2, ease: 'power2.in' }, 4.05)
+      /* 4. il rametto cresce dal picciolo sopra l'oliva */
+      .to(seme, { attr: { r: 420 }, duration: 1.1, ease: 'power2.inOut' }, 2.5)
+      .to(ramo, { rotate: 0, duration: 1.2, ease: 'elastic.out(1, .6)' }, 2.6)
+      /* 5. la stella si accende girando */
+      .to(stella, { scale: 1, rotate: 0, duration: .8, ease: 'back.out(2.4)' }, 3.3)
+      /* 6. la scritta sale lettera per lettera */
+      .to(lettere, { opacity: 1, y: 0, duration: .5, stagger: .035, ease: 'power3.out' }, 3.5);
+    /* 7. il logo vola al posto di quello della testata, il velo sfuma e si vede il sito */
+    tl.add(() => {
+      const meta = qa('.testata__logo img').find((i) => i.offsetParent !== null) || q('.testata__logo img');
+      const a = svg.getBoundingClientRect(), b = meta.getBoundingClientRect();
+      gsap.to(svg, { x: b.left + b.width / 2 - (a.left + a.width / 2), y: b.top + b.height / 2 - (a.top + a.height / 2), scale: b.width / a.width, duration: .8, ease: 'power3.inOut' });
+      gsap.to(svg, { opacity: 0, duration: .25, delay: .6, ease: 'none' });
+      gsap.to(v, { backgroundColor: 'rgba(238, 241, 230, 0)', duration: .7, delay: .1, ease: 'power2.inOut' });
+    }, 4.45)
+      .add(() => html.classList.remove('is-velato'), 4.95)
+      .add(() => { v.remove(); lenis?.start(); }, INTRO.fine);
+    /* rete di sicurezza: se il browser si inceppa, dopo 8 s il velo sparisce comunque */
+    setTimeout(() => { if (v.isConnected) { v.remove(); html.classList.remove('is-velato'); lenis?.start(); } }, 8000);
     return tl;
   }
 
@@ -784,7 +824,7 @@
   puntaFoglio(); teli(); ramettiUlivo(); manifesto(); nidi(); family(); stelle(); nastro(); coccole(); dintorni(); voucher(); domande(); piede(); contatori(); giraRecensioni(); ospiti(); mappa(); popup(); reveal();
   const tlVelo = velo();
   if (RIDOTTO || QA || RIPRISTINO) { html.classList.add('is-pronto'); if (RIPRISTINO) introHero?.progress(1); }
-  else { tlVelo.add(() => introHero.play(), 2.0); tlVelo.add(() => html.classList.add('is-pronto'), 3.1); }
+  else { tlVelo.add(() => introHero.play(), INTRO.hero); tlVelo.add(() => html.classList.add('is-pronto'), INTRO.fine); }
   window.addEventListener('load', () => ST.refresh());
   document.fonts?.ready.then(() => ST.refresh());
   if (RIPRISTINO) {
