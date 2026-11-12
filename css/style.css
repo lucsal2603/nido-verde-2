@@ -172,7 +172,7 @@ html.is-ridotto .nido__anta { display: none; }
 .nido__presto { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding-top: 14%; gap: 6px; color: var(--bianco); text-align: center; pointer-events: none; transition: opacity .5s; }
 .nido__presto-eti { font: 600 .72rem/1 var(--sans); letter-spacing: .24em; text-transform: uppercase; color: var(--evidenzia); }
 .nido__presto-titolo { font: italic 400 clamp(2.6rem, 5.4vw, 4.8rem)/1 var(--serif); letter-spacing: -.01em; }
-@media (hover: none) { .nido--arrivo .nido__nome em { font-style: italic; color: var(--oliva); }
+.nido--arrivo .nido__nome em { font-style: italic; color: var(--oliva); }
 .nido__indizi { list-style: none; padding: 0; margin: 1.2em 0 1.4em; max-width: 52ch; }
 .nido__indizi li { display: flex; align-items: baseline; gap: 12px; padding: .55em 0; border-top: 1px solid var(--salvia-chiara); }
 .nido__indizi li:last-child { border-bottom: 1px solid var(--salvia-chiara); }
