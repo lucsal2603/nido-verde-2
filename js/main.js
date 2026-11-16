@@ -50,16 +50,21 @@
   /* ── menu mobile ── */
   const menu = q('#menu'), menuBottone = q('#menuBottone');
   let menuAperto = false;
+  /* il telo scende dall'alto con la punta a tetto, che si appiattisce arrivando in fondo */
+  const telo = { y: 0 };
+  const forma = () => { const y = telo.y, p = 14 * Math.sin(Math.PI * Math.min(1, y / 100)); menu.style.clipPath = `polygon(0 0, 100% 0, 100% ${y}%, 50% ${y + p}%, 0 ${y}%)`; };
   const apriMenu = () => {
     if (menuAperto) return; menuAperto = true;
-    menu.hidden = false; html.classList.add('is-menu'); menuBottone.setAttribute('aria-expanded', 'true'); lenis?.stop();
-    gsap.fromTo(menu, { clipPath: 'circle(0% at calc(100% - 44px) 42px)' }, { clipPath: 'circle(150% at calc(100% - 44px) 42px)', duration: .8, ease: 'power3.inOut' });
-    gsap.fromTo(qa('.menu > a, .menu__contatti', menu), { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: .7, ease: 'power3.out', stagger: .06, delay: .25 });
+    menu.hidden = false; menu.scrollTop = 0; html.classList.add('is-menu'); menuBottone.setAttribute('aria-expanded', 'true'); menuBottone.setAttribute('aria-label', 'Chiudi il menu'); lenis?.stop();
+    gsap.fromTo(telo, { y: 0 }, { y: 100, duration: .85, ease: 'power3.inOut', onUpdate: forma, onComplete: () => { menu.style.clipPath = 'none'; } });
+    gsap.fromTo(qa('.menu__occhiello, .menu__lista li, .menu__prenota, .menu__contatti', menu), { y: 34, opacity: 0 }, { y: 0, opacity: 1, duration: .7, ease: 'power3.out', stagger: .055, delay: .3 });
+    gsap.fromTo(qa('.menu__foto', menu), { scale: 0, rotate: -20 }, { scale: 1, rotate: 0, duration: .7, ease: 'back.out(2)', stagger: .055, delay: .4 });
+    gsap.fromTo(q('.menu__rametto', menu), { y: 60, rotate: -12, opacity: 0 }, { y: 0, rotate: 0, opacity: .06, duration: 1.2, ease: 'power3.out', delay: .4 });
   };
   const chiudiMenu = () => {
     if (!menuAperto) return; menuAperto = false;
-    html.classList.remove('is-menu'); menuBottone.setAttribute('aria-expanded', 'false');
-    gsap.to(menu, { clipPath: 'circle(0% at calc(100% - 44px) 42px)', duration: .6, ease: 'power3.inOut', onComplete: () => { menu.hidden = true; lenis?.start(); } });
+    html.classList.remove('is-menu'); menuBottone.setAttribute('aria-expanded', 'false'); menuBottone.setAttribute('aria-label', 'Apri il menu');
+    gsap.fromTo(telo, { y: 100 }, { y: 0, duration: .6, ease: 'power3.inOut', onUpdate: forma, onComplete: () => { menu.hidden = true; lenis?.start(); } });
   };
   menuBottone?.addEventListener('click', () => (menuAperto ? chiudiMenu() : apriMenu()));
   window.addEventListener('keydown', (e) => { if (e.key === 'Escape') chiudiMenu(); });

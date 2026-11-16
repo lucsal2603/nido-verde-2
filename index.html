@@ -17,12 +17,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Big+Shoulders+Display:wght@300;400&family=Albert+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=2026111604">
+  <link rel="stylesheet" href="css/style.css?v=2026111605">
   <script>if ('scrollRestoration' in history) history.scrollRestoration = 'manual';</script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.4/dist/lenis.min.js"></script>
-  <script src="js/main.js?v=2026111604" defer></script>
+  <script src="js/main.js?v=2026111605" defer></script>
 </head>
 <body>
 
@@ -63,18 +63,24 @@
     <a href="#domande">Domande</a>
   </nav>
   <a class="bottone bottone--pieno testata__prenota" href="#prenota">Prenota</a>
-  <button class="testata__menu" id="menuBottone" type="button" aria-label="Apri il menu" aria-expanded="false" aria-controls="menu"><span></span><span></span></button>
+  <button class="testata__menu" id="menuBottone" type="button" aria-label="Apri il menu" aria-expanded="false" aria-controls="menu"><span class="testata__menu-testo"><span>Menu</span><span>Chiudi</span></span><span class="testata__menu-icona" aria-hidden="true"><i></i><i></i></span></button>
 </header>
 
 <nav class="menu" id="menu" aria-label="Menu" hidden>
-  <a href="#nidi">I tre nidi</a>
-  <a href="#stelle">Le stelle</a>
-  <a href="#extra">Le coccole</a>
-  <a href="#dintorni">Dintorni</a>
-  <a href="#voucher">Voucher regalo</a>
-  <a href="#domande">Domande</a>
-  <a href="#prenota">Prenota</a>
-  <p class="menu__contatti"><a href="https://wa.me/393515987323" target="_blank" rel="noreferrer">WhatsApp</a><a href="https://www.instagram.com/ilnidotragliulivi/" target="_blank" rel="noreferrer">Instagram</a><a href="mailto:federica@ilnidotragliulivi.com">Mail</a></p>
+  <div class="menu__dentro">
+    <p class="menu__occhiello">Glamping sul lago di Viverone</p>
+    <ul class="menu__lista">
+      <li><a class="menu__voce" href="#nidi"><span class="menu__foto"><img src="img/skyroom-fronte.webp" alt="" loading="lazy"></span><span class="menu__testi"><span class="menu__nome">I tre nidi</span><span class="menu__sotto">Skyroom, Starsbox e il nido segreto</span></span><svg class="menu__freccia" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+      <li><a class="menu__voce" href="#stelle"><span class="menu__foto"><img src="img/nido-notte.webp" alt="" loading="lazy"></span><span class="menu__testi"><span class="menu__nome">Le stelle</span><span class="menu__sotto">Il cielo sopra il letto</span></span><svg class="menu__freccia" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+      <li><a class="menu__voce" href="#extra"><span class="menu__foto"><img src="img/starsbox-dentro.webp" alt="" loading="lazy"></span><span class="menu__testi"><span class="menu__nome">Le coccole</span><span class="menu__sotto">Colazione, vasca, aperitivi</span></span><svg class="menu__freccia" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+      <li><a class="menu__voce" href="#dintorni"><span class="menu__foto"><img src="img/lago-panorama.webp" alt="" loading="lazy"></span><span class="menu__testi"><span class="menu__nome">Dintorni</span><span class="menu__sotto">Il lago e le gite vicine</span></span><svg class="menu__freccia" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+      <li><a class="menu__voce" href="#voucher"><span class="menu__foto"><img src="img/colazione-vasca.webp" alt="" loading="lazy"></span><span class="menu__testi"><span class="menu__nome">Voucher regalo</span><span class="menu__sotto">Una notte da regalare</span></span><svg class="menu__freccia" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+      <li><a class="menu__voce" href="#domande"><span class="menu__foto"><img src="img/nidi-ulivi.webp" alt="" loading="lazy"></span><span class="menu__testi"><span class="menu__nome">Domande</span><span class="menu__sotto">Orari, pioggia, pagamenti</span></span><svg class="menu__freccia" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10M9 4l4 4-4 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></a></li>
+    </ul>
+    <a class="bottone bottone--pieno bottone--grande menu__prenota" href="#prenota">Prenota una notte</a>
+    <p class="menu__contatti"><a href="https://wa.me/393515987323" target="_blank" rel="noreferrer">WhatsApp</a><a href="https://www.instagram.com/ilnidotragliulivi/" target="_blank" rel="noreferrer">Instagram</a><a href="mailto:federica@ilnidotragliulivi.com">Mail</a></p>
+  </div>
+  <img class="menu__rametto" src="img/logo-nido-bianco.svg" alt="" aria-hidden="true">
 </nav>
 
 <main id="top">

@@ -82,17 +82,44 @@ html.con-foglia, html.con-foglia * { cursor: none !important; }
 @media (hover: hover) and (pointer: fine) { .testata__nav a:hover { color: var(--bianco); } .testata__nav a:hover::before { transform: scaleX(1); } .testata.is-scura .testata__nav a:hover { color: var(--notte); } .testata.is-scura .testata__nav a:hover::before { background: var(--lime); } }
 .testata__prenota { height: 42px; padding: 0 20px; }
 .testata.is-scura .testata__prenota { border-color: var(--lime); background: var(--lime); color: var(--notte); }
-.testata__menu { display: none; width: 44px; height: 44px; border: 0; background: none; padding: 0; position: relative; cursor: pointer; }
-.testata__menu span { position: absolute; left: 10px; width: 24px; height: 2px; background: currentColor; top: 16px; transition: transform .45s var(--e-inout), top .45s var(--e-inout); }
-.testata__menu span:nth-of-type(2) { top: 26px; }
-html.is-menu .testata__menu span:nth-of-type(1) { top: 21px; transform: rotate(45deg); }
-html.is-menu .testata__menu span:nth-of-type(2) { top: 21px; transform: rotate(-45deg); }
+/* ── menu da telefono: pillola «Menu» e telo con la punta a tetto ── */
+.testata__menu { display: none; height: 42px; padding: 0 8px 0 16px; border: 1px solid currentColor; border-radius: 999px; background: none; color: inherit; cursor: pointer; align-items: center; gap: 10px; font: 500 .9rem/1 var(--sans); }
+.testata__menu-testo { display: grid; height: 1.1em; overflow: hidden; }
+.testata__menu-testo span { grid-area: 1 / 1; transition: transform .5s var(--e-inout); }
+.testata__menu-testo span:last-child { transform: translateY(110%); }
+html.is-menu .testata__menu-testo span:first-child { transform: translateY(-110%); }
+html.is-menu .testata__menu-testo span:last-child { transform: none; }
+.testata__menu-icona { position: relative; width: 28px; height: 28px; border-radius: 50%; background: var(--oliva); }
+.testata.is-scura .testata__menu-icona, html.is-menu .testata__menu-icona { background: var(--lime); }
+.testata__menu-icona i { position: absolute; left: 8px; width: 12px; height: 1.6px; border-radius: 2px; background: var(--bianco); top: 11px; transition: transform .5s var(--e-inout), top .5s var(--e-inout), width .5s var(--e-inout); }
+.testata__menu-icona i:last-child { top: 15.5px; width: 8px; }
+.testata.is-scura .testata__menu-icona i, html.is-menu .testata__menu-icona i { background: var(--notte); }
+html.is-menu .testata__menu-icona i { top: 13.2px; width: 12px; transform: rotate(45deg); }
+html.is-menu .testata__menu-icona i:last-child { transform: rotate(-45deg); }
 html.is-menu .testata { color: var(--carta); transform: none; }
-.menu { position: fixed; inset: 0; z-index: 55; background: var(--notte); color: var(--carta); display: flex; flex-direction: column; justify-content: center; gap: 6px; padding: var(--testata-h) var(--gut) 40px; clip-path: circle(0% at calc(100% - 44px) 42px); }
+html.is-menu .testata__logo-chiaro { display: none; }
+html.is-menu .testata__logo-scuro { display: block; }
+.menu { position: fixed; inset: 0; z-index: 55; background: var(--notte) url("../img/stelle-sfondo.png") 0 0 / 512px 512px; color: var(--carta); overflow-y: auto; overscroll-behavior: contain; }
 .menu[hidden] { display: none; }
-.menu > a { font: clamp(2rem, 8vw, 3rem)/1.15 var(--serif); width: max-content; }
-.menu__contatti { margin-top: 26px; display: flex; gap: 18px; font-size: .95rem; }
-@media (max-width: 860px) { .testata__nav, .testata__prenota, .testata__logo span { display: none; } .testata__menu { display: block; } .testata { gap: 12px; --testata-h: 72px; } }
+.menu__dentro { min-height: 100%; display: flex; flex-direction: column; justify-content: center; padding: calc(var(--testata-h) + 12px) var(--gut) 28px; position: relative; z-index: 1; }
+.menu__occhiello { font: italic 1.05rem var(--serif); color: var(--lime); margin-bottom: 10px; }
+.menu__lista { list-style: none; margin: 0; padding: 0; }
+.menu__lista li { border-top: 1px solid rgba(247, 248, 243, .14); }
+.menu__lista li:last-child { border-bottom: 1px solid rgba(247, 248, 243, .14); }
+.menu__voce { display: flex; align-items: center; gap: 14px; padding: 11px 0; margin: 0; border-radius: 0; text-decoration: none; color: inherit; }
+.menu__foto { flex: none; width: 50px; height: 50px; clip-path: var(--timpano); overflow: hidden; background: rgba(247, 248, 243, .08); }
+.menu__foto img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s var(--e-out); }
+.menu__testi { flex: 1; display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.menu__nome { font: 400 clamp(1.7rem, 7.4vw, 2.3rem)/1 var(--serif); letter-spacing: -.01em; }
+.menu__sotto { font-size: .8rem; color: var(--salvia-chiara); }
+.menu__freccia { flex: none; width: 18px; color: var(--lime); transition: transform .4s var(--e-out); }
+.menu__voce:active .menu__freccia { transform: translateX(5px); }
+.menu__voce:active .menu__foto img { transform: scale(1.12); }
+.menu__prenota { margin: 22px 0 0; padding: 0 24px; width: 100%; background: var(--lime); border-color: var(--lime); color: var(--notte); }
+.menu__contatti { margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap; }
+.menu__contatti a { flex: 1; text-align: center; padding: 10px 0; border: 1px solid rgba(247, 248, 243, .3); border-radius: 999px; font-size: .88rem; text-decoration: none; margin: 0; }
+.menu__rametto { position: absolute; right: -40px; bottom: -30px; width: 190px; opacity: .06; pointer-events: none; }
+@media (max-width: 860px) { .testata__nav, .testata__prenota, .testata__logo span { display: none; } .testata__menu { display: inline-flex; } .testata { gap: 12px; --testata-h: 72px; } }
 
 /* ── hero ── */
 .hero { height: 200svh; position: relative; }
@@ -605,3 +632,11 @@ html.is-ridotto .dintorni__azioni { position: static; }
 @keyframes dondola { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(4deg); } }
 @media (max-width: 760px) { .ulivo--desk { display: none; } .ulivo { width: calc(var(--d) * .7); height: calc(var(--d) * .7); margin-top: calc(var(--d) * -.61); margin-left: calc(var(--d) * -.025); } }
 @media (prefers-reduced-motion: reduce) { .ulivo__dondolo { animation: none; } }
+@media (max-height: 700px) {
+  .menu__voce { padding: 7px 0; gap: 12px; }
+  .menu__foto { width: 40px; height: 40px; }
+  .menu__nome { font-size: 1.55rem; }
+  .menu__sotto { font-size: .74rem; }
+  .menu__prenota { margin: 14px 0 0; height: 50px; }
+  .menu__occhiello { margin-bottom: 6px; }
+}
