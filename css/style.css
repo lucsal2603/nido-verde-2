@@ -106,7 +106,7 @@ html.is-menu .testata__logo-scuro { display: block; }
 .menu__lista { list-style: none; margin: 0; padding: 0; }
 .menu__lista li { border-top: 1px solid rgba(247, 248, 243, .14); }
 .menu__lista li:last-child { border-bottom: 1px solid rgba(247, 248, 243, .14); }
-.menu__voce { display: flex; align-items: center; gap: 14px; padding: 11px 0; margin: 0; border-radius: 0; text-decoration: none; color: inherit; }
+.menu .menu__voce { display: flex; align-items: center; gap: 14px; padding: 11px 0; margin: 0; border-radius: 0; text-decoration: none; color: inherit; }
 .menu__foto { flex: none; width: 50px; height: 50px; clip-path: var(--timpano); overflow: hidden; background: rgba(247, 248, 243, .08); }
 .menu__foto img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s var(--e-out); }
 .menu__testi { flex: 1; display: flex; flex-direction: column; gap: 3px; min-width: 0; }
@@ -115,7 +115,7 @@ html.is-menu .testata__logo-scuro { display: block; }
 .menu__freccia { flex: none; width: 18px; color: var(--lime); transition: transform .4s var(--e-out); }
 .menu__voce:active .menu__freccia { transform: translateX(5px); }
 .menu__voce:active .menu__foto img { transform: scale(1.12); }
-.menu__prenota { margin: 22px 0 0; padding: 0 24px; width: 100%; background: var(--lime); border-color: var(--lime); color: var(--notte); }
+.menu .menu__prenota { margin: 22px 0 0; padding: 0 24px; width: 100%; background: var(--lime); border-color: var(--lime); color: var(--notte); }
 .menu__contatti { margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap; }
 .menu__contatti a { flex: 1; text-align: center; padding: 10px 0; border: 1px solid rgba(247, 248, 243, .3); border-radius: 999px; font-size: .88rem; text-decoration: none; margin: 0; }
 .menu__rametto { position: absolute; right: -40px; bottom: -30px; width: 190px; opacity: .06; pointer-events: none; }
@@ -637,6 +637,6 @@ html.is-ridotto .dintorni__azioni { position: static; }
   .menu__foto { width: 40px; height: 40px; }
   .menu__nome { font-size: 1.55rem; }
   .menu__sotto { font-size: .74rem; }
-  .menu__prenota { margin: 14px 0 0; height: 50px; }
+  .menu .menu__prenota { margin: 14px 0 0; height: 50px; }
   .menu__occhiello { margin-bottom: 6px; }
 }
