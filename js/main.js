@@ -162,7 +162,6 @@
     const MAPPA = [
       ['#skyroom .nido__tetto', .2, .2, 220, -125, 'dietro'],
       ['#starsbox .nido__tetto', .9, .3, 230, -12, 'dietro'],
-      ['.family__foto', .9, .04, 250, -50, 'dietro'],
       ['.busta', .06, .95, 230, 165, 'dentro', 'desk'],
       ['.magia__quattro li:last-child', .98, 0, 170, -14, 'sopra', 'desk'],
       ['.prenota__mappa', .95, .04, 240, -40, 'dietro'],
