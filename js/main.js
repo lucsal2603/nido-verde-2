@@ -511,7 +511,11 @@
     ST.create({ trigger: '.coccole', start: 'top 80px', end: 'bottom 80px', onToggle: (e) => testata.classList.toggle('is-scura', e.isActive) });
     const ramo = q('[data-ramo]'); if (!ramo) return;
     const svg = q('.ramo__disegno', ramo), olive = qa('.ramo__oliva', ramo), cartelle = qa('.cartella');
-    olive.forEach((o) => { const f = q('.ramo__frutto', o); if (!q('.ramo__onda', f)) { const w = document.createElement('i'); w.className = 'ramo__onda'; f.appendChild(w); } });
+    olive.forEach((o) => {
+      const f = q('.ramo__frutto', o);
+      if (!q('.ramo__molla', f)) { const m = document.createElement('span'); m.className = 'ramo__molla'; m.appendChild(q('svg', f)); f.prepend(m); }
+      if (!q('.ramo__onda', f)) { const w = document.createElement('i'); w.className = 'ramo__onda'; f.appendChild(w); }
+    });
     const pendolo = (o) => q('.ramo__frutto svg', o);
     const NS = 'http://www.w3.org/2000/svg';
     let gambo = null, foglie = [];
@@ -608,7 +612,7 @@
         <path d="M44 60C41 68 35 72 28 73" stroke="#000" stroke-width="2" opacity=".18" fill="none" stroke-linecap="round"/>
         <g fill="#fff" opacity=".18"><circle cx="38" cy="40" r=".9"/><circle cx="33" cy="54" r=".7"/><circle cx="43" cy="49" r=".8"/><circle cx="24" cy="60" r=".7"/></g>`;
     });
-    disegna();
+    disegna(); gsap.set(foglie, { transformOrigin: '0% 50%' });
     let larghezza = ramo.clientWidth;
     window.addEventListener('resize', () => { if (ramo.clientWidth !== larghezza) { larghezza = ramo.clientWidth; disegna(); if (entrato) { gsap.set(foglie, { scale: 1 }); accendiVento(); } } });
     /* foglioline che si staccano e cadono dondolando */
@@ -627,13 +631,34 @@
           .to(f, { opacity: 0, duration: .5 }, 1.45);
       }
     };
-    /* le foglie vicine all'oliva fremono al passaggio */
-    const fremono = (o) => {
+    /* molle: ogni foglia e ogni oliva ha un angolo e una velocità; il mouse dà solo una spinta o cambia il punto d'arrivo,
+       e una molla smorzata le riporta a riposo. Così entrare e uscire in fretta non fa mai ripartire un'animazione da capo. */
+    const molle = new Map();
+    const molla = (el, opz) => { if (!molle.has(el)) molle.set(el, Object.assign({ a: 0, v: 0, meta: 0, s: 1, vs: 0, metaS: 1, k: 90, c: 9 }, opz)); return molle.get(el); };
+    let molleAttive = false;
+    const passo = (_, dms) => {
+      const dt = Math.min(.032, dms / 1000); let ferme = true;
+      molle.forEach((m, el) => {
+        m.v += ((m.meta - m.a) * m.k - m.v * m.c) * dt; m.a += m.v * dt;
+        m.vs += ((m.metaS - m.s) * m.k - m.vs * m.c) * dt; m.s += m.vs * dt;
+        if (Math.abs(m.v) > .02 || Math.abs(m.a - m.meta) > .02 || Math.abs(m.vs) > .0005 || Math.abs(m.s - m.metaS) > .0005) ferme = false;
+        gsap.set(el, { rotate: m.a, scale: m.s });
+      });
+      if (ferme) { gsap.ticker.remove(passo); molleAttive = false; }
+    };
+    const sveglia = () => { if (!molleAttive) { molleAttive = true; gsap.ticker.add(passo); } };
+    /* le foglie vicine all'oliva ricevono una spinta, più forte se sono vicine, nel verso in cui si muove il mouse */
+    let ultimoX = 0;
+    const fremono = (o, verso) => {
+      if (!entrato) return;
       const r = ramo.getBoundingClientRect(), b = o.getBoundingClientRect(), cx = b.left - r.left + b.width / 2;
       foglie.forEach((f) => {
         const fb = f.getBoundingClientRect(), d = Math.abs(fb.left - r.left + fb.width / 2 - cx);
-        if (d < 120) gsap.fromTo(f, { rotate: 0 }, { keyframes: [{ rotate: 14 }, { rotate: -9 }, { rotate: 4 }, { rotate: 0 }], duration: .9, ease: 'sine.inOut', delay: d / 900, overwrite: 'auto' });
+        if (d > 140) return;
+        const m = molla(f, { k: 70, c: 6 });
+        m.v = gsap.utils.clamp(-160, 160, m.v + verso * 150 * (1 - d / 140));
       });
+      sveglia();
     };
     /* vento: foglie e olive dondolano piano, ognuna con il suo ritmo; solo quando il ramo è sullo schermo */
     let vento = [];
@@ -675,8 +700,10 @@
         e.preventDefault(); apri((i + k + olive.length) % olive.length, true);
       });
       if (!TOUCH && !RIDOTTO) {
-        o.addEventListener('pointerenter', () => { gsap.to(q('.ramo__frutto', o), { rotate: 12, scale: 1.14, duration: .4, ease: 'back.out(3)', overwrite: 'auto' }); fremono(o); });
-        o.addEventListener('pointerleave', () => gsap.to(q('.ramo__frutto', o), { rotate: 0, scale: 1, duration: 1.1, ease: 'elastic.out(1, .3)', overwrite: 'auto' }));
+        const m = molla(q('.ramo__molla', o), { k: 110, c: 11 });
+        o.addEventListener('pointerenter', (e) => { const verso = e.clientX >= ultimoX ? 1 : -1; ultimoX = e.clientX; m.meta = 10 * verso; m.metaS = 1.12; m.v += 40 * verso; sveglia(); fremono(o, verso); });
+        o.addEventListener('pointermove', (e) => { ultimoX = e.clientX; });
+        o.addEventListener('pointerleave', (e) => { const verso = e.clientX >= ultimoX ? 1 : -1; m.meta = 0; m.metaS = 1; m.v -= 30 * verso; sveglia(); fremono(o, -verso * .6); });
       }
     });
     /* entrata: il gambo si disegna, le foglie spuntano, le olive cadono e dondolano, poi si apre la prima cartella */
