@@ -509,34 +509,100 @@
     olive.forEach((o) => { const f = q('.ramo__frutto', o); if (!q('.ramo__onda', f)) { const w = document.createElement('i'); w.className = 'ramo__onda'; f.appendChild(w); } });
     const pendolo = (o) => q('.ramo__frutto svg', o);
     const NS = 'http://www.w3.org/2000/svg';
-    let gambo = null, foglie = [], piccioli = [];
+    let gambo = null, foglie = [];
     /* il ramo si disegna alla larghezza vera, così le foglie non si deformano; le olive pendono dal gambo */
-    const disegna = () => {
-      const W = ramo.clientWidth, H = ramo.clientHeight, y0 = Math.min(64, H * .26), amp = Math.min(22, W * .02);
-      const Y = (x) => y0 + amp * Math.sin((x / W) * Math.PI * 2.2 + .4) + (x / W) * 10;
-      svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.innerHTML = '';
-      let d = `M${-W * .02} ${Y(0)}`;
-      for (let x = 0; x <= W * 1.02; x += W / 60) d += ` L${x.toFixed(1)} ${Y(x).toFixed(1)}`;
-      gambo = document.createElementNS(NS, 'path');
-      gambo.setAttribute('d', d); gambo.setAttribute('fill', 'none'); gambo.setAttribute('stroke', '#8B5E3C'); gambo.setAttribute('stroke-width', W < 700 ? 3 : 4); gambo.setAttribute('stroke-linecap', 'round');
-      svg.appendChild(gambo);
-      /* foglie a coppie sfalsate lungo il gambo, sopra e sotto, mai davanti alle olive */
-      foglie = [];
-      const posOlive = olive.map((o) => parseFloat(o.style.getPropertyValue('--x')) / 100 * W);
-      const n = Math.round(W / (W < 700 ? 36 : 46));
-      for (let i = 1; i < n; i++) {
-        const x = (i / n) * W, sopra = i % 2 === 0;
-        if (!sopra && posOlive.some((p) => Math.abs(p - x) < (W < 700 ? 34 : 48))) continue;
-        const L = (W < 700 ? 30 : 46) * (0.8 + ((i * 37) % 10) / 25), w = L * .2;
-        const dir = Math.atan2(Y(x + 1) - Y(x), 1) * 180 / Math.PI, ang = dir + (sopra ? -1 : 1) * (32 + ((i * 53) % 18));
-        const g = document.createElementNS(NS, 'g');
-        g.setAttribute('transform', `translate(${x.toFixed(1)} ${Y(x).toFixed(1)}) rotate(${ang.toFixed(1)})`);
-        g.innerHTML = `<g class="ramo__vento"><g class="ramo__foglia"><path d="M0 0C${L * .3} ${-w} ${L * .75} ${-w} ${L} 0 ${L * .75} ${w} ${L * .3} ${w} 0 0z" fill="#B4C2AC"/><path d="M0 0C${L * .3} ${-w} ${L * .75} ${-w} ${L} 0z" fill="#607860"/></g></g>`;
-        svg.appendChild(g); foglie.push(g.firstChild.firstChild);
-      }
-      /* il punto d'attacco di ogni oliva sul gambo */
-      olive.forEach((o, i) => o.style.setProperty('--y', `${Y(posOlive[i]) - 2}px`));
+    /* numeri "casuali" ma sempre uguali, così il ramo non cambia a ogni ridisegno */
+    const caso = (k) => { const x = Math.sin(k * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+    /* una foglia d'ulivo come nel logo: lunga e stretta, un po' asimmetrica e piegata, con la nervatura chiara;
+       alcune sono girate e mostrano il rovescio argentato */
+    const foglia = (L, k) => {
+      const w = L * (.15 + caso(k) * .05), piega = (caso(k + 1) - .5) * L * .16, rovescio = caso(k + 2) < .3;
+      const sopra = `M0 0C${L * .22} ${-w * 1.15} ${L * .62} ${-w * 1.05 + piega * .4} ${L} ${piega}`;
+      const sotto = `C${L * .7} ${w * .85 + piega * .6} ${L * .28} ${w * 1.05} 0 0Z`;
+      const meta = `M0 0C${L * .22} ${-w * 1.15} ${L * .62} ${-w * 1.05 + piega * .4} ${L} ${piega}C${L * .6} ${piega * .7} ${L * .3} ${piega * .2} 0 0Z`;
+      const nerv = `M${L * .04} 0C${L * .35} ${piega * .15} ${L * .65} ${piega * .55} ${L * .93} ${piega * .95}`;
+      return rovescio
+        ? `<path d="${sopra}${sotto}" fill="url(#rFogliaRov)"/><path d="${nerv}" stroke="#7E8F7A" stroke-width="${Math.max(.6, L * .018)}" fill="none" stroke-linecap="round"/>`
+        : `<path d="${sopra}${sotto}" fill="url(#rFoglia)"/><path d="${meta}" fill="#2F4532" opacity=".28"/><path d="${nerv}" stroke="#C9D3BF" stroke-width="${Math.max(.6, L * .02)}" fill="none" stroke-linecap="round" opacity=".75"/>`;
     };
+    const disegna = () => {
+      const W = ramo.clientWidth, H = ramo.clientHeight, y0 = Math.min(64, H * .26), amp = Math.min(22, W * .02), picc = W < 700;
+      const Y = (x) => y0 + amp * Math.sin((x / W) * Math.PI * 2.2 + .4) + (x / W) * 10;
+      const dY = (x) => (Y(x + 1) - Y(x - 1)) / 2;
+      svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+      svg.innerHTML = `<defs>
+        <linearGradient id="rFoglia" x1="0" x2="1"><stop offset="0" stop-color="#4E6A4F"/><stop offset=".55" stop-color="#637861"/><stop offset="1" stop-color="#7C9178"/></linearGradient>
+        <linearGradient id="rFogliaRov" x1="0" x2="1"><stop offset="0" stop-color="#8E9F8B"/><stop offset="1" stop-color="#B9C6B3"/></linearGradient>
+        <linearGradient id="rLegno" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#A27450"/><stop offset=".55" stop-color="#7A5233"/><stop offset="1" stop-color="#5A3B24"/></linearGradient>
+        <mask id="rCresce" maskUnits="userSpaceOnUse" x="${-W}" y="${-H}" width="${W * 3}" height="${H * 3}"><path class="ramo__traccia" fill="none" stroke="#fff" stroke-width="${H * 2}" stroke-linecap="butt"/></mask>
+      </defs>`;
+      /* il gambo: più grosso a sinistra, sottile verso la punta, con nodi e rametti laterali */
+      const x0 = -W * .02, x1 = W * 1.02, passi = 90, alto = [], basso = [];
+      for (let k = 0; k <= passi; k++) {
+        const x = x0 + (x1 - x0) * k / passi, t = k / passi, sp = (picc ? 5.2 : 7) * (1 - t * .72) * (1 + (caso(k) - .5) * .12);
+        const n = Math.hypot(1, dY(x)), nx = -dY(x) / n, ny = 1 / n;
+        alto.push([x + nx * sp / 2, Y(x) - ny * sp / 2]); basso.push([x - nx * sp / 2, Y(x) + ny * sp / 2]);
+      }
+      const linea = (pts) => pts.map((p, k) => (k ? 'L' : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1)).join('');
+      const legno = document.createElementNS(NS, 'g'); legno.setAttribute('mask', 'url(#rCresce)');
+      let corteccia = '';
+      for (let k = 0; k < 26; k++) { const x = x0 + (x1 - x0) * caso(k + 40), l = 6 + caso(k + 41) * 14; corteccia += `M${x.toFixed(1)} ${(Y(x) + (caso(k + 42) - .5) * 2.5).toFixed(1)}l${l.toFixed(1)} ${(dY(x) * l).toFixed(1)}`; }
+      /* rametti laterali che portano altre foglie */
+      const rametti = [], posOlive = olive.map((o) => parseFloat(o.style.getPropertyValue('--x')) / 100 * W);
+      const nR = picc ? 4 : 7;
+      for (let k = 0; k < nR; k++) {
+        const x = W * (.06 + .88 * (k + .5) / nR) + (caso(k + 60) - .5) * 30;
+        if (posOlive.some((p) => Math.abs(p - x) < (picc ? 30 : 46))) continue;
+        const su = k % 2 === 0, l = (picc ? 22 : 38) * (.8 + caso(k + 61) * .5), a = (su ? -1 : 1) * (28 + caso(k + 62) * 22) * Math.PI / 180 + Math.atan(dY(x));
+        const ex = x + Math.cos(a) * l, ey = Y(x) + Math.sin(a) * l;
+        rametti.push({ x, y: Y(x), ex, ey, a, su });
+      }
+      legno.innerHTML = `<path d="${linea(alto)}${linea(basso.slice().reverse()).replace('M', 'L')}Z" fill="url(#rLegno)"/>`
+        + rametti.map((r) => `<path d="M${r.x.toFixed(1)} ${r.y.toFixed(1)}Q${((r.x + r.ex) / 2 + (r.su ? -4 : 4)).toFixed(1)} ${((r.y + r.ey) / 2).toFixed(1)} ${r.ex.toFixed(1)} ${r.ey.toFixed(1)}" stroke="#7A5233" stroke-width="${picc ? 1.6 : 2.2}" fill="none" stroke-linecap="round"/>`).join('')
+        + `<path d="${corteccia}" stroke="#4A3020" stroke-width=".8" opacity=".55" fill="none" stroke-linecap="round"/>`
+        + [.18, .42, .66, .88].map((t, k) => { const x = W * t + (caso(k + 80) - .5) * 40; return `<ellipse cx="${x.toFixed(1)}" cy="${Y(x).toFixed(1)}" rx="${picc ? 2.4 : 3.4}" ry="${picc ? 1.6 : 2.2}" fill="#5A3B24"/>`; }).join('');
+      /* i piccioli delle olive fanno parte del ramo: scendono dal gambo e l'oliva ci resta appesa */
+      const LP = picc ? 10 : 14;
+      legno.innerHTML += posOlive.map((px) => `<path d="M${px.toFixed(1)} ${Y(px).toFixed(1)}C${(px + 1.5).toFixed(1)} ${(Y(px) + LP * .4).toFixed(1)} ${(px - 1).toFixed(1)} ${(Y(px) + LP * .7).toFixed(1)} ${px.toFixed(1)} ${(Y(px) + LP).toFixed(1)}" stroke="#6E4A2C" stroke-width="${picc ? 1.8 : 2.4}" fill="none" stroke-linecap="round"/>`).join('');
+      svg.appendChild(legno);
+      gambo = q('.ramo__traccia', svg);
+      let dc = `M${x0} ${Y(0)}`; for (let x = x0; x <= x1; x += W / 60) dc += ` L${x.toFixed(1)} ${Y(x).toFixed(1)}`;
+      gambo.setAttribute('d', dc);
+      /* le foglie: lungo il gambo, a coppie sfalsate, più due o tre in cima a ogni rametto */
+      foglie = [];
+      const metti = (x, y, ang, L, k) => {
+        const g = document.createElementNS(NS, 'g');
+        g.setAttribute('transform', `translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${ang.toFixed(1)})`);
+        g.innerHTML = `<g class="ramo__vento"><g class="ramo__foglia">${foglia(L, k)}</g></g>`;
+        svg.appendChild(g); foglie.push(g.firstChild.firstChild);
+      };
+      const n = Math.round(W / (picc ? 30 : 40)), base = picc ? 30 : 46;
+      for (let i = 1; i < n; i++) {
+        const x = (i / n) * W + (caso(i + 100) - .5) * 10, sopra = i % 2 === 0;
+        if (!sopra && posOlive.some((p) => Math.abs(p - x) < (picc ? 32 : 50))) continue;
+        const dir = Math.atan(dY(x)) * 180 / Math.PI, ang = dir + (sopra ? -1 : 1) * (26 + caso(i + 120) * 30);
+        metti(x, Y(x), ang, base * (.75 + caso(i + 140) * .55) * (1 - (x / W) * .18), i);
+      }
+      rametti.forEach((r, k) => {
+        const da = r.a * 180 / Math.PI;
+        [-38, 6, 44].forEach((off, j) => { if (j === 2 && caso(k + 200) < .4) return; metti(r.ex, r.ey, da + off * (r.su ? 1 : -1) * .8, base * (.7 + caso(k * 3 + j + 220) * .4), 300 + k * 3 + j); });
+      });
+      /* il punto d'attacco di ogni oliva sul gambo */
+      olive.forEach((o, i) => o.style.setProperty('--y', `${Y(posOlive[i]) + LP - 1}px`));
+    };
+    /* le olive: volume, riflesso, picciolo curvo e coroncina in cima; il colore cambia con la maturazione */
+    const TINTE = { scura: ['#5B4A6E', '#3A2F48', '#221B2C'], verde: ['#A3B353', '#7A8C3A', '#4F5E22'] };
+    olive.forEach((o, i) => {
+      const t = TINTE[o.classList.contains('ramo__oliva--verde') ? 'verde' : 'scura'], id = `rOliva${i}`;
+      q('.ramo__frutto svg', o).setAttribute('viewBox', '0 15 60 63');
+      q('.ramo__frutto svg', o).innerHTML = `<defs><radialGradient id="${id}" cx=".36" cy=".34" r=".75"><stop offset="0" stop-color="${t[0]}"/><stop offset=".55" stop-color="${t[1]}"/><stop offset="1" stop-color="${t[2]}"/></radialGradient></defs>
+        <path class="ramo__polpa" d="M30 15C45 15 56 30 55 48C54 66 43 77 30 77C16 77 5 66 5 47C5 29 16 15 30 15Z" fill="url(#${id})"/>
+        <path d="M24 16.5l6 3 6-3-2.5 4.5 3 1.5-6.5.5-6.5-.5 3-1.5z" fill="#5A3B24"/>
+        <ellipse cx="20" cy="35" rx="5.5" ry="10" fill="#fff" opacity=".28" transform="rotate(-22 20 35)"/>
+        <ellipse cx="17.5" cy="31" rx="2" ry="3.2" fill="#fff" opacity=".55" transform="rotate(-22 17.5 31)"/>
+        <path d="M44 60C41 68 35 72 28 73" stroke="#000" stroke-width="2" opacity=".18" fill="none" stroke-linecap="round"/>
+        <g fill="#fff" opacity=".18"><circle cx="38" cy="40" r=".9"/><circle cx="33" cy="54" r=".7"/><circle cx="43" cy="49" r=".8"/><circle cx="24" cy="60" r=".7"/></g>`;
+    });
     disegna();
     let larghezza = ramo.clientWidth;
     window.addEventListener('resize', () => { if (ramo.clientWidth !== larghezza) { larghezza = ramo.clientWidth; disegna(); if (entrato) { gsap.set(foglie, { scale: 1 }); accendiVento(); } } });
@@ -590,8 +656,8 @@
         const fr = q('.ramo__frutto', olive[i]);
         gsap.timeline()
           .to(fr, { scaleX: 1.25, scaleY: .78, duration: .12, ease: 'power2.out' })
-          .to(fr, { scaleX: .88, scaleY: 1.18, y: -10, duration: .16, ease: 'power2.out' })
-          .to(fr, { scaleX: 1, scaleY: 1, y: 0, duration: .55, ease: 'elastic.out(1.1, .4)' })
+          .to(fr, { scaleX: .9, scaleY: 1.14, duration: .16, ease: 'power2.out' })
+          .to(fr, { scaleX: 1, scaleY: 1, duration: .55, ease: 'elastic.out(1.1, .4)' })
           .fromTo(fr, { rotate: 0 }, { keyframes: [{ rotate: -22, duration: .2 }, { rotate: 16, duration: .24 }, { rotate: -9, duration: .24 }, { rotate: 4, duration: .22 }, { rotate: 0, duration: .3 }], ease: 'sine.inOut' }, 0);
         gsap.fromTo(q('.ramo__onda', fr), { scale: .6, opacity: .9 }, { scale: 2.4, opacity: 0, duration: .9, ease: 'power2.out' });
         cadonoFoglie(olive[i]);
@@ -615,7 +681,7 @@
     const L = gambo.getTotalLength();
     gsap.set(gambo, { strokeDasharray: L, strokeDashoffset: L });
     gsap.set(foglie, { scale: 0, rotate: -70, transformOrigin: '0% 50%' });
-    gsap.set(qa('.ramo__frutto', ramo), { y: -90, opacity: 0, scaleY: 1.3, transformOrigin: '50% 0%' });
+    gsap.set(qa('.ramo__frutto', ramo), { scale: 0, opacity: 0, transformOrigin: '50% 0%' });
     gsap.set(qa('.ramo__nome, .ramo__prezzo', ramo), { opacity: 0, y: 14 });
     gsap.set(q('.cartelle'), { opacity: 0, y: 30 });
     const frutti = qa('.ramo__frutto', ramo);
@@ -624,7 +690,7 @@
       .to(gambo, { strokeDashoffset: 0, duration: 1.6, ease: 'power2.inOut' }, 0)
       .to(foglie, { scale: 1, rotate: 0, duration: .7, ease: 'back.out(2.2)', stagger: { each: 1.3 / Math.max(1, foglie.length) } }, .2)
       /* le olive cadono dall'alto, si allungano, rimbalzano e oscillano come pendoli */
-      .to(frutti, { y: 0, opacity: 1, scaleY: 1, duration: .7, ease: 'bounce.out', stagger: .16 }, 1.0)
+      .to(frutti, { scale: 1, opacity: 1, duration: .9, ease: 'elastic.out(1, .45)', stagger: .16 }, 1.0)
       .fromTo(frutti, { rotate: 0 }, { keyframes: [{ rotate: 18, duration: .25 }, { rotate: -13, duration: .3 }, { rotate: 7, duration: .3 }, { rotate: -3, duration: .3 }, { rotate: 0, duration: .35 }], ease: 'sine.inOut', stagger: .16 }, 1.5)
       .to(qa('.ramo__nome, .ramo__prezzo', ramo), { opacity: 1, y: 0, duration: .5, stagger: .05, ease: 'power3.out' }, 1.4)
       /* una folata di vento passa lungo il ramo */
