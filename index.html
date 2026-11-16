@@ -17,12 +17,12 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Big+Shoulders+Display:wght@300;400&family=Albert+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=2026111601">
+  <link rel="stylesheet" href="css/style.css?v=2026111602">
   <script>if ('scrollRestoration' in history) history.scrollRestoration = 'manual';</script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.4/dist/lenis.min.js"></script>
-  <script src="js/main.js?v=2026111601" defer></script>
+  <script src="js/main.js?v=2026111602" defer></script>
 </head>
 <body>
 
@@ -248,28 +248,65 @@
       <h2 class="titolo-l"><span class="riga"><i>Tutto artigianale,</i></span><span class="riga"><i>tutto tuo.</i></span></h2>
       <p data-sale>Colazione inclusa. Vasca idromassaggio 40 € a coppia, aperitivo brindisi 20 €, aperitivo del contadino 40 €, torta di compleanno 15 €. Gli extra si confermano almeno 48 ore prima del check-in; allergie, intolleranze e diete: basta dirlo.</p>
     </header>
-    <ul class="coccole__lista">
-      <li class="coccole__voce coccole__voce--destra">
-        <a class="coccole__parola" href="#prenota"><span>colazione</span><i class="coccole__binario"></i></a>
-        <a class="coccole__foto" href="#prenota" tabindex="-1" aria-hidden="true"><img src="img/skyroom-dentro.webp" alt="" loading="lazy"></a>
-        <a class="coccole__foto coccole__foto--seconda" href="#prenota" tabindex="-1" aria-hidden="true"><img src="img/starsbox-dentro.webp" alt="" loading="lazy"></a>
-      </li>
-      <li class="coccole__voce coccole__voce--centro">
-        <a class="coccole__parola" href="#prenota"><span>vasca</span><i class="coccole__binario"></i></a>
-        <a class="coccole__foto" href="#prenota" tabindex="-1" aria-hidden="true"><img src="img/vasca-lago.webp" alt="" loading="lazy"></a>
-        <a class="coccole__foto coccole__foto--seconda" href="#prenota" tabindex="-1" aria-hidden="true"><img src="img/vasca-ombrellone.webp" alt="" loading="lazy"></a>
-      </li>
-      <li class="coccole__voce coccole__voce--destra">
-        <a class="coccole__parola" href="#prenota"><span>aperitivi</span><i class="coccole__binario"></i></a>
-        <a class="coccole__foto" href="#prenota" tabindex="-1" aria-hidden="true"><img src="img/aperitivo-calice.webp" alt="" loading="lazy"></a>
-        <a class="coccole__foto coccole__foto--seconda" href="#prenota" tabindex="-1" aria-hidden="true"><img src="img/skyroom-tetto.webp" alt="" loading="lazy"></a>
-      </li>
-      <li class="coccole__voce coccole__voce--centro">
-        <a class="coccole__parola" href="#prenota"><span>torta</span><i class="coccole__binario"></i></a>
-        <a class="coccole__foto" href="#prenota" tabindex="-1" aria-hidden="true"><img src="img/cestino-lago.webp" alt="" loading="lazy"></a>
-        <a class="coccole__foto coccole__foto--seconda" href="#prenota" tabindex="-1" aria-hidden="true"><img src="img/starsbox-letto.webp" alt="" loading="lazy"></a>
-      </li>
-    </ul>
+    <div class="ramo" data-ramo>
+      <svg class="ramo__disegno" viewBox="0 0 1200 220" preserveAspectRatio="none" aria-hidden="true"></svg>
+      <div class="ramo__olive" role="tablist" aria-label="Le coccole del Nido">
+        <button class="ramo__oliva ramo__oliva--scura" type="button" role="tab" id="oliva-colazione" aria-controls="cartella-colazione" aria-selected="true" style="--x:17%">
+          <span class="ramo__frutto" aria-hidden="true"><svg viewBox="0 0 60 78"><path class="ramo__picciolo" d="M30 0C30 6 31 10 30 14" fill="none" stroke="#8B5E3C" stroke-width="2.4" stroke-linecap="round"/><ellipse class="ramo__polpa" cx="30" cy="46" rx="25" ry="31"/><ellipse cx="21" cy="34" rx="6" ry="9" fill="#fff" opacity=".22" transform="rotate(-18 21 34)"/></svg></span>
+          <span class="ramo__nome">Colazione</span>
+          <span class="ramo__prezzo">inclusa</span>
+        </button>
+        <button class="ramo__oliva ramo__oliva--verde" type="button" role="tab" id="oliva-vasca" aria-controls="cartella-vasca" aria-selected="false" tabindex="-1" style="--x:39%">
+          <span class="ramo__frutto" aria-hidden="true"><svg viewBox="0 0 60 78"><path class="ramo__picciolo" d="M30 0C30 6 31 10 30 14" fill="none" stroke="#8B5E3C" stroke-width="2.4" stroke-linecap="round"/><ellipse class="ramo__polpa" cx="30" cy="46" rx="25" ry="31"/><ellipse cx="21" cy="34" rx="6" ry="9" fill="#fff" opacity=".22" transform="rotate(-18 21 34)"/></svg></span>
+          <span class="ramo__nome">Vasca</span>
+          <span class="ramo__prezzo">40 € a coppia</span>
+        </button>
+        <button class="ramo__oliva ramo__oliva--scura" type="button" role="tab" id="oliva-aperitivi" aria-controls="cartella-aperitivi" aria-selected="false" tabindex="-1" style="--x:61%">
+          <span class="ramo__frutto" aria-hidden="true"><svg viewBox="0 0 60 78"><path class="ramo__picciolo" d="M30 0C30 6 31 10 30 14" fill="none" stroke="#8B5E3C" stroke-width="2.4" stroke-linecap="round"/><ellipse class="ramo__polpa" cx="30" cy="46" rx="25" ry="31"/><ellipse cx="21" cy="34" rx="6" ry="9" fill="#fff" opacity=".22" transform="rotate(-18 21 34)"/></svg></span>
+          <span class="ramo__nome">Aperitivi</span>
+          <span class="ramo__prezzo">da 20 €</span>
+        </button>
+        <button class="ramo__oliva ramo__oliva--verde" type="button" role="tab" id="oliva-torta" aria-controls="cartella-torta" aria-selected="false" tabindex="-1" style="--x:83%">
+          <span class="ramo__frutto" aria-hidden="true"><svg viewBox="0 0 60 78"><path class="ramo__picciolo" d="M30 0C30 6 31 10 30 14" fill="none" stroke="#8B5E3C" stroke-width="2.4" stroke-linecap="round"/><ellipse class="ramo__polpa" cx="30" cy="46" rx="25" ry="31"/><ellipse cx="21" cy="34" rx="6" ry="9" fill="#fff" opacity=".22" transform="rotate(-18 21 34)"/></svg></span>
+          <span class="ramo__nome">Torta</span>
+          <span class="ramo__prezzo">15 €</span>
+        </button>
+      </div>
+    </div>
+    <div class="cartelle">
+      <div class="cartella" role="tabpanel" id="cartella-colazione" aria-labelledby="oliva-colazione">
+        <div class="cartella__testo">
+          <p class="cartella__prezzo">inclusa</p>
+          <h3 class="cartella__titolo">Colazione</h3>
+          <p>La colazione artigianale del Nido, servita nel cestino con prodotti freschi del territorio. Per ogni dieta: basta dirlo.</p>
+        </div>
+        <div class="cartella__foto"><figure><img src="img/starsbox-dentro.webp" alt="" loading="lazy"></figure><figure><img src="img/skyroom-dentro.webp" alt="" loading="lazy"></figure><figure><img src="img/lago-panorama.webp" alt="" loading="lazy"></figure></div>
+      </div>
+      <div class="cartella" role="tabpanel" id="cartella-vasca" aria-labelledby="oliva-vasca" hidden>
+        <div class="cartella__testo">
+          <p class="cartella__prezzo">40 € a coppia</p>
+          <h3 class="cartella__titolo">Vasca</h3>
+          <p>La vasca idromassaggio riscaldata, con il lago davanti e nessun limite di orario. Da confermare almeno 24 ore prima del check-in.</p>
+        </div>
+        <div class="cartella__foto"><figure><img src="img/vasca-lago.webp" alt="" loading="lazy"></figure><figure><img src="img/vasca-ombrellone.webp" alt="" loading="lazy"></figure><figure><img src="img/vasca-nuvole.webp" alt="" loading="lazy"></figure></div>
+      </div>
+      <div class="cartella" role="tabpanel" id="cartella-aperitivi" aria-labelledby="oliva-aperitivi" hidden>
+        <div class="cartella__testo">
+          <p class="cartella__prezzo">da 20 €</p>
+          <h3 class="cartella__titolo">Aperitivi</h3>
+          <p>L’aperitivo brindisi a 20 € o l’aperitivo del contadino a 40 €, da gustare in vasca o sotto il gazebo mentre il sole scende sul lago.</p>
+        </div>
+        <div class="cartella__foto"><figure><img src="img/colazione-vasca.webp" alt="" loading="lazy"></figure><figure><img src="img/aperitivo-calice.webp" alt="" loading="lazy"></figure><figure><img src="img/bacio.webp" alt="" loading="lazy"></figure></div>
+      </div>
+      <div class="cartella" role="tabpanel" id="cartella-torta" aria-labelledby="oliva-torta" hidden>
+        <div class="cartella__testo">
+          <p class="cartella__prezzo">15 €</p>
+          <h3 class="cartella__titolo">Torta</h3>
+          <p>Una torta di compleanno per festeggiare al Nido una ricorrenza speciale. Da prenotare almeno 48 ore prima del check-in.</p>
+        </div>
+        <div class="cartella__foto"><figure><img src="img/starsbox-letto.webp" alt="" loading="lazy"></figure><figure><img src="img/skyroom-tetto.webp" alt="" loading="lazy"></figure><figure><img src="img/papaveri.webp" alt="" loading="lazy"></figure></div>
+      </div>
+    </div>
   </section>
 
   <!-- dintorni: sezione appiccicosa a passi (impianto di funtownstudio.com), con l'omino a destra -->

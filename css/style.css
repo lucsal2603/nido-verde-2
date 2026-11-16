@@ -265,25 +265,39 @@ html.js:not(.is-ridotto) .stella { transform: none; }
 .coccole__testa { padding: 0 var(--gut); margin-bottom: clamp(30px, 5vw, 80px); max-width: 780px; }
 .coccole__testa .occhiello { color: var(--lime); }
 .coccole__testa > p:last-child { margin-top: 1.2em; max-width: 60ch; opacity: .85; }
-.coccole__lista { --passo: clamp(300px, 40vw, 600px); list-style: none; margin: 0; padding: 0; }
-.coccole__voce { position: relative; height: var(--passo); }
-.coccole__parola { position: absolute; left: var(--gut); top: 14%; z-index: 3; display: block; transform: rotate(33deg); transform-origin: 0 0; font: 400 clamp(56px, 9.6vw, 152px)/.9 var(--serif); letter-spacing: -.025em; white-space: nowrap; text-decoration: none; }
-.coccole__parola > span { display: inline-block; padding-right: .08em; background-image: linear-gradient(90deg, var(--lime) 0 50%, var(--carta) 50% 100%); background-size: 210% 100%; background-position: 100% 0; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; transition: background-position .6s var(--e-out); }
-@media (hover: hover) and (pointer: fine) { .coccole__parola:hover > span { background-position: 0 0; } }
-.coccole__binario { position: absolute; left: -60vw; width: 300vw; bottom: .03em; height: 1.5px; background: var(--carta); transform-origin: 20% 50%; pointer-events: none; z-index: 2; }
-.coccole__foto { position: absolute; z-index: 1; display: block; overflow: hidden; background: rgba(247, 248, 243, .08); }
-.coccole__foto img { width: 100%; height: 100%; object-fit: cover; transition: transform .8s var(--e-out); }
-.coccole__voce--destra .coccole__foto { left: 66%; width: 27%; top: 2%; aspect-ratio: 3 / 4; }
-.coccole__voce--destra .coccole__foto--seconda { left: 39%; width: 22%; top: 60%; aspect-ratio: 4 / 3; }
-.coccole__voce--centro .coccole__foto { left: 35%; width: 30%; top: 44%; aspect-ratio: 4 / 3; }
-.coccole__voce--centro .coccole__foto--seconda { left: 76%; width: 17%; top: 4%; aspect-ratio: 3 / 4; }
-@media (hover: hover) and (pointer: fine) { .coccole__voce:has(.coccole__parola:hover) .coccole__foto img { transform: scale(1.06); } }
-@media (max-width: 700px) {
-  .coccole__lista { --passo: 84vw; }
-  .coccole__parola { font-size: 15.5vw; top: 8%; }
-  .coccole__voce--destra .coccole__foto { left: 57%; width: 38%; top: -2%; }
-  .coccole__voce--centro .coccole__foto { left: 36%; width: 46%; top: 46%; }
-  .coccole__foto--seconda { display: none; }
+/* il ramo: le olive sono i bottoni, cliccandole si apre la cartella con foto e prezzo */
+.ramo { position: relative; height: clamp(230px, 22vw, 300px); margin: 0 var(--gut); }
+.ramo__disegno { position: absolute; left: 0; top: 0; width: 100%; height: 100%; overflow: visible; }
+.ramo__olive { position: absolute; inset: 0; }
+.ramo__oliva { position: absolute; left: var(--x); top: var(--y, 70px); transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 0 6px 6px; background: none; border: 0; color: var(--carta); cursor: pointer; font: inherit; -webkit-tap-highlight-color: transparent; }
+.ramo__frutto { display: block; width: clamp(44px, 4.6vw, 64px); transform-origin: 50% 0; }
+.ramo__frutto svg { display: block; width: 100%; height: auto; overflow: visible; }
+.ramo__oliva--scura .ramo__polpa { fill: #3A3550; }
+.ramo__oliva--verde .ramo__polpa { fill: #6E7F3A; }
+.ramo__polpa { stroke: transparent; stroke-width: 3; transition: stroke .3s, fill .3s; }
+.ramo__oliva[aria-selected="true"] .ramo__polpa { stroke: var(--lime); }
+.ramo__nome { font: italic 400 clamp(1.25rem, 2vw, 1.9rem)/1 var(--serif); transition: color .3s; }
+.ramo__prezzo { font-size: .78rem; letter-spacing: .06em; opacity: .7; }
+.ramo__oliva[aria-selected="true"] .ramo__nome { color: var(--lime); }
+@media (hover: hover) and (pointer: fine) { .ramo__oliva:hover .ramo__nome { color: var(--lime); } }
+.ramo__oliva:focus-visible { outline: 2px solid var(--lime); outline-offset: 4px; border-radius: 8px; }
+.cartelle { position: relative; margin: clamp(12px, 2vw, 28px) var(--gut) 0; }
+.cartella { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 2.2fr); gap: clamp(20px, 3vw, 48px); align-items: center; padding-top: clamp(20px, 3vw, 36px); border-top: 1px solid rgba(247, 248, 243, .18); }
+.cartella[hidden] { display: none; }
+.cartella__prezzo { font-size: .8rem; letter-spacing: .18em; text-transform: uppercase; color: var(--lime); margin-bottom: .6em; }
+.cartella__titolo { font: 400 var(--t-l)/1 var(--serif); margin-bottom: .4em; }
+.cartella__testo p:last-child { max-width: 42ch; opacity: .85; }
+.cartella__foto { display: grid; grid-template-columns: 1.25fr 1fr 1fr; gap: clamp(10px, 1.4vw, 18px); }
+.cartella__foto figure { margin: 0; aspect-ratio: 4 / 5; overflow: hidden; border-radius: var(--r-s); background: rgba(247, 248, 243, .06); }
+.cartella__foto figure:first-child { aspect-ratio: auto; }
+.cartella__foto img { width: 100%; height: 100%; object-fit: cover; }
+@media (max-width: 760px) {
+  .ramo { height: 175px; margin: 0 8px; }
+  .ramo__nome { font-size: 1.1rem; }
+  .ramo__prezzo { font-size: .68rem; }
+  .cartella { grid-template-columns: 1fr; }
+  .cartella__foto { grid-template-columns: 1fr 1fr; }
+  .cartella__foto figure:first-child { grid-column: 1 / -1; aspect-ratio: 16 / 10; }
 }
 
 /* ── dintorni: la sezione a passi (clonata da funtownstudio.com): testi a sinistra, omino a destra, tappe sotto ── */
@@ -538,7 +552,6 @@ html.is-menu .wa { opacity: 0; pointer-events: none; }
   .stelle__tratto { stroke-dashoffset: 0; opacity: .5; }
   .stelle__titolo { position: static; text-align: center; }
   .stelle__pin { height: auto; }
-  .coccole__binario { transform: none; }
   .sentiero__barra i { transform: none; }
   .nastro__riga { width: auto; white-space: normal; flex-wrap: wrap; }
   .nastro { height: auto; padding: 40px 0; gap: 10px; } .nastro__fascia { grid-area: auto; width: 100%; transform: none; }

@@ -503,20 +503,81 @@
 
   /* ── le coccole: parole di traverso, binari che si allungano, foto sfalsate ── */
   function coccole() {
-    const voci = qa('.coccole__voce'); if (!voci.length || RIDOTTO) return;
-    voci.forEach((voce, i) => {
-      const parola = q('.coccole__parola > span', voce), binario = q('.coccole__binario', voce);
-      if (!QA) gsap.fromTo(parola, { xPercent: -16, autoAlpha: 0 }, { xPercent: 0, autoAlpha: 1, duration: 1.4, ease: 'expo.out', scrollTrigger: { trigger: voce, start: 'top 80%', once: true } });
-      gsap.fromTo(binario, { scaleX: 0 }, { scaleX: 1, ease: 'none', scrollTrigger: { trigger: voce, start: 'top 96%', end: 'bottom 50%', scrub: .5 } });
-      qa('.coccole__foto', voce).forEach((f, k) => {
-        const img = q('img', f);
-        if (!QA) gsap.fromTo(img, { clipPath: 'polygon(0% 0%, 0% 0%, -70% 100%, -70% 100%)' }, { clipPath: 'polygon(0% 0%, 170% 0%, 100% 100%, -70% 100%)', duration: 1.5, ease: 'power3.inOut', scrollTrigger: { trigger: f, start: 'top 90%', once: true } });
-        const ampiezza = (i + k) % 2 ? 9 : 15;
-        gsap.fromTo(f, { yPercent: ampiezza }, { yPercent: -ampiezza, ease: 'none', scrollTrigger: { trigger: voce, start: 'top bottom', end: 'bottom top', scrub: true } });
-      });
-    });
     ST.create({ trigger: '.coccole', start: 'top 80px', end: 'bottom 80px', onToggle: (e) => testata.classList.toggle('is-scura', e.isActive) });
+    const ramo = q('[data-ramo]'); if (!ramo) return;
+    const svg = q('.ramo__disegno', ramo), olive = qa('.ramo__oliva', ramo), cartelle = qa('.cartella');
+    const NS = 'http://www.w3.org/2000/svg';
+    let gambo = null, foglie = [], piccioli = [];
+    /* il ramo si disegna alla larghezza vera, così le foglie non si deformano; le olive pendono dal gambo */
+    const disegna = () => {
+      const W = ramo.clientWidth, H = ramo.clientHeight, y0 = Math.min(64, H * .26), amp = Math.min(22, W * .02);
+      const Y = (x) => y0 + amp * Math.sin((x / W) * Math.PI * 2.2 + .4) + (x / W) * 10;
+      svg.setAttribute('viewBox', `0 0 ${W} ${H}`); svg.innerHTML = '';
+      let d = `M${-W * .02} ${Y(0)}`;
+      for (let x = 0; x <= W * 1.02; x += W / 60) d += ` L${x.toFixed(1)} ${Y(x).toFixed(1)}`;
+      gambo = document.createElementNS(NS, 'path');
+      gambo.setAttribute('d', d); gambo.setAttribute('fill', 'none'); gambo.setAttribute('stroke', '#8B5E3C'); gambo.setAttribute('stroke-width', W < 700 ? 3 : 4); gambo.setAttribute('stroke-linecap', 'round');
+      svg.appendChild(gambo);
+      /* foglie a coppie sfalsate lungo il gambo, sopra e sotto, mai davanti alle olive */
+      foglie = [];
+      const posOlive = olive.map((o) => parseFloat(o.style.getPropertyValue('--x')) / 100 * W);
+      const n = Math.round(W / (W < 700 ? 36 : 46));
+      for (let i = 1; i < n; i++) {
+        const x = (i / n) * W, sopra = i % 2 === 0;
+        if (!sopra && posOlive.some((p) => Math.abs(p - x) < (W < 700 ? 34 : 48))) continue;
+        const L = (W < 700 ? 30 : 46) * (0.8 + ((i * 37) % 10) / 25), w = L * .2;
+        const dir = Math.atan2(Y(x + 1) - Y(x), 1) * 180 / Math.PI, ang = dir + (sopra ? -1 : 1) * (32 + ((i * 53) % 18));
+        const g = document.createElementNS(NS, 'g');
+        g.setAttribute('transform', `translate(${x.toFixed(1)} ${Y(x).toFixed(1)}) rotate(${ang.toFixed(1)})`);
+        g.innerHTML = `<g class="ramo__foglia"><path d="M0 0C${L * .3} ${-w} ${L * .75} ${-w} ${L} 0 ${L * .75} ${w} ${L * .3} ${w} 0 0z" fill="#B4C2AC"/><path d="M0 0C${L * .3} ${-w} ${L * .75} ${-w} ${L} 0z" fill="#607860"/></g>`;
+        svg.appendChild(g); foglie.push(g.firstChild);
+      }
+      /* il punto d'attacco di ogni oliva sul gambo */
+      olive.forEach((o, i) => o.style.setProperty('--y', `${Y(posOlive[i]) - 2}px`));
+    };
+    disegna();
+    let larghezza = ramo.clientWidth;
+    window.addEventListener('resize', () => { if (ramo.clientWidth !== larghezza) { larghezza = ramo.clientWidth; disegna(); if (entrato) gsap.set(foglie, { scale: 1 }); } });
+    /* apre la cartella dell'oliva scelta */
+    const apri = (i, focus) => {
+      olive.forEach((o, k) => { o.setAttribute('aria-selected', String(k === i)); o.tabIndex = k === i ? 0 : -1; });
+      cartelle.forEach((c, k) => { c.hidden = k !== i; });
+      if (focus) olive[i].focus();
+      const c = cartelle[i];
+      if (!RIDOTTO) {
+        gsap.fromTo(q('.cartella__testo', c).children, { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: .5, stagger: .06, ease: 'power3.out' });
+        gsap.fromTo(qa('.cartella__foto figure', c), { clipPath: 'inset(100% 0 0 0 round 10px)' }, { clipPath: 'inset(0% 0 0 0 round 10px)', duration: .8, stagger: .08, ease: 'power3.inOut' });
+        gsap.fromTo(q('.ramo__frutto', olive[i]), { rotate: 0 }, { keyframes: [{ rotate: -16, duration: .18 }, { rotate: 12, duration: .2 }, { rotate: -6, duration: .2 }, { rotate: 0, duration: .25 }], ease: 'sine.inOut' });
+      }
+    };
+    olive.forEach((o, i) => {
+      o.addEventListener('click', () => apri(i));
+      o.addEventListener('keydown', (e) => {
+        const k = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key]; if (!k) return;
+        e.preventDefault(); apri((i + k + olive.length) % olive.length, true);
+      });
+      if (!TOUCH && !RIDOTTO) {
+        o.addEventListener('pointerenter', () => gsap.to(q('.ramo__frutto', o), { rotate: 9, duration: .35, ease: 'power2.out', overwrite: 'auto' }));
+        o.addEventListener('pointerleave', () => gsap.to(q('.ramo__frutto', o), { rotate: 0, duration: .9, ease: 'elastic.out(1, .35)', overwrite: 'auto' }));
+      }
+    });
+    /* entrata: il gambo si disegna, le foglie spuntano, le olive cadono e dondolano, poi si apre la prima cartella */
+    let entrato = false;
+    if (RIDOTTO || QA) { entrato = true; return; }
+    const L = gambo.getTotalLength();
+    gsap.set(gambo, { strokeDasharray: L, strokeDashoffset: L });
+    gsap.set(foglie, { scale: 0, transformOrigin: '0% 50%' });
+    gsap.set(qa('.ramo__frutto', ramo), { scale: 0, transformOrigin: '50% 0%' });
+    gsap.set(qa('.ramo__nome, .ramo__prezzo', ramo), { opacity: 0, y: 10 });
+    gsap.set(q('.cartelle'), { opacity: 0, y: 30 });
+    gsap.timeline({ scrollTrigger: { trigger: ramo, start: 'top 75%', once: true }, onComplete: () => { entrato = true; } })
+      .to(gambo, { strokeDashoffset: 0, duration: 1.4, ease: 'power2.inOut' }, 0)
+      .to(foglie, { scale: 1, duration: .6, ease: 'back.out(2)', stagger: { each: .025 } }, .25)
+      .to(qa('.ramo__frutto', ramo), { scale: 1, duration: .7, ease: 'elastic.out(1, .5)', stagger: .15 }, .9)
+      .to(qa('.ramo__nome, .ramo__prezzo', ramo), { opacity: 1, y: 0, duration: .5, stagger: .05, ease: 'power3.out' }, 1.2)
+      .to(q('.cartelle'), { opacity: 1, y: 0, duration: .8, ease: 'power3.out' }, 1.5);
   }
+
 
   /* ── dintorni: la sezione a passi: un passo per volta, l'omino a destra, tappe e barre sotto ── */
   function dintorni() {
