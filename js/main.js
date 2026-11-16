@@ -506,6 +506,8 @@
     ST.create({ trigger: '.coccole', start: 'top 80px', end: 'bottom 80px', onToggle: (e) => testata.classList.toggle('is-scura', e.isActive) });
     const ramo = q('[data-ramo]'); if (!ramo) return;
     const svg = q('.ramo__disegno', ramo), olive = qa('.ramo__oliva', ramo), cartelle = qa('.cartella');
+    olive.forEach((o) => { const f = q('.ramo__frutto', o); if (!q('.ramo__onda', f)) { const w = document.createElement('i'); w.className = 'ramo__onda'; f.appendChild(w); } });
+    const pendolo = (o) => q('.ramo__frutto svg', o);
     const NS = 'http://www.w3.org/2000/svg';
     let gambo = null, foglie = [], piccioli = [];
     /* il ramo si disegna alla larghezza vera, così le foglie non si deformano; le olive pendono dal gambo */
@@ -529,16 +531,54 @@
         const dir = Math.atan2(Y(x + 1) - Y(x), 1) * 180 / Math.PI, ang = dir + (sopra ? -1 : 1) * (32 + ((i * 53) % 18));
         const g = document.createElementNS(NS, 'g');
         g.setAttribute('transform', `translate(${x.toFixed(1)} ${Y(x).toFixed(1)}) rotate(${ang.toFixed(1)})`);
-        g.innerHTML = `<g class="ramo__foglia"><path d="M0 0C${L * .3} ${-w} ${L * .75} ${-w} ${L} 0 ${L * .75} ${w} ${L * .3} ${w} 0 0z" fill="#B4C2AC"/><path d="M0 0C${L * .3} ${-w} ${L * .75} ${-w} ${L} 0z" fill="#607860"/></g>`;
-        svg.appendChild(g); foglie.push(g.firstChild);
+        g.innerHTML = `<g class="ramo__vento"><g class="ramo__foglia"><path d="M0 0C${L * .3} ${-w} ${L * .75} ${-w} ${L} 0 ${L * .75} ${w} ${L * .3} ${w} 0 0z" fill="#B4C2AC"/><path d="M0 0C${L * .3} ${-w} ${L * .75} ${-w} ${L} 0z" fill="#607860"/></g></g>`;
+        svg.appendChild(g); foglie.push(g.firstChild.firstChild);
       }
       /* il punto d'attacco di ogni oliva sul gambo */
       olive.forEach((o, i) => o.style.setProperty('--y', `${Y(posOlive[i]) - 2}px`));
     };
     disegna();
     let larghezza = ramo.clientWidth;
-    window.addEventListener('resize', () => { if (ramo.clientWidth !== larghezza) { larghezza = ramo.clientWidth; disegna(); if (entrato) gsap.set(foglie, { scale: 1 }); } });
-    /* apre la cartella dell'oliva scelta */
+    window.addEventListener('resize', () => { if (ramo.clientWidth !== larghezza) { larghezza = ramo.clientWidth; disegna(); if (entrato) { gsap.set(foglie, { scale: 1 }); accendiVento(); } } });
+    /* foglioline che si staccano e cadono dondolando */
+    const cadonoFoglie = (o) => {
+      const r = ramo.getBoundingClientRect(), b = q('.ramo__frutto', o).getBoundingClientRect();
+      const cx = b.left - r.left + b.width / 2, cy = b.top - r.top + b.height * .2;
+      for (let k = 0; k < 4; k++) {
+        const f = document.createElement('i'); f.className = 'ramo__volo';
+        f.innerHTML = '<svg viewBox="0 0 30 10"><path d="M0 5C8 0 22 0 30 5 22 10 8 10 0 5z" fill="' + (k % 2 ? '#B4C2AC' : '#607860') + '"/></svg>';
+        f.style.left = cx + 'px'; f.style.top = cy + 'px'; ramo.appendChild(f);
+        const dx = (k - 1.5) * 28 + (Math.random() - .5) * 20;
+        gsap.timeline({ onComplete: () => f.remove() })
+          .fromTo(f, { x: 0, y: 0, rotate: Math.random() * 180, opacity: 1, scale: .6 + Math.random() * .5 }, { x: dx, y: -30 - Math.random() * 20, duration: .35, ease: 'power2.out' })
+          .to(f, { x: dx * 1.8, y: 120 + Math.random() * 60, rotate: '+=' + (200 + Math.random() * 200), duration: 1.6, ease: 'sine.in' })
+          .to(f, { keyframes: [{ x: '+=14' }, { x: '-=22' }, { x: '+=12' }], duration: 1.6, ease: 'sine.inOut' }, .35)
+          .to(f, { opacity: 0, duration: .5 }, 1.45);
+      }
+    };
+    /* le foglie vicine all'oliva fremono al passaggio */
+    const fremono = (o) => {
+      const r = ramo.getBoundingClientRect(), b = o.getBoundingClientRect(), cx = b.left - r.left + b.width / 2;
+      foglie.forEach((f) => {
+        const fb = f.getBoundingClientRect(), d = Math.abs(fb.left - r.left + fb.width / 2 - cx);
+        if (d < 120) gsap.fromTo(f, { rotate: 0 }, { keyframes: [{ rotate: 14 }, { rotate: -9 }, { rotate: 4 }, { rotate: 0 }], duration: .9, ease: 'sine.inOut', delay: d / 900, overwrite: 'auto' });
+      });
+    };
+    /* vento: foglie e olive dondolano piano, ognuna con il suo ritmo; solo quando il ramo è sullo schermo */
+    let vento = [];
+    const accendiVento = () => {
+      vento.forEach((t) => t.kill()); vento = [];
+      foglie.forEach((f, k) => {
+        const a = 3 + (k * 7) % 5;
+        vento.push(gsap.fromTo(f.parentNode, { rotate: k % 2 ? -a : a }, { rotate: k % 2 ? a : -a, duration: 1.8 + (k % 5) * .35, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: -((k % 7) * .3), transformOrigin: '0% 50%' }));
+      });
+      olive.forEach((o, k) => {
+        vento.push(gsap.fromTo(pendolo(o), { rotate: -(3 + k) }, { rotate: 3 + k, duration: 2.2 + k * .3, ease: 'sine.inOut', yoyo: true, repeat: -1, transformOrigin: '50% 0%' }));
+      });
+      vento.push(gsap.fromTo(svg, { y: -1.5 }, { y: 1.5, duration: 2.6, ease: 'sine.inOut', yoyo: true, repeat: -1 }));
+    };
+    const ventoAttivo = (v) => vento.forEach((t) => (v ? t.play() : t.pause()));
+
     const apri = (i, focus) => {
       olive.forEach((o, k) => { o.setAttribute('aria-selected', String(k === i)); o.tabIndex = k === i ? 0 : -1; });
       cartelle.forEach((c, k) => { c.hidden = k !== i; });
@@ -547,7 +587,14 @@
       if (!RIDOTTO) {
         gsap.fromTo(q('.cartella__testo', c).children, { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: .5, stagger: .06, ease: 'power3.out' });
         gsap.fromTo(qa('.cartella__foto figure', c), { clipPath: 'inset(100% 0 0 0 round 10px)' }, { clipPath: 'inset(0% 0 0 0 round 10px)', duration: .8, stagger: .08, ease: 'power3.inOut' });
-        gsap.fromTo(q('.ramo__frutto', olive[i]), { rotate: 0 }, { keyframes: [{ rotate: -16, duration: .18 }, { rotate: 12, duration: .2 }, { rotate: -6, duration: .2 }, { rotate: 0, duration: .25 }], ease: 'sine.inOut' });
+        const fr = q('.ramo__frutto', olive[i]);
+        gsap.timeline()
+          .to(fr, { scaleX: 1.25, scaleY: .78, duration: .12, ease: 'power2.out' })
+          .to(fr, { scaleX: .88, scaleY: 1.18, y: -10, duration: .16, ease: 'power2.out' })
+          .to(fr, { scaleX: 1, scaleY: 1, y: 0, duration: .55, ease: 'elastic.out(1.1, .4)' })
+          .fromTo(fr, { rotate: 0 }, { keyframes: [{ rotate: -22, duration: .2 }, { rotate: 16, duration: .24 }, { rotate: -9, duration: .24 }, { rotate: 4, duration: .22 }, { rotate: 0, duration: .3 }], ease: 'sine.inOut' }, 0);
+        gsap.fromTo(q('.ramo__onda', fr), { scale: .6, opacity: .9 }, { scale: 2.4, opacity: 0, duration: .9, ease: 'power2.out' });
+        cadonoFoglie(olive[i]);
       }
     };
     olive.forEach((o, i) => {
@@ -557,25 +604,34 @@
         e.preventDefault(); apri((i + k + olive.length) % olive.length, true);
       });
       if (!TOUCH && !RIDOTTO) {
-        o.addEventListener('pointerenter', () => gsap.to(q('.ramo__frutto', o), { rotate: 9, duration: .35, ease: 'power2.out', overwrite: 'auto' }));
-        o.addEventListener('pointerleave', () => gsap.to(q('.ramo__frutto', o), { rotate: 0, duration: .9, ease: 'elastic.out(1, .35)', overwrite: 'auto' }));
+        o.addEventListener('pointerenter', () => { gsap.to(q('.ramo__frutto', o), { rotate: 12, scale: 1.14, duration: .4, ease: 'back.out(3)', overwrite: 'auto' }); fremono(o); });
+        o.addEventListener('pointerleave', () => gsap.to(q('.ramo__frutto', o), { rotate: 0, scale: 1, duration: 1.1, ease: 'elastic.out(1, .3)', overwrite: 'auto' }));
       }
     });
     /* entrata: il gambo si disegna, le foglie spuntano, le olive cadono e dondolano, poi si apre la prima cartella */
     let entrato = false;
-    if (RIDOTTO || QA) { entrato = true; return; }
+    if (RIDOTTO) { entrato = true; return; }
+    if (QA) { entrato = true; accendiVento(); return; }
     const L = gambo.getTotalLength();
     gsap.set(gambo, { strokeDasharray: L, strokeDashoffset: L });
-    gsap.set(foglie, { scale: 0, transformOrigin: '0% 50%' });
-    gsap.set(qa('.ramo__frutto', ramo), { scale: 0, transformOrigin: '50% 0%' });
-    gsap.set(qa('.ramo__nome, .ramo__prezzo', ramo), { opacity: 0, y: 10 });
+    gsap.set(foglie, { scale: 0, rotate: -70, transformOrigin: '0% 50%' });
+    gsap.set(qa('.ramo__frutto', ramo), { y: -90, opacity: 0, scaleY: 1.3, transformOrigin: '50% 0%' });
+    gsap.set(qa('.ramo__nome, .ramo__prezzo', ramo), { opacity: 0, y: 14 });
     gsap.set(q('.cartelle'), { opacity: 0, y: 30 });
-    gsap.timeline({ scrollTrigger: { trigger: ramo, start: 'top 75%', once: true }, onComplete: () => { entrato = true; } })
-      .to(gambo, { strokeDashoffset: 0, duration: 1.4, ease: 'power2.inOut' }, 0)
-      .to(foglie, { scale: 1, duration: .6, ease: 'back.out(2)', stagger: { each: .025 } }, .25)
-      .to(qa('.ramo__frutto', ramo), { scale: 1, duration: .7, ease: 'elastic.out(1, .5)', stagger: .15 }, .9)
-      .to(qa('.ramo__nome, .ramo__prezzo', ramo), { opacity: 1, y: 0, duration: .5, stagger: .05, ease: 'power3.out' }, 1.2)
-      .to(q('.cartelle'), { opacity: 1, y: 0, duration: .8, ease: 'power3.out' }, 1.5);
+    const frutti = qa('.ramo__frutto', ramo);
+    const tl = gsap.timeline({ paused: true, onComplete: () => { entrato = true; accendiVento(); } })
+      /* il gambo cresce da sinistra; le foglie si aprono girando man mano che il gambo arriva */
+      .to(gambo, { strokeDashoffset: 0, duration: 1.6, ease: 'power2.inOut' }, 0)
+      .to(foglie, { scale: 1, rotate: 0, duration: .7, ease: 'back.out(2.2)', stagger: { each: 1.3 / Math.max(1, foglie.length) } }, .2)
+      /* le olive cadono dall'alto, si allungano, rimbalzano e oscillano come pendoli */
+      .to(frutti, { y: 0, opacity: 1, scaleY: 1, duration: .7, ease: 'bounce.out', stagger: .16 }, 1.0)
+      .fromTo(frutti, { rotate: 0 }, { keyframes: [{ rotate: 18, duration: .25 }, { rotate: -13, duration: .3 }, { rotate: 7, duration: .3 }, { rotate: -3, duration: .3 }, { rotate: 0, duration: .35 }], ease: 'sine.inOut', stagger: .16 }, 1.5)
+      .to(qa('.ramo__nome, .ramo__prezzo', ramo), { opacity: 1, y: 0, duration: .5, stagger: .05, ease: 'power3.out' }, 1.4)
+      /* una folata di vento passa lungo il ramo */
+      .to(foglie, { keyframes: [{ rotate: 16 }, { rotate: -6 }, { rotate: 0 }], duration: .8, ease: 'sine.inOut', stagger: { each: .02 } }, 2.0)
+      .to(q('.cartelle'), { opacity: 1, y: 0, duration: .8, ease: 'power3.out' }, 1.8);
+    ST.create({ trigger: ramo, start: 'top 75%', once: true, onEnter: () => tl.play() });
+    ST.create({ trigger: ramo, start: 'top bottom', end: 'bottom top', onToggle: (e) => { if (entrato) ventoAttivo(e.isActive); } });
   }
 
 
