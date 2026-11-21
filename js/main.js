@@ -286,14 +286,14 @@
     }
     /* finché la foto è a tutto schermo la testata è chiara, come il testo dell'hero */
     testata.classList.add('is-scura');
-    if (RIDOTTO) { ST.create({ trigger: sez, start: 'top top', end: 'bottom 80px', onToggle: (e) => testata.classList.toggle('is-scura', e.isActive), onRefresh: (e) => testata.classList.toggle('is-scura', e.isActive) }); return intro; }
+    if (RIDOTTO) { ST.create({ trigger: sez, start: 'top top', end: 'bottom 80px', onToggle: (e) => { testata.classList.toggle('is-scura', e.isActive); testata.classList.toggle('is-solida', !e.isActive); }, onRefresh: (e) => { testata.classList.toggle('is-scura', e.isActive); testata.classList.toggle('is-solida', !e.isActive); } }); return intro; }
     const mm = gsap.matchMedia();
     mm.add({ desk: '(min-width: 861px)', mob: '(max-width: 860px)' }, (ctx) => {
       const { desk } = ctx.conditions;
       /* su telefono la foto resta intera a tutto schermo, senza casetta né blocco: solo la testata che si scurisce finché l'hero è in vista */
-      if (!desk) { ST.create({ trigger: sez, start: 'top bottom', end: 'bottom 80px', onToggle: (e) => testata.classList.toggle('is-scura', e.isActive), onRefresh: (e) => testata.classList.toggle('is-scura', e.isActive) }); return; }
+      if (!desk) { const stato = (e) => { testata.classList.toggle('is-scura', e.isActive); testata.classList.toggle('is-solida', !e.isActive); }; ST.create({ trigger: sez, start: 'top bottom', end: 'bottom 80px', onToggle: stato, onRefresh: stato }); return; }
       const timpano = 'polygon(0 32%, 50% 0, 100% 32%, 100% 100%, 0 100%)';
-      const tl = gsap.timeline({ scrollTrigger: { trigger: sez, start: 'top top', end: 'bottom bottom', scrub: .6, invalidateOnRefresh: true, onUpdate: (e) => { const chiara = e.progress > .42; sez.classList.toggle('is-chiara', chiara); testata.classList.toggle('is-scura', !chiara); } } });
+      const tl = gsap.timeline({ scrollTrigger: { trigger: sez, start: 'top top', end: 'bottom bottom', scrub: .6, invalidateOnRefresh: true, onUpdate: (e) => { const chiara = e.progress > .42; sez.classList.toggle('is-chiara', chiara); testata.classList.toggle('is-scura', !chiara); testata.classList.toggle('is-solida', chiara); } } });
       tl.to(foto, { scale: .46, x: () => -gut(), y: () => -vh() * .04, transformOrigin: '100% 50%', clipPath: timpano, ease: 'none' }, 0);
       tl.to(foto, { '--scrim': 0, ease: 'none', duration: .5 }, 0);
       tl.fromTo(testo, { y: 0 }, { y: 0, ease: 'none' }, 0);

@@ -71,6 +71,11 @@ html.con-foglia, html.con-foglia * { cursor: none !important; }
 /* ── testata ── */
 .testata { position: fixed; top: 0; left: 0; right: 0; z-index: 60; height: var(--testata-h); padding: 0 var(--gut); display: flex; align-items: center; gap: 28px; transition: color var(--d-lenta); }
 .testata.is-scura { color: var(--bianco); }
+/* dopo l'hero la testata ha un fondo pieno, chiaro o scuro come la sezione sotto: sta sempre sopra a tutto e si legge sempre */
+.testata::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--carta); border-bottom: 1px solid rgba(96, 120, 96, .18); opacity: 0; transform: translateY(-100%); transition: opacity .45s var(--e-out), transform .45s var(--e-out), background-color var(--d-lenta), border-color var(--d-lenta); pointer-events: none; }
+.testata.is-solida::before { opacity: 1; transform: none; }
+.testata.is-scura::before { background: var(--notte); border-color: rgba(247, 248, 243, .12); }
+html.is-menu .testata::before { opacity: 0; }
 .testata__logo { display: flex; align-items: center; gap: 12px; text-decoration: none; font: 1.05rem var(--serif); margin-right: auto; }
 .testata__logo img { width: 40px; height: auto; }
 .testata__logo-scuro, .testata.is-scura .testata__logo-chiaro { display: none; }
