@@ -2,7 +2,8 @@
 import sys, numpy as np
 from PIL import Image
 D, OUT, FERMO = sys.argv[1:4]
-fr = [Image.open(f'{D}/f{i:03d}.png') for i in range(48)]
+import glob
+fr = [Image.open(p) for p in sorted(glob.glob(f'{D}/f*.png'))]
 bb = None
 for f in fr:
     b = f.getchannel('A').point(lambda v: 255 if v > 8 else 0).getbbox()
