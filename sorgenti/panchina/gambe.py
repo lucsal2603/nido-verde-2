@@ -83,72 +83,78 @@ def panchina():
     d.polygon(P([(xa, top(xa)), (xb, top(xb)), (xb, top(xb) + 5.1), (xa, top(xa) + 5.2)]), fill=BLU_SC)
     return riduci(t)
 
-# ---------- gambe ----------
-def ruota(c, p, a):
-    s, co = math.sin(a), math.cos(a)
-    x, y = p[0] - c[0], p[1] - c[1]
-    return (c[0] + x * co - y * s, c[1] + x * s + y * co)
+# ---------- gambe: prese tali e quali dal fotogramma pulito dell'illustrazione ----------
+# cosce ferme; ciascuno stinco+scarpa è un pezzo rigido che oscilla attorno al ginocchio
+# (stesso dondolio dell'originale, ma senza pezzi che si duplicano)
+f0 = frames[0][..., :3].astype(int)
+dN = ((f0 - np.array(PANT)) ** 2).sum(-1); dn = ((f0 - np.array(PANT_SC)) ** 2).sum(-1)
+nav0 = (np.minimum(dN, dn) < 40 ** 2) & (frames[0][..., 3] > 128)
+nav0 = ndimage.binary_opening(nav0, iterations=1) | ndimage.binary_closing(nav0, iterations=1) & nav0
+yy, xx = np.mgrid[:nav0.shape[0], :nav0.shape[1]]
+nav0 &= (yy >= 212)
+chiaro = dN < dn
+TAGLIO = 247
+sx = nav0 & (yy >= TAGLIO - 6) & (((yy < 282) & (xx < 293)) | ((yy >= 282) & (xx < 308)))
+dx_ = nav0 & (yy >= TAGLIO - 6) & ~sx
+coscia = nav0 & (yy >= 243) & (yy < TAGLIO + 2)   # sopra resta l'originale, intatto
 
-def tibia(d, K, ang, lato_scuro, L=31, w=12.5, av=0.0):
-    # av: 0 = gamba a piombo, 1 = piede tutto in avanti (scorcio)
-    L = L * (1 - .2 * av)
-    k = 1 + .1 * av
-    # stinco: rettangolo dal ginocchio verso il basso, ruotato di ang
-    loc = lambda x, y: ruota(K, (K[0] + x, K[1] + y), ang)
-    d.polygon(P([loc(-w, -8), loc(w, -8), loc(w, L), loc(-w, L)]), fill=PANT)
-    s = 5.5
-    if lato_scuro < 0:
-        d.polygon(P([loc(-w, -8), loc(-w + s, -8), loc(-w + s, L), loc(-w, L)]), fill=PANT_SC)
-    else:
-        d.polygon(P([loc(w - s, -8), loc(w, -8), loc(w, L), loc(w - s, L)]), fill=PANT_SC)
-    # scarpa: punta verso chi guarda, un filo a destra
-    h = 13.5 * k
-    sc = [loc(-w + .5, L - 1), loc(w - .5, L - 1), loc(w + 3, L + 2.5), loc(w + 5.5, L + h * .55),
-          loc(w + 5, L + h * .85), loc(w + 2.5, L + h), loc(-w + 2, L + h), loc(-w - .5, L + h * .8), loc(-w - .5, L + 3)]
-    d.polygon(P(sc), fill=PANT_SC)
-    d.polygon(P([loc(-w + 1.5, L + h - 2.2), loc(w + 4.6, L + h - 2.2), loc(w + 2.5, L + h), loc(-w + 2, L + h)]), fill=SCARPA_SUOLA)
-    d.polygon(P([loc(-w + 4.5, L + 1.2), loc(w - 2.5, L + 1.2), loc(w + 2, L + 2.6 + 3 * k), loc(-w + 5.5, L + 2.6 + 3 * k)]), fill=PANT)
-    # orlo sopra la scarpa
-    d.polygon(P([loc(-w, L - 3), loc(w, L - 3), loc(w, L - .5), loc(-w, L - .5)]), fill=PANT_SC)
+def grandi(m, n=40):
+    lb, k = ndimage.label(m)
+    if k == 0: return m
+    sz = ndimage.sum(m, lb, range(1, k + 1))
+    return np.isin(lb, 1 + np.where(sz >= n)[0])
 
-KL, KR = (268.5, 256), (298.5, 251.5)
+sx, dx_ = grandi(ndimage.binary_opening(sx, iterations=2) | (sx & (yy < 270))), grandi(ndimage.binary_opening(dx_, iterations=1))
 
-def gambe(aL, aR, vL=0, vR=0):
-    t = tela(); d = ImageDraw.Draw(t)
-    tibia(d, KL, aL, -1, av=vL)
-    tibia(d, KR, aR, +1, av=vR)
-    # cosce (coprono l'attacco delle tibie)
-    d.polygon(P([(233, 230), (238, 225), (242, 222), (256, 220.5), (268, 218.6), (282, 251.5), (255.5, 257.5), (233, 236)]), fill=PANT)
-    d.polygon(P([(233, 230), (238, 225), (242, 222), (256, 251), (256.5, 258), (252, 262), (233, 238)]), fill=PANT_SC)
-    d.polygon(P([(267, 218.4), (276, 217.5), (290, 218), (296, 219.5), (300, 221), (313.5, 251.5), (283.5, 252)]), fill=PANT)
-    d.polygon(P([(296, 219.5), (300, 221), (306, 223), (312, 228), (316, 234), (320, 248), (318, 253), (312.5, 252)]), fill=PANT_SC)
-    # piega tra le cosce
-    d.polygon(P([(266.2, 218.6), (268.6, 218.4), (284, 252.5), (281.6, 252.8)]), fill=PANT_SC)
-    # ginocchia arrotondate
-    for K, ang in ((KL, aL), (KR, aR)):
-        r = 12.3
-        d.pieslice([((K[0] - r - BX0) * Z, (K[1] - r - BY0) * Z), ((K[0] + r - BX0) * Z, (K[1] + r - BY0) * Z)],
-                   0, 180, fill=PANT)
+def sprite(mask):
+    # maschera e due toni ingranditi 4x e lisciati: bordi netti come le altre animazioni
+    reg = (slice(BY0, BY1), slice(BX0, BX1))
+    m = mask[reg].astype(np.float32); c = (mask & chiaro)[reg].astype(np.float32)
+    M = ndimage.gaussian_filter(ndimage.zoom(m, Z, order=1), Z * .9)
+    Cc = ndimage.gaussian_filter(ndimage.zoom(c, Z, order=1), Z * .9)
+    a = np.clip((M - .5) * 4 + .5, 0, 1)
+    luce = (Cc > M * .5)
+    rgb = np.where(luce[..., None], np.array(PANT), np.array(PANT_SC))
+    out = np.zeros(M.shape + (4,), np.uint8); out[..., :3] = rgb; out[..., 3] = (a * 255).astype(np.uint8)
+    return Image.fromarray(out)
+
+SPR_SX, SPR_DX, SPR_CO = sprite(sx), sprite(dx_), sprite(coscia)
+KL, KR = (276, 248), (306, 246)
+
+def gambe(aL, aR):
+    t = tela()
+    for spr, K, a in ((SPR_SX, KL, aL), (SPR_DX, KR, aR)):
+        r = spr.rotate(math.degrees(-a), resample=Image.BICUBIC, center=((K[0] - BX0) * Z, (K[1] - BY0) * Z))
+        t.alpha_composite(r)
+    t.alpha_composite(SPR_CO)
     return riduci(t)
 
+def angoli(i):
+    # stesso dondolio dell'originale (periodo 48), relativo alla posa del fotogramma 0
+    dxl = lambda k: 2.25 * math.cos(2 * math.pi * (k - 45) / 48)
+    dxr = lambda k: 5.0 * math.cos(2 * math.pi * (k - 14) / 48)
+    return -(dxl(i) - dxl(0)) / 32, -(dxr(i) - dxr(0)) / 32
+
 fondo = panchina()
+# cosce del fotogramma pulito sopra a tutto, fino all'altezza delle ginocchia
+_s = np.zeros_like(frames[0])
+_m = ndimage.binary_dilation(nav0, iterations=1) & (yy < 248) & (yy >= 212) & (xx > 225) & (xx < 330)
+_s[_m] = frames[0][_m]
+SOPRA = Image.fromarray(_s)
 out = []
 for i, f in enumerate(frames):
     f = f.copy()
     reg = f[BY0:BY1, BX0:BX1]
     rgb = reg[..., :3].astype(int)
     tieni = ((((rgb - ARANCIO) ** 2).sum(-1) < 45 ** 2) | (((rgb - PELLE) ** 2).sum(-1) < 30 ** 2)) & (reg[..., 3] > 128)
-    m = U[BY0:BY1, BX0:BX1] & ~tieni
+    nav_i = ((((rgb - PANT) ** 2).sum(-1) < 60 ** 2) | (((rgb - PANT_SC) ** 2).sum(-1) < 60 ** 2))
+    m = U[BY0:BY1, BX0:BX1] & ~tieni & (np.arange(BY0, BY1)[:, None] >= 244)
     reg[m] = fondo[m]
     ph = 2 * math.pi * i / 48
-    sL, sR = math.sin(ph), math.sin(ph + math.pi)
-    # avanti/indietro: scorcio dello stinco + leggera rotazione verso l'esterno
-    vL, vR = (1 - math.cos(ph)) / 2, (1 + math.cos(ph)) / 2
-    aL = math.radians(4) * sL - math.radians(2)
-    aR = math.radians(4) * sR + math.radians(2)
-    g = Image.fromarray(gambe(aL, aR, vL, vR))
+    g = Image.fromarray(gambe(*angoli(i)))
     base = Image.fromarray(f)
     base.alpha_composite(g, (BX0, BY0))
+    base.alpha_composite(SOPRA)
     out.append(base)
 
 out[0].save(OUT, save_all=True, append_images=out[1:], duration=42, loop=0, quality=90, method=4)
