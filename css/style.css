@@ -187,6 +187,38 @@ html.is-ridotto .nido__anta { display: none; }
 .nido__corpo { padding: clamp(24px, 3vw, 44px) 0 0; }
 .nido__corpo > p { max-width: 52ch; }
 .nido__nome { font-size: var(--t-l); line-height: 1; }
+.nido__nome em { font-style: italic; color: var(--oliva); }
+.nido__casetta { font: 600 .8rem/1 var(--sans); letter-spacing: .22em; text-transform: uppercase; color: var(--salvia); margin-bottom: .9em; }
+/* il bottone per aprire le foto, appoggiato in basso sulla foto */
+.nido__galleria { position: absolute; left: 14px; bottom: 14px; z-index: 3; display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 8px 0 14px; border: 0; border-radius: 999px; background: rgba(247, 248, 243, .94); color: var(--inchiostro); font: 500 .88rem/1 var(--sans); cursor: pointer; transition: transform .35s var(--e-out), background .3s; }
+.nido__galleria svg { width: 18px; height: 18px; color: var(--oliva); }
+.nido__galleria b { display: inline-grid; place-items: center; min-width: 26px; height: 26px; padding: 0 6px; border-radius: 999px; background: var(--oliva); color: var(--bianco); font-weight: 600; font-size: .78rem; }
+.nido__galleria[hidden] { display: none; }
+@media (hover: hover) { .nido__galleria:hover { transform: translateY(-2px) scale(1.03); background: var(--bianco); } }
+.nido__galleria:focus-visible { outline: 2px solid var(--lime); outline-offset: 3px; }
+/* la galleria a tutto schermo */
+.galleria { position: fixed; inset: 0; z-index: 80; background: rgba(14, 26, 18, .96); color: var(--carta); display: grid; grid-template-rows: auto 1fr auto; padding: 18px var(--gut) 20px; }
+.galleria[hidden] { display: none; }
+.galleria__testa { display: flex; align-items: center; gap: 16px; }
+.galleria__titolo { font: italic 1.4rem var(--serif); color: var(--lime); }
+.galleria__conto { margin-left: auto; font-size: .9rem; opacity: .75; font-variant-numeric: tabular-nums; }
+.galleria__chiudi { position: relative; width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(247, 248, 243, .35); background: none; cursor: pointer; }
+.galleria__chiudi span { position: absolute; left: 13px; top: 21px; width: 17px; height: 1.6px; background: var(--carta); transform: rotate(45deg); }
+.galleria__chiudi span + span { transform: rotate(-45deg); }
+.galleria__palco { position: relative; display: flex; align-items: center; justify-content: center; min-height: 0; padding: 16px 0; }
+.galleria__foto { margin: 0; height: 100%; max-width: 100%; display: flex; align-items: center; justify-content: center; }
+.galleria__foto img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: var(--r-s); box-shadow: 0 30px 80px -30px rgba(0, 0, 0, .7); user-select: none; -webkit-user-drag: none; }
+.galleria__freccia { position: absolute; top: 50%; transform: translateY(-50%); width: 52px; height: 52px; border-radius: 50%; border: 0; background: rgba(247, 248, 243, .12); color: var(--carta); cursor: pointer; display: grid; place-items: center; transition: background .3s; z-index: 2; }
+.galleria__freccia svg { width: 20px; }
+.galleria__freccia--prima { left: 0; }
+.galleria__freccia--dopo { right: 0; }
+@media (hover: hover) { .galleria__freccia:hover { background: var(--lime); color: var(--notte); } }
+.galleria__miniature { display: flex; gap: 10px; justify-content: center; overflow-x: auto; padding: 4px 2px; scrollbar-width: none; }
+.galleria__miniature::-webkit-scrollbar { display: none; }
+.galleria__miniature button { flex: none; width: 74px; height: 56px; padding: 0; border: 2px solid transparent; border-radius: 8px; overflow: hidden; background: none; cursor: pointer; opacity: .5; transition: opacity .3s, border-color .3s; }
+.galleria__miniature button.is-attiva { opacity: 1; border-color: var(--lime); }
+.galleria__miniature img { width: 100%; height: 100%; object-fit: cover; display: block; }
+@media (max-width: 760px) { .galleria { padding: 12px 14px 16px; } .galleria__freccia { width: 42px; height: 42px; background: rgba(14, 26, 18, .55); } .galleria__freccia--prima { left: 4px; } .galleria__freccia--dopo { right: 4px; } .galleria__miniature { justify-content: flex-start; } .galleria__miniature button { width: 60px; height: 46px; } }
 .nido__motto { font: italic var(--t-m) var(--serif); margin: .25em 0 .8em; color: var(--oliva); }
 .nido__lista { list-style: none; padding: 0; margin: 1.6em 0; max-width: 52ch; }
 .nido__lista li { padding: .55em 0; border-top: 1px solid var(--salvia-chiara); }

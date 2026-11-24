@@ -138,6 +138,45 @@
     window.addEventListener('resize', () => lista.forEach((el, i) => forma(el, stati[i])));
   }
 
+  /* ── galleria dei nidi: foto a tutto schermo, frecce, miniature, tastiera e scorrimento col dito ── */
+  function galleria() {
+    const g = q('#galleria'); if (!g) return;
+    const foto = q('.galleria__foto', g), img = q('img', foto), mini = q('.galleria__miniature', g), titolo = q('.galleria__titolo', g), conto = q('.galleria__conto', g);
+    let lista = [], i = 0, aperta = false, origine = null;
+    const mostra = (k, verso = 0) => {
+      i = (k + lista.length) % lista.length;
+      conto.textContent = `${i + 1} / ${lista.length}`;
+      qa('button', mini).forEach((b, n) => b.classList.toggle('is-attiva', n === i));
+      q('.is-attiva', mini)?.scrollIntoView({ block: 'nearest', inline: 'center', behavior: 'smooth' });
+      if (RIDOTTO || !verso) { img.src = lista[i]; return; }
+      gsap.to(img, { x: -40 * verso, opacity: 0, duration: .18, ease: 'power2.in', onComplete: () => { img.src = lista[i]; const v = () => gsap.fromTo(img, { x: 40 * verso, opacity: 0 }, { x: 0, opacity: 1, duration: .35, ease: 'power3.out' }); img.complete ? v() : img.addEventListener('load', v, { once: true }); } });
+    };
+    const apri = (b) => {
+      lista = b.dataset.galleria.split(',').filter(Boolean); if (!lista.length) return;
+      origine = b; aperta = true; titolo.textContent = 'Le foto ' + (b.dataset.nome.startsWith('il ') ? 'del ' : 'della ') + b.dataset.nome.replace(/^(il|la) /, '');
+      mini.innerHTML = lista.map((src, n) => `<button type="button" aria-label="Foto ${n + 1}"><img src="${src}" alt="" loading="lazy"></button>`).join('');
+      qa('button', mini).forEach((m, n) => m.addEventListener('click', () => mostra(n, n > i ? 1 : -1)));
+      g.hidden = false; lenis?.stop(); html.classList.add('is-galleria');
+      mostra(0);
+      if (!RIDOTTO) { gsap.fromTo(g, { opacity: 0 }, { opacity: 1, duration: .35 }); gsap.fromTo(foto, { scale: .92, y: 20 }, { scale: 1, y: 0, duration: .6, ease: 'power3.out' }); gsap.fromTo(qa('button', mini), { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: .5, stagger: .04, delay: .15, ease: 'power3.out' }); }
+      q('.galleria__chiudi', g).focus();
+    };
+    const chiudi = () => {
+      if (!aperta) return; aperta = false;
+      const fine = () => { g.hidden = true; lenis?.start(); html.classList.remove('is-galleria'); origine?.focus(); };
+      RIDOTTO ? fine() : gsap.to(g, { opacity: 0, duration: .3, onComplete: fine });
+    };
+    qa('[data-galleria]').forEach((b) => b.addEventListener('click', () => apri(b)));
+    q('.galleria__chiudi', g).addEventListener('click', chiudi);
+    q('.galleria__freccia--prima', g).addEventListener('click', () => mostra(i - 1, -1));
+    q('.galleria__freccia--dopo', g).addEventListener('click', () => mostra(i + 1, 1));
+    g.addEventListener('click', (e) => { if (e.target === g || e.target.classList.contains('galleria__palco')) chiudi(); });
+    window.addEventListener('keydown', (e) => { if (!aperta) return; if (e.key === 'Escape') chiudi(); if (e.key === 'ArrowRight') mostra(i + 1, 1); if (e.key === 'ArrowLeft') mostra(i - 1, -1); });
+    let x0 = null;
+    foto.addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX; }, { passive: true });
+    foto.addEventListener('touchend', (e) => { if (x0 === null) return; const dx = e.changedTouches[0].clientX - x0; x0 = null; if (Math.abs(dx) > 40) mostra(i + (dx < 0 ? 1 : -1), dx < 0 ? 1 : -1); });
+  }
+
   /* ── rametti di ulivo: sempre attaccati a qualcosa (spuntano da dietro foto, carte e righe), mai fluttuanti ── */
   function rametto(seme) {
     /* gambo curvo dalla base (0,100) verso la punta, foglie a coppie sfalsate che si rimpiccioliscono, qualche oliva */
@@ -883,8 +922,8 @@
   /* ── recensioni: al passaggio la carta gira su se stessa da sinistra a destra, mostra per un attimo sul retro in quale nido ha dormito chi scrive, poi torna com'era ── */
   function giraRecensioni() {
     const NIDI = {
-      skyroom: { nome: 'Skyroom', sotto: 'Nido 1 · due cuori e un nido', foto: 'img/skyroom-fronte.webp' },
-      starsbox: { nome: 'Starsbox', sotto: 'Nido 2 · mille stelle e coccole', foto: 'img/starsbox-aperta.webp' },
+      skyroom: { nome: 'Skyroom', sotto: 'Nido 1 · 2 cuori e 1 nido', foto: 'img/skyroom-fronte.webp' },
+      starsbox: { nome: 'Starsbox', sotto: 'Nido 2 · 1000 stelle e coccole', foto: 'img/starsbox-aperta.webp' },
     };
     qa('.citazione').forEach((c) => {
       const chiave = (q('.nido', c)?.textContent || '').trim().toLowerCase(), n = NIDI[chiave]; if (!n) return;
@@ -1035,7 +1074,7 @@
 
   /* ── avvio ── */
   const introHero = hero();
-  puntaFoglio(); teli(); ramettiUlivo(); manifesto(); nidi(); family(); stelle(); nastro(); coccole(); dintorni(); voucher(); domande(); piede(); contatori(); giraRecensioni(); ospiti(); mappa(); popup(); reveal();
+  puntaFoglio(); teli(); ramettiUlivo(); galleria(); manifesto(); nidi(); family(); stelle(); nastro(); coccole(); dintorni(); voucher(); domande(); piede(); contatori(); giraRecensioni(); ospiti(); mappa(); popup(); reveal();
   const tlVelo = velo();
   if (RIDOTTO || QA || RIPRISTINO) { html.classList.add('is-pronto'); if (RIPRISTINO) introHero?.progress(1); }
   else { tlVelo.add(() => introHero.play(), INTRO.hero); tlVelo.add(() => html.classList.add('is-pronto'), INTRO.fine); }
