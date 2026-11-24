@@ -373,6 +373,11 @@ html.js:not(.is-ridotto) .stella { transform: none; }
 .cartella__foto--sei { grid-template-columns: repeat(3, 1fr); }
 .cartella__foto--sei figure, .cartella__foto--sei figure:first-child { aspect-ratio: 4 / 5; }
 .cartella__foto--tre { grid-template-columns: repeat(3, 1fr); }
+.vasche { display: grid; gap: clamp(18px, 2.4vw, 30px); }
+.vasche__nome { margin: 0 0 10px; font: italic 400 clamp(1.25rem, 1.8vw, 1.6rem)/1.1 var(--serif); color: var(--bianco); }
+.vasche__nome span { margin-left: .6em; font: 500 .72rem/1 var(--sans); font-style: normal; letter-spacing: .16em; text-transform: uppercase; color: var(--lime); vertical-align: .25em; }
+.vasche .cartella__foto figure, .vasche .cartella__foto figure:first-child { aspect-ratio: 4 / 3; }
+@media (max-width: 860px) { .vasche .cartella__foto figure:first-child { aspect-ratio: 16 / 10; } }
 .cartella__foto--tre figure:first-child { aspect-ratio: 4 / 5; }
 .cartella__foto--otto { grid-template-columns: repeat(4, 1fr); }
 .cartella__foto--otto figure, .cartella__foto--otto figure:first-child { aspect-ratio: 4 / 5; }
