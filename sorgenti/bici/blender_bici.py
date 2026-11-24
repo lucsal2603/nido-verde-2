@@ -62,6 +62,15 @@ def capsula(a, b, w0, w1=None, n=14):
     for k in range(n+1):
         t = ang + math.pi/2 + math.pi*k/n; pts.append((a[0] + w0/2*math.cos(t), a[1] + w0/2*math.sin(t)))
     return pts
+def liscia(pts, n=10):
+    """contorno chiuso morbido (Catmull-Rom) che passa per i punti dati"""
+    out = []; m = len(pts)
+    for i in range(m):
+        p0, p1, p2, p3 = pts[i-1], pts[i], pts[(i+1) % m], pts[(i+2) % m]
+        for k in range(n):
+            t = k / n; t2 = t*t; t3 = t2*t
+            out.append(tuple(.5*((2*p1[j]) + (-p0[j]+p2[j])*t + (2*p0[j]-5*p1[j]+4*p2[j]-p3[j])*t2 + (-p0[j]+3*p1[j]-3*p2[j]+p3[j])*t3) for j in (0, 1)))
+    return out
 BLU, NAVY, PANT, PANT2, SCARPA = '093CC8', '0B143C', '1E2965', '2E3A7C', '0B143C'
 R_HUB, F_HUB, BB = (118, 520), (490, 520), (316, 504)
 SEAT_T, HEAD_T, HEAD_B = (208, 376), (440, 352), (452, 398)
@@ -91,12 +100,20 @@ oggetto('corona', '07309E', poligoni=[cerchio(BB, 24)])
 oggetto('mozzo', BLU, poligoni=[cerchio(BB, 11)])
 oggetto('sella', NAVY, splines=P['sella']['splines'])
 bacino = oggetto('bacino', PANT, splines=P['bacino']['splines'])
+PELLE = P['mano']['col']
+collo = oggetto('collo', PELLE, poligoni=[liscia([(300, 118), (331, 122), (329, 146), (301, 146)], 6)])
 busto = oggetto('busto', P['busto']['col'], splines=P['busto']['splines'])
 capelli = oggetto('capelli', P['capelli']['col'], splines=P['capelli']['splines'])
+# viso di profilo, come gli altri omini: pelle davanti, capelli sopra e dietro con la frangia
+viso = oggetto('viso', PELLE, poligoni=[liscia([(316, 60), (348, 58), (360, 68), (362, 82), (369, 94), (362, 100), (363, 109),
+                                               (356, 120), (340, 129), (318, 133), (301, 126), (296, 92)], 10)])
+frangia = oggetto('frangia', P['capelli']['col'], poligoni=[liscia([(296, 48), (330, 40), (358, 48), (366, 62), (348, 64),
+                                                                   (326, 70), (311, 84), (304, 102), (295, 84)], 10)])
 pedivella_n = oggetto('pedivella_vicina', BLU, poligoni=[capsula((0, 0), (CRANK, 0), 12, 10)], origine=(0, 0))
 pedale_n = oggetto('pedale_vicino', NAVY, poligoni=[capsula((-15, 0), (15, 0), 9)], origine=(0, 0))
 gamba_n = gamba('vicina', PANT)
 mano = oggetto('mano', P['mano']['col'], splines=P['mano']['splines'])
+gamba_n['coscia'].location.z = busto.location.z - 0.005   # la maglia copre l'attacco della gamba
 # ── animazione ──
 def poni(ob, f, pos, ang):
     ob.location = (pos[0]*U, -pos[1]*U, ob.location.z); ob.rotation_euler = (0, 0, -math.radians(ang))
@@ -112,7 +129,7 @@ for f in range(N if MODE == 'anim' else 1):
     u = f / N; th = 2*math.pi*u   # un giro completo di pedali per ciclo
     for r, hub, a0 in ruote: poni(r, f, hub, math.degrees(th)*0.9)
     bob = 1.6*math.sin(2*th)
-    for ob in (busto, capelli, bacino, mano): poni(ob, f, (0, bob*(0.4 if ob is mano else 1)), 0)
+    for ob in (busto, capelli, bacino, mano, collo, viso, frangia): poni(ob, f, (0, bob*(0.4 if ob is mano else 1)), 0)
     hip = (HIP[0], HIP[1] + bob)
     for side, crank, pedale, g in ((0, pedivella_n, pedale_n, gamba_n), (math.pi, pedivella_l, pedale_l, gamba_l)):
         a = th + side
