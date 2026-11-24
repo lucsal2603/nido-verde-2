@@ -56,26 +56,36 @@ P['asta']=('shaft', comp('navy',(686,410,835,680),lab_orig))
 P['pala']=('ora', comp('ora',(572,668,710,822),lab_orig))
 P['mano_su']=('skin', comp('skin',(790,355,858,428),lab_orig))
 P['mano_giu']=('skin', comp('skin',(720,528,788,590),lab_orig))
+# fondi pieni sotto gambe e busto: coprono qualunque fessurina interna
+P['gambe_fondo']=('pant', ndimage.binary_erosion(ndimage.binary_fill_holes(P['gambe'][1]), iterations=5))
+P['busto_fondo']=('ora', ndimage.binary_erosion(P['busto'][1] & ~ndimage.binary_dilation(P['ombra'][1],iterations=2), iterations=5))
 # acqua
 P['acqua_sx']=('acqua', comp('acqua',(55,705,442,802)))
 P['acqua_pala']=('acqua', comp('acqua',(460,738,735,850)))
 P['acqua_dx']=('acqua', comp('acqua',(1085,742,1422,800)))
 P['acqua_dx2']=('acqua', comp('acqua',(1338,705,1484,758)))
-def trace(mask, dil=1):
+def trace(mask, dil=1, liscio=1.1):
+    """ricalco preciso: la forma si ingrandisce 4 volte e si ammorbidisce prima di potrace, poi le coordinate tornano alla scala vera"""
+    K=4
     mask=ndimage.binary_dilation(mask,iterations=dil)
-    mask=ndimage.gaussian_filter(mask.astype(float),1.6)>.5   # bordi lisci, niente scalini
-    bm=potrace.Bitmap(~mask)   # potracer traccia lo 0: si passa la maschera invertita
-    pl=bm.trace(turdsize=30,alphamax=1.0,opticurve=True,opttolerance=0.3)
+    big=ndimage.zoom(mask.astype(float),K,order=1)
+    big=ndimage.gaussian_filter(big,K*liscio)>.5
+    pl=potrace.Bitmap(~big).trace(turdsize=30*K*K,alphamax=1.2,opticurve=True,opttolerance=1.0)
     splines=[]
     for c in pl:
         segs=[]
-        for s in c.segments:
-            if s.is_corner: segs.append(['L',[s.c.x,s.c.y],[s.end_point.x,s.end_point.y]])
-            else: segs.append(['C',[s.c1.x,s.c1.y],[s.c2.x,s.c2.y],[s.end_point.x,s.end_point.y]])
-        splines.append({'start':[c.start_point.x,c.start_point.y],'segs':segs})
+        for s_ in c.segments:
+            if s_.is_corner: segs.append(['L',[s_.c.x/K,s_.c.y/K],[s_.end_point.x/K,s_.end_point.y/K]])
+            else: segs.append(['C',[s_.c1.x/K,s_.c1.y/K],[s_.c2.x/K,s_.c2.y/K],[s_.end_point.x/K,s_.end_point.y/K]])
+        splines.append({'start':[c.start_point.x/K,c.start_point.y/K],'segs':segs})
     return splines
+def grandi(m, minimo=250):
+    l,k=ndimage.label(m); s=ndimage.sum(m,l,range(1,k+1))
+    return np.isin(l, [i+1 for i,v in enumerate(s) if v>=minimo])
 out={}
 for k,(col,m) in P.items():
+    m = grandi(m)   # via i puntini isolati (pixel di bordo scambiati di colore)
     print(k, int(m.sum()))
-    out[k]={'col':COL[col],'splines':trace(m, 3 if k in ('braccio','avambraccio','busto') else 1)}
+    if k in ('gambe','scafo','scafo_scuro','bordo','interno','busto'): m = ndimage.binary_closing(m, iterations=5) | m   # chiude le fessure lasciate dalla pagaia
+    out[k]={'col':COL[col],'splines':trace(m, 3 if k in ('braccio','avambraccio','busto') else 1, 1.1 if k in ('asta','mano_su','mano_giu','sedili','pala') else 2.4)}
 json.dump(out,open(S+'/parti.json','w'))

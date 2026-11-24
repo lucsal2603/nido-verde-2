@@ -17,7 +17,7 @@ cam.data.type = 'ORTHO'; cam.data.ortho_scale = 15.36; cam.location = (7.68, -5.
 def srgb(h):
     c = [int(h[i:i+2], 16)/255 for i in (0, 2, 4)]
     return [x/12.92 if x <= .04045 else ((x+.055)/1.055)**2.4 for x in c] + [1]
-ORDINE = ['acqua_dx2','scafo_scuro','scafo','bordo','interno','sedili','gambe','busto','ombra','avambraccio','testa','capelli','braccio','asta','pala','mano_giu','mano_su','acqua_sx','acqua_pala','acqua_dx']
+ORDINE = ['acqua_dx2','scafo_scuro','scafo','bordo','interno','sedili','gambe_fondo','gambe','busto_fondo','busto','ombra','avambraccio','testa','capelli','braccio','asta','pala','mano_giu','mano_su','acqua_sx','acqua_pala','acqua_dx']
 OBJ = {}
 for z, nome in enumerate(ORDINE):
     p = P[nome]
@@ -81,8 +81,8 @@ N = 48
 ease = lambda u: u*u*(3-2*u)
 MANO_SU, MANO_GIU = (824, 392), (754, 558)
 SPALLA, GOMITO, ANCA = (690, 412), (662, 528), (630, 600)
-CANOA = ['scafo_scuro','scafo','bordo','interno','sedili','gambe']
-PERSONA = ['busto','ombra','testa','capelli']
+CANOA = ['scafo_scuro','scafo','bordo','interno','sedili','gambe_fondo','gambe']
+PERSONA = ['busto_fondo','busto','ombra','testa','capelli']
 for f in range(N if MODE == 'anim' else 1):
     u = f / N
     # colpo di pagaia: 0-0.62 la pala tira indietro in acqua, 0.62-1 si alza e torna avanti
