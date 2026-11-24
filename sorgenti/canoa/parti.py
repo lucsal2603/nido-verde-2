@@ -45,7 +45,7 @@ ora=comp('ora',(530,380,790,600),lab_orig)
 busto_f=comp('ora',(530,380,790,600))
 avamb=ora & (xx>650+(yy-500)*0.45) & (yy>492)
 vic = lambda c, r: (xx-c[0])**2 + (yy-c[1])**2 < r*r
-P['busto']=('ora', (busto_f & ~avamb) | (avamb & vic((662,528), 38)))   # sotto il gomito resta arancione, così l'avambraccio non si stacca
+P['busto']=('ora', (busto_f & ~avamb) | (avamb & vic((662,528), 62)))   # sotto il gomito resta arancione, così l'avambraccio non si stacca
 P['avambraccio']=('ora', avamb)
 P['ombra']=('ora3', comp('ora3',(610,488,660,568)))
 P['testa']=('skin', comp('skin',(630,285,750,410)))
@@ -63,6 +63,7 @@ P['acqua_dx']=('acqua', comp('acqua',(1085,742,1422,800)))
 P['acqua_dx2']=('acqua', comp('acqua',(1338,705,1484,758)))
 def trace(mask, dil=1):
     mask=ndimage.binary_dilation(mask,iterations=dil)
+    mask=ndimage.gaussian_filter(mask.astype(float),1.6)>.5   # bordi lisci, niente scalini
     bm=potrace.Bitmap(~mask)   # potracer traccia lo 0: si passa la maschera invertita
     pl=bm.trace(turdsize=30,alphamax=1.0,opticurve=True,opttolerance=0.3)
     splines=[]

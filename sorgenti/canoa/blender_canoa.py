@@ -52,6 +52,16 @@ for z, nome in enumerate(ORDINE):
     out = nt.nodes.new('ShaderNodeOutputMaterial'); nt.links.new(em.outputs[0], out.inputs['Surface']); cu.materials.append(m)
     OBJ[nome] = ob
 
+# braccia: ognuna appesa a un empty nel punto d'attacco, girato lungo il braccio; l'empty si allunga solo in quel verso
+import mathutils
+ARTI = {}
+for n, base, mano in [('braccio', (690, 412), (824, 392)), ('avambraccio', (662, 528), (754, 558))]:
+    e = bpy.data.objects.new('osso_' + n, None); sc.collection.objects.link(e)
+    ang = math.atan2(-(mano[1]-base[1]), mano[0]-base[0])
+    e.location = (base[0]*U, -base[1]*U, 0); e.rotation_euler = (0, 0, ang)
+    bpy.context.view_layer.update()
+    ob = OBJ[n]; ob.parent = e; ob.matrix_parent_inverse = e.matrix_world.inverted()
+    ARTI[n] = (e, ang)
 # ── animazione: tutto in coordinate del disegno (pixel, y verso il basso) ──
 def rot(p, c, a):  # ruota p attorno a c di a gradi (orari sullo schermo)
     r = math.radians(a); x, y = p[0]-c[0], p[1]-c[1]
@@ -102,7 +112,9 @@ for f in range(N if MODE == 'anim' else 1):
         b = corpo(base)
         a0 = math.degrees(math.atan2(mano0[1]-base[1], mano0[0]-base[0])); a1 = math.degrees(math.atan2(mano[1]-b[1], mano[0]-b[0]))
         s = math.hypot(mano[0]-b[0], mano[1]-b[1]) / math.hypot(mano0[0]-base[0], mano0[1]-base[1])
-        metti(OBJ[n], f, base, a1 - a0, (b[0]-base[0], b[1]-base[1]), s, base)
+        e, ang = ARTI[n]
+        e.location = (b[0]*U, -b[1]*U, 0); e.rotation_euler = (0, 0, ang - math.radians(a1 - a0)); e.scale = (s, 1, 1)
+        for prop in ('location', 'rotation_euler', 'scale'): e.keyframe_insert(prop, frame=f)
     # acqua: le onde scorrono e respirano; l'increspatura attorno alla pala segue la pala
     for n, ph, amp in [('acqua_sx', 0, 9), ('acqua_dx', 1.7, 9), ('acqua_dx2', 3.1, 7)]:
         metti(OBJ[n], f, (0, 0), 0, (-amp*math.sin(2*math.pi*u + ph) - 6, 2*math.sin(2*math.pi*u*2 + ph)))
