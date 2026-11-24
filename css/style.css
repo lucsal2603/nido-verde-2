@@ -133,7 +133,8 @@ html.is-menu .testata__logo-scuro { display: block; }
 .hero__foto { position: absolute; inset: 0; margin: 0; clip-path: polygon(0 0, 50% 0, 100% 0, 100% 100%, 0 100%); will-change: transform, clip-path; }
 .hero__foto img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 55%; }
 .hero__foto::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(14, 26, 18, .5) 0%, rgba(14, 26, 18, 0) 26%, rgba(14, 26, 18, 0) 42%, rgba(14, 26, 18, .55) 100%); opacity: var(--scrim, 1); }
-.hero__testo { position: absolute; left: var(--gut); right: var(--gut); bottom: clamp(28px, 6vh, 64px); max-width: 720px; color: var(--bianco); transition: color .5s var(--e-out); z-index: 2; }
+.hero__testo { position: absolute; left: var(--gut); right: var(--gut); bottom: clamp(28px, 6vh, 64px); max-width: 720px; color: var(--bianco); transition: color .5s var(--e-out); z-index: 2; text-shadow: 0 1px 18px rgba(14, 26, 18, .45); }
+.hero.is-chiara .hero__testo { text-shadow: none; }
 .hero.is-chiara .hero__testo { color: var(--inchiostro); }
 .hero__testo .occhiello { color: inherit; opacity: .85; }
 .hero__titolo { font-size: var(--t-xl); line-height: .95; }
