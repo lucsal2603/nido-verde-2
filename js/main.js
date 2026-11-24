@@ -3,6 +3,7 @@
   const gsap = window.gsap, ST = window.ScrollTrigger;
   if (!gsap || !ST) return;
   gsap.registerPlugin(ST);
+  ST.config({ ignoreMobileResize: true });   /* su telefono la barra dell'indirizzo cambia l'altezza mentre scorri: niente ricalcoli a metà, che fanno saltare la pagina */
   const html = document.documentElement;
   const RIDOTTO = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const QA = new URLSearchParams(location.search).has('qa');
@@ -25,11 +26,12 @@
     gsap.ticker.lagSmoothing(0);
   }
   /* i salti da un pulsante a una sezione sono lenti e morbidi: la durata cresce con la distanza (da 2,2 a 4,5 s), con partenza e arrivo dolci */
+  let navigando = false;   /* durante un salto a una sezione il popup di benvenuto non si apre (fermerebbe lo scroll a metà strada) */
   const vaiA = (el) => {
     if (!lenis) { el.scrollIntoView({ behavior: RIDOTTO ? 'auto' : 'smooth' }); return; }
     const distanza = Math.abs(el.getBoundingClientRect().top - 72);
     const durata = gsap.utils.clamp(2.2, 4.5, 2.2 + distanza / 2200);
-    lenis.scrollTo(el, { offset: -72, duration: durata, easing: (t) => (t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2) });
+    navigando = true; lenis.start(); lenis.scrollTo(el, { offset: -72, duration: durata, force: true, onComplete: () => { navigando = false; }, easing: (t) => (t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2) });
   };
 
   /* ── ricarica: si riparte da dove si era (sessionStorage: dura finché la scheda resta aperta); una visita nuova parte dall'alto ── */
@@ -73,7 +75,9 @@
   qa('a[href^="#"]').forEach((a) => a.addEventListener('click', (e) => {
     const id = a.getAttribute('href'); if (id.length < 2) return;
     const el = q(id); if (!el) return;
-    e.preventDefault(); chiudiMenu(); setTimeout(() => vaiA(el), menuAperto ? 500 : 0);
+    e.preventDefault();
+    /* dal menu: prima si chiude il telo (e lo scroll si riattiva), poi si parte verso la sezione */
+    const dalMenu = menuAperto; chiudiMenu(); setTimeout(() => vaiA(el), dalMenu ? 650 : 0);
   }));
 
   /* ── testata: si nasconde scendendo, torna salendo, si scurisce sulla notte e sul piede ── */
@@ -792,9 +796,9 @@
        La sezione dopo (voucher) sta sotto i dintorni (margine negativo di uno schermo) e viene tenuta ferma in alto mentre si scopre. */
     const fisso = q('.passi__fisso', root), scena = q('.passi__scena', root);
     const sezione = q('.dintorni'), voucherSez = q('.voucher');
-    let EXTRA = innerHeight;
+    let EXTRA = innerHeight, HH = innerHeight;   /* altezza schermo fissata all'ultimo refresh: su telefono la barra dell'indirizzo che compare e sparisce non fa saltare niente */
     const misura = () => {
-      const H = innerHeight, top = parseFloat(getComputedStyle(fisso).top) || 0;
+      const H = HH = innerHeight, top = parseFloat(getComputedStyle(fisso).top) || 0;
       EXTRA = Math.max(0, 2 * H - top - fisso.offsetHeight);   /* così il risucchio comincia esattamente quando la macchina è arrivata, e il blocco resta fermo fino alla fine */
       root.style.height = `calc(${(N + 1) * 60}svh + ${Math.round(EXTRA)}px)`;
       if (sezione) sezione.style.marginBottom = `${-H}px`;
@@ -871,7 +875,7 @@
     const disegna = (sv) => {
       if (sv === ultimo) return; ultimo = sv;
       if (sv <= 0) { pulisci(); ancora = null; return; }
-      const W = innerWidth, H = innerHeight;
+      const W = innerWidth, H = HH;
       if (!ancora && auto) {
         auto.style.translate = auto.style.rotate = ''; sezione.style.translate = ''; fisso.style.transform = '';
         const r = auto.getBoundingClientRect(), f = fisso.getBoundingClientRect();
@@ -903,7 +907,7 @@
       }
       /* gli strati: il primo è fermo sotto la pagina, gli altri e poi il voucher entrano da sinistra con il bordo ad arco */
       strati.style.display = sv > 0 && sv < 1 ? 'block' : 'none';
-      const entra = (i) => eInOut(clamp01((sv - (.5 + i * .1)) / .26));   /* i = 0..2 per gli strati, 3 per il voucher */
+      const entra = (i) => eInOut(clamp01((sv - (i < 3 ? .5 + i * .1 : .72)) / (i < 3 ? .26 : .28)));   /* i = 0..2 per gli strati, 3 per il voucher: il voucher finisce di entrare esattamente a fine corsa, così non scatta all'arrivo */
       const T = W * .24;
       fogli.forEach((f, i) => {
         if (i === 0) { f.style.translate = '0 0'; return; }
@@ -982,7 +986,7 @@
     const velo = q('.popup__velo', box), carta = q('.popup__carta', box), chiudi = q('.popup__chiudi', box);
     let aperto = false;
     const apri = () => {
-      if (aperto || menuAperto) return; aperto = true; box.hidden = false; lenis?.stop();
+      if (aperto || menuAperto) return; if (navigando) { setTimeout(apri, 1500); return; } aperto = true; box.hidden = false; lenis?.stop();
       try { sessionStorage.setItem('nido:popup', '1'); localStorage.setItem('nido:popup_a', String(visite)); } catch (e) { /* niente */ }
       gsap.timeline({ defaults: { ease: 'power3.out' } })
         .to(velo, { opacity: 1, duration: .5 }, 0)
@@ -1031,7 +1035,7 @@
         if (scarto < 0) { vSez.style.paddingTop = `${parseFloat(getComputedStyle(vSez).paddingTop) - scarto}px`; ritardo = 0; } else ritardo = Math.round(scarto);
       };
       centra(); ST.addEventListener('refreshInit', centra);
-      gsap.timeline({ scrollTrigger: { trigger: vSez, start: () => `top -${ritardo}`, end: () => '+=' + Math.round(innerHeight * 1.1), scrub: .6, pin: true, anticipatePin: 1, invalidateOnRefresh: true } })
+      gsap.timeline({ scrollTrigger: { trigger: vSez, start: () => `top -${ritardo}`, end: () => '+=' + Math.round(innerHeight * 1.1), scrub: .6, pin: true, anticipatePin: TOUCH ? 0 : 1, invalidateOnRefresh: true } })
         .to(sigillo, { scale: 1.25, ease: 'power2.out', duration: .06 }, 0)
         .to(sigillo, { scale: 0, rotate: 140, opacity: 0, ease: 'power2.in', duration: .08 }, .06)
         .to(lembo, { rotateX: 180, ease: 'power2.inOut', duration: .26 }, .1)
