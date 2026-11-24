@@ -970,7 +970,7 @@
       else visite = parseInt(localStorage.getItem('nido:visite') || '1', 10) || 1;
       mostrato = parseInt(localStorage.getItem('nido:popup_a') || '0', 10) || 0;
     } catch (e) { return; }   /* senza memoria niente popup: meglio zitti che invadenti */
-    if (giaSessione || (mostrato > 0 && visite - mostrato < OGNI)) return;
+    if (!/[?&]benvenuto=/.test(location.search) && (giaSessione || (mostrato > 0 && visite - mostrato < OGNI))) return;
     const velo = q('.popup__velo', box), carta = q('.popup__carta', box), chiudi = q('.popup__chiudi', box);
     let aperto = false;
     const apri = () => {

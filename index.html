@@ -90,8 +90,10 @@
     <div class="hero__palco">
       <figure class="hero__foto">
         <img src="img/starsbox-letto.webp" alt="Dal letto della Starsbox, con il tetto aperto, la vista sul lago di Viverone" fetchpriority="high">
-        <script>/* anteprima: con ?copertina=lago nell'indirizzo la copertina diventa il tramonto sul lago */
-          if (/[?&]copertina=lago/.test(location.search)) { const i = document.currentScript.previousElementSibling; i.src = 'img/lago-tramonto.webp'; i.alt = 'Il tramonto sul lago di Viverone dalla collina degli ulivi'; i.style.objectPosition = '50% 70%'; }</script>
+        <script>/* anteprime della copertina: ?copertina=lago, ?copertina=terrazza, ?copertina=skyroom */
+          (function () { const m = location.search.match(/[?&]copertina=(lago|terrazza|skyroom)/); if (!m) return; const i = document.currentScript.previousElementSibling;
+            const F = { lago: ['img/lago-tramonto.webp', '50% 70%', 'Il tramonto sul lago di Viverone dalla collina degli ulivi'], terrazza: ['img/terrazza-tramonto.webp', '40% 60%', 'La terrazza al tramonto, con il lago e gli ulivi'], skyroom: ['img/skyroom-tramonto.webp', '50% 62%', 'La Skyroom al tramonto fra gli ulivi'] }[m[1]];
+            i.src = F[0]; i.style.objectPosition = F[1]; i.alt = F[2]; })();</script>
       </figure>
       <div class="hero__testo">
         <p class="occhiello" data-sale>Glamping sul lago di Viverone</p>
@@ -570,7 +572,8 @@
   <div class="popup__velo" data-popup-chiudi></div>
   <div class="popup__carta" role="dialog" aria-modal="true" aria-labelledby="popupTitolo">
     <button class="popup__chiudi" type="button" aria-label="Chiudi" data-popup-chiudi><span></span><span></span></button>
-    <figure class="popup__foto"><img src="img/popup-notte.webp" alt="" loading="lazy"></figure>
+    <figure class="popup__foto"><img src="img/popup-notte.webp" alt="" loading="lazy"></figure><script>/* anteprima: con ?benvenuto=skyroom la finestrella usa la Skyroom al tramonto */
+      if (/[?&]benvenuto=skyroom/.test(location.search)) { const i = document.currentScript.previousElementSibling.querySelector('img'); i.src = 'img/skyroom-tramonto.webp'; i.style.objectPosition = '50% 55%'; }</script>
     <div class="popup__testo">
       <p class="occhiello">Benvenuto al Nido</p>
       <h2 class="popup__titolo" id="popupTitolo">Tre casette,<br>un lago, <em>un’emozione.</em></h2>
