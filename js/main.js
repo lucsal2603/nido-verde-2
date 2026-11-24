@@ -166,7 +166,11 @@
       const fine = () => { g.hidden = true; lenis?.start(); html.classList.remove('is-galleria'); origine?.focus(); };
       RIDOTTO ? fine() : gsap.to(g, { opacity: 0, duration: .3, onComplete: fine });
     };
-    qa('[data-galleria]').forEach((b) => b.addEventListener('click', () => apri(b)));
+    qa('[data-galleria]').forEach((b) => {
+      const n = b.dataset.galleria.split(',').filter(Boolean).length;   /* il numero sul bottone si conta da solo, e senza foto il bottone resta nascosto */
+      const c = q('b', b); if (c) c.textContent = n; b.hidden = !n;
+      b.addEventListener('click', () => apri(b));
+    });
     q('.galleria__chiudi', g).addEventListener('click', chiudi);
     q('.galleria__freccia--prima', g).addEventListener('click', () => mostra(i - 1, -1));
     q('.galleria__freccia--dopo', g).addEventListener('click', () => mostra(i + 1, 1));
