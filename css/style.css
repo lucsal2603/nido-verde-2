@@ -204,9 +204,12 @@ html.is-ridotto .nido__anta { display: none; }
 .galleria__testa { display: flex; align-items: center; gap: 16px; }
 .galleria__titolo { font: italic 1.4rem var(--serif); color: var(--lime); }
 .galleria__conto { margin-left: auto; font-size: .9rem; opacity: .75; font-variant-numeric: tabular-nums; }
-.galleria__chiudi { position: relative; width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(247, 248, 243, .35); background: none; cursor: pointer; }
-.galleria__chiudi span { position: absolute; left: 13px; top: 21px; width: 17px; height: 1.6px; background: var(--carta); transform: rotate(45deg); }
+.galleria__chiudi { position: relative; flex: none; width: 46px; height: 46px; border-radius: 50%; border: 1px solid rgba(247, 248, 243, .35); background: transparent; color: var(--carta); cursor: pointer; transition: background .3s, border-color .3s, color .3s, transform .35s var(--e-out); }
+.galleria__chiudi span { position: absolute; left: 50%; top: 50%; width: 18px; height: 1.8px; margin: -.9px 0 0 -9px; border-radius: 2px; background: currentColor; transform: rotate(45deg); }
 .galleria__chiudi span + span { transform: rotate(-45deg); }
+.galleria__chiudi:focus { outline: none; }
+.galleria__chiudi:focus-visible { outline: 2px solid var(--lime); outline-offset: 3px; }
+@media (hover: hover) { .galleria__chiudi:hover { background: var(--lime); border-color: var(--lime); color: var(--notte); transform: rotate(90deg); } }
 .galleria__palco { position: relative; display: flex; align-items: center; justify-content: center; min-height: 0; padding: 16px 0; }
 .galleria__foto { margin: 0; height: 100%; max-width: 100%; display: flex; align-items: center; justify-content: center; }
 .galleria__foto img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: var(--r-s); box-shadow: 0 30px 80px -30px rgba(0, 0, 0, .7); user-select: none; -webkit-user-drag: none; }

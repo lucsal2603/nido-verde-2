@@ -88,7 +88,7 @@
     const xTo = gsap.quickTo(foglia, 'x', { duration: .18, ease: 'power3' }), yTo = gsap.quickTo(foglia, 'y', { duration: .18, ease: 'power3' });
     const rotTo = gsap.quickTo(foglia, 'rotation', { duration: .5, ease: 'power2' });
     /* sulle parti scure (piede, notte, coccole, dintorni) la foglia diventa lime, altrimenti si confonde con lo sfondo */
-    const SCURE = '.piede, .stelle, .coccole, .dintorni';
+    const SCURE = '.piede, .stelle, .coccole, .dintorni, .galleria';
     window.addEventListener('pointermove', (e) => { xTo(e.clientX); yTo(e.clientY); foglia.style.opacity = '1';
       const t = e.target instanceof Element ? e.target : null;
       foglia.classList.toggle('is-chiara', !!(t && t.closest(SCURE) && !t.closest('.popup__carta') && !(q('#popup') && !q('#popup').hidden && t.closest('.popup')))); }, { passive: true });
