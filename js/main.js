@@ -494,8 +494,12 @@
     gsap.set(foto, { clipPath: centro }); gsap.set(img, { filter: 'brightness(.25) saturate(.6)', scale: 1.18 });
     gsap.set(punti, { xPercent: -50, yPercent: -50, scale: 0, opacity: 0, rotate: -90 }); gsap.set(lettere, { opacity: 0, filter: 'blur(10px)', scale: 1.4 }); if (occ) gsap.set(occ, { opacity: 0, y: 24 });
 
-    const tl = gsap.timeline({ scrollTrigger: { trigger: q('.stelle__pin', sez), start: 'top top', end: 'bottom bottom', scrub: .6,
-      onUpdate: (e) => { testata.classList.toggle('is-scura', e.progress > .1 && e.progress < .98); } } });
+    const tl = gsap.timeline({ scrollTrigger: { trigger: q('.stelle__pin', sez), start: 'top top', end: 'bottom bottom', scrub: .6 } });
+    /* la notte comincia quando il cielo si è scurito e continua senza interruzioni (testo, nastro, coccole, dintorni):
+       un unico trigger, così la testata non torna mai chiara per un attimo fra una sezione e l'altra */
+    const pin = q('.stelle__pin', sez);
+    ST.create({ trigger: pin, start: () => `top+=${Math.max(0, (pin.offsetHeight - innerHeight) * .1)} top`, endTrigger: '.dintorni', end: 'bottom 80px', invalidateOnRefresh: true,
+      onToggle: (e) => testata.classList.toggle('is-scura', e.isActive), onRefresh: (e) => { if (e.isActive) testata.classList.add('is-scura'); } });
     ST.create({ trigger: sez, start: 'top bottom', end: 'bottom top', onToggle: (e) => accendi(e.isActive) });
     tl.to(sez, { backgroundColor: '#0E1A12', ease: 'none', duration: .16 }, 0)
       .to(canvas, { opacity: 1, ease: 'none', duration: .2 }, .06)
@@ -527,7 +531,6 @@
       testo.innerHTML = parole.map((w) => `<span class="parola-t" aria-hidden="true">${w}</span>`).join(' ');
       const pt = qa('.parola-t', testo);
       gsap.fromTo(pt, { opacity: .08, y: 18, filter: 'blur(8px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', ease: 'power2.out', stagger: .06, scrollTrigger: { trigger: dopo, start: 'top 85%', end: 'bottom 75%', scrub: .5 } });
-      ST.create({ trigger: dopo, start: 'top 80px', end: 'bottom 80px', onToggle: (e) => { if (e.isActive) testata.classList.add('is-scura'); } });
     }
   }
 
@@ -535,7 +538,6 @@
   function nastro() {
     const righeN = qa('[data-nastro]'); if (!righeN.length || RIDOTTO) return;
     /* il nastro sta nella notte delle stelle: la testata resta chiara anche lì */
-    ST.create({ trigger: '.nastro', start: 'top 80px', end: 'bottom 80px', onToggle: (e) => testata.classList.toggle('is-scura', e.isActive) });
     righeN.forEach((r) => {
       r.innerHTML += r.innerHTML;
       const contro = r.dataset.nastro === 'contro';
@@ -550,7 +552,8 @@
 
   /* ── le coccole: parole di traverso, binari che si allungano, foto sfalsate ── */
   function coccole() {
-    ST.create({ trigger: '.coccole', start: 'top 80px', end: 'bottom 80px', onToggle: (e) => testata.classList.toggle('is-scura', e.isActive) });
+    /* con le animazioni ridotte le stelle non girano: la notte va dalla sezione stelle fino ai dintorni */
+    if (RIDOTTO) ST.create({ trigger: '.stelle', start: 'top 80px', endTrigger: '.dintorni', end: 'bottom 80px', onToggle: (e) => testata.classList.toggle('is-scura', e.isActive) });
     const ramo = q('[data-ramo]'); if (!ramo) return;
     const svg = q('.ramo__disegno', ramo), olive = qa('.ramo__oliva', ramo), cartelle = qa('.cartella');
     olive.forEach((o) => {
@@ -780,7 +783,6 @@
     const root = q('[data-passi]'); if (!root) return;
     const passi = qa('[data-passo]', root), tappe = qa('[data-tappa]', root), omini = qa('.passi__omino', root), barre = tappe.map((t) => q('.passi__barra i', t));
     const N = passi.length; let attivo = -1;
-    ST.create({ trigger: '.dintorni', start: 'top 80px', end: 'bottom 80px', onToggle: (e) => testata.classList.toggle('is-scura', e.isActive) });
     if (RIDOTTO) { html.classList.add('is-ridotto'); return; }
     /* dopo l'ultima tappa il blocco resta fermo ancora un po': la macchina arriva in fondo e risucchia la pagina, sotto compare il voucher.
        La sezione dopo (voucher) sta sotto i dintorni (margine negativo di uno schermo) e viene tenuta ferma in alto mentre si scopre. */

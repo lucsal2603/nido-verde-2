@@ -63,41 +63,49 @@ def ellisse(dr, c, rx, ry, ang, fill, n=56):
 EL0, MA0 = (655, 478), (760, 455)
 EL1, MA1 = (772, 392), (708, 250)
 SPALLA = (640, 445)
-def posa(k):
-    # k: 0 = sul bastoncino, 1 = a visiera
-    e = smooth(k)
-    el = lerp(EL0, EL1, e)
-    ma = lerp(MA0, MA1, e)
-    ma = (ma[0] + 28 * math.sin(math.pi * e), ma[1])          # arco: esce in avanti e sale
+def smoother(t): t = min(max(t, 0), 1); return t * t * t * (t * (t * 6 - 15) + 10)
+def bez(p0, c, p1, t): return ((1 - t) ** 2 * p0[0] + 2 * (1 - t) * t * c[0] + t * t * p1[0], (1 - t) ** 2 * p0[1] + 2 * (1 - t) * t * c[1] + t * t * p1[1])
+CM, CE = (812, 330), (760, 440)      # punti di controllo: la mano esce in avanti e sale ad arco, il gomito la segue
+def posa(e):
+    # e: 0 = sul bastoncino, 1 = a visiera (già addolcito)
+    el = bez(EL0, CE, EL1, e)
+    ma = bez(MA0, CM, MA1, e)
     rx, ry = 33 + 9 * e, 37 - 21 * e
     ang = math.radians(-15 + 3 * e)
     return el, ma, rx, ry, ang
 
-N = 72                      # 3 secondi: ferma, alza, guarda lontano, riabbassa
-def k_di(i):
+N = 104                     # ~4,4 secondi: ferma, alza piano, guarda lontano, riabbassa piano
+SU0, SU1, GIU0, GIU1 = .08, .36, .72, .97
+def e_di(i):
     t = i / N
-    if t < .12: return 0
-    if t < .30: return (t - .12) / .18
-    if t < .80: return 1
-    if t < .96: return 1 - (t - .80) / .16
+    if t < SU0: return 0
+    if t < SU1:                       # salita con un piccolo assestamento finale
+        u = (t - SU0) / (SU1 - SU0)
+        return smoother(u) + .035 * math.sin(math.pi * smoother(u)) * u
+    if t < GIU0: return 1
+    if t < GIU1: return 1 - smoother((t - GIU0) / (GIU1 - GIU0))
     return 0
 
 def fotogramma(i):
-    k = k_di(i)
-    el, ma, rx, ry, ang = posa(k)
-    if .30 <= i / N < .80:   # mentre guarda, la mano si sposta appena (scruta l'orizzonte)
-        ma = (ma[0] + 3 * math.sin(2 * math.pi * (i / N - .30) / .5), ma[1] - 2 * math.sin(4 * math.pi * (i / N - .30) / .5))
+    e = e_di(i)
+    el, ma, rx, ry, ang = posa(e)
+    t = i / N
+    if SU1 - .06 <= t < GIU0 + .04:   # mentre guarda la mano scruta piano l'orizzonte (entra e esce dolcemente)
+        w = smooth((t - (SU1 - .06)) / .1) * (1 - smooth((t - (GIU0 - .06)) / .1))
+        ph = 2 * math.pi * (t - (SU1 - .06)) / (GIU0 - SU1 + .1)
+        ma = (ma[0] + 4 * w * math.sin(ph), ma[1] - 2.5 * w * math.sin(2 * ph))
+        ang += math.radians(3) * w * math.sin(ph)
+    davanti = ma[1] < 395                # appena la mano supera la spalla passa davanti al viso
     img = fondo.copy()
     lay = Image.new('RGBA', img.size, (0, 0, 0, 0)); dr = ImageDraw.Draw(lay)
-    # bastoncino piantato (resta in piedi)
     capsula(dr, POLO_A, POLO_B, 18, 18, NAVY)
     capsula(dr, POLO_A, add(POLO_A, (12, 45)), 23, 23, NAVY)
     capsula(dr, SPALLA, el, 62, 56, MANICA_L)
     capsula(dr, el, ma, 54, 46, MANICA_L)
-    if k < .5: ellisse(dr, ma, rx, ry, ang, PELLE)
+    if not davanti: ellisse(dr, ma, rx, ry, ang, PELLE)
     img.alpha_composite(lay)
     img.alpha_composite(figura)
-    if k >= .5:              # vicino al viso la mano passa davanti alla fronte
+    if davanti:
         lay = Image.new('RGBA', img.size, (0, 0, 0, 0)); dr = ImageDraw.Draw(lay)
         capsula(dr, lerp(el, ma, .35), ma, 50, 44, MANICA_L)
         ellisse(dr, ma, rx, ry, ang, PELLE)

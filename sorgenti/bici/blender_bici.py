@@ -74,14 +74,14 @@ def liscia(pts, n=10):
 BLU, NAVY, PANT, PANT2, SCARPA = '093CC8', '0B143C', '1E2965', '2E3A7C', '0B143C'
 R_HUB, F_HUB, BB = (118, 520), (490, 520), (316, 504)
 SEAT_T, HEAD_T, HEAD_B = (208, 376), (440, 352), (452, 398)
-CRANK = 46; HIP = (248, 318); L1, L2 = 134, 124
+CRANK = 46; HIP = (244, 326); L1, L2 = 134, 124
 # ── ordine di disegno: dietro → davanti ──
 gamba_l = {}; gamba_n = {}
 def gamba(nome, col):
     # coscia e stinco come oggetti con perno all'anca e al ginocchio, la scarpa con perno alla caviglia
-    c = oggetto(nome+'_coscia', col, poligoni=[capsula((0, 0), (L1, 0), 64, 52)], origine=(0, 0))
-    s = oggetto(nome+'_stinco', col, poligoni=[capsula((0, 0), (L2, 0), 50, 42)], origine=(0, 0))
-    p = oggetto(nome+'_scarpa', SCARPA, poligoni=[[(-22, -16), (30, -14), (44, -6), (48, 4), (44, 12), (-22, 12), (-26, -2)]], origine=(0, 0))
+    c = oggetto(nome+'_coscia', col, poligoni=[capsula((0, 0), (L1, 0), 80, 70)], origine=(0, 0))
+    s = oggetto(nome+'_stinco', col, poligoni=[capsula((0, 0), (L2, 0), 68, 58)], origine=(0, 0))
+    p = oggetto(nome+'_scarpa', SCARPA, poligoni=[[(-30, -20), (32, -18), (50, -8), (54, 5), (49, 14), (-30, 14), (-34, -3)]], origine=(0, 0))
     return {'coscia': c, 'stinco': s, 'scarpa': p}
 pedivella_l = oggetto('pedivella_lontana', '07309E', poligoni=[capsula((0, 0), (CRANK, 0), 11, 9)], origine=(0, 0))
 pedale_l = oggetto('pedale_lontano', NAVY, poligoni=[capsula((-14, 0), (14, 0), 8)], origine=(0, 0))
@@ -100,13 +100,14 @@ oggetto('corona', '07309E', poligoni=[cerchio(BB, 24)])
 oggetto('mozzo', BLU, poligoni=[cerchio(BB, 11)])
 oggetto('sella', NAVY, splines=P['sella']['splines'])
 bacino = oggetto('bacino', PANT, splines=P['bacino']['splines'])
+# sedere tondo seduto sulla sella, come nel disegno di prima
+sedere = oggetto('sedere', PANT, poligoni=[liscia([(160, 300), (215, 296), (262, 312), (270, 340), (240, 356), (196, 358), (166, 348), (156, 326)], 10)])
 PELLE = P['mano']['col']
 collo = oggetto('collo', PELLE, poligoni=[liscia([(300, 118), (331, 122), (329, 146), (301, 146)], 6)])
 busto = oggetto('busto', P['busto']['col'], splines=P['busto']['splines'])
 capelli = oggetto('capelli', P['capelli']['col'], splines=P['capelli']['splines'])
 # viso di profilo, come gli altri omini: pelle davanti, capelli sopra e dietro con la frangia
-viso = oggetto('viso', PELLE, poligoni=[liscia([(316, 60), (348, 58), (360, 68), (362, 82), (369, 94), (362, 100), (363, 109),
-                                               (356, 120), (340, 129), (318, 133), (301, 126), (296, 92)], 10)])
+viso = oggetto('viso', PELLE, poligoni=[liscia([(312, 62), (345, 60), (360, 78), (360, 102), (348, 122), (322, 131), (302, 120), (298, 88)], 10)])
 frangia = oggetto('frangia', P['capelli']['col'], poligoni=[liscia([(296, 48), (330, 40), (358, 48), (366, 62), (348, 64),
                                                                    (326, 70), (311, 84), (304, 102), (295, 84)], 10)])
 pedivella_n = oggetto('pedivella_vicina', BLU, poligoni=[capsula((0, 0), (CRANK, 0), 12, 10)], origine=(0, 0))
@@ -127,9 +128,9 @@ def ik(h, p):
 N = 40
 for f in range(N if MODE == 'anim' else 1):
     u = f / N; th = 2*math.pi*u   # un giro completo di pedali per ciclo
-    for r, hub, a0 in ruote: poni(r, f, hub, math.degrees(th)*0.9)
+    for r, hub, a0 in ruote: poni(r, f, hub, math.degrees(th))   # un giro intero per ciclo: il loop non si vede
     bob = 1.6*math.sin(2*th)
-    for ob in (busto, capelli, bacino, mano, collo, viso, frangia): poni(ob, f, (0, bob*(0.4 if ob is mano else 1)), 0)
+    for ob in (busto, capelli, bacino, sedere, mano, collo, viso, frangia): poni(ob, f, (0, bob*(0.4 if ob is mano else 1)), 0)
     hip = (HIP[0], HIP[1] + bob)
     for side, crank, pedale, g in ((0, pedivella_n, pedale_n, gamba_n), (math.pi, pedivella_l, pedale_l, gamba_l)):
         a = th + side

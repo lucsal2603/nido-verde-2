@@ -71,7 +71,8 @@ def trace(mask, liscio=.7, dil=1):
             else: segs.append(['C', [s.c1.x / K, s.c1.y / K], [s.c2.x / K, s.c2.y / K], [s.end_point.x / K, s.end_point.y / K]])
         sp.append({'start': [c.start_point.x / K, c.start_point.y / K], 'segs': segs})
     return sp
-hexc = lambda k: '%02X%02X%02X' % PAL[k]
+COLORE = dict(PAL, bianco=(240, 196, 156))   # mani e orecchio color pelle: in piccolo non sembrano puntini bianchi
+hexc = lambda k: '%02X%02X%02X' % COLORE[k]
 parti = []
 # fondo: un pezzo per colore, in ordine (i successivi coprono le giunture dei precedenti)
 ORD = ['blu', 'blu_sc', 'azzurro', 'verde', 'verde_sc', 'bianco', 'arancio', 'pant_sc', 'pant']
