@@ -363,6 +363,14 @@ html.js:not(.is-ridotto) .stella { transform: none; }
 .cartella__foto figure { margin: 0; aspect-ratio: 4 / 5; overflow: hidden; border-radius: var(--r-s); background: rgba(247, 248, 243, .06); }
 .cartella__foto figure:first-child { aspect-ratio: auto; }
 .cartella__foto img { width: 100%; height: 100%; object-fit: cover; }
+.cartella__foto--cinque figure { aspect-ratio: 1 / 1; }
+.cartella__foto--cinque figure:first-child { grid-row: span 2; aspect-ratio: auto; }
+.cartella__foto--sei { grid-template-columns: repeat(3, 1fr); }
+.cartella__foto--sei figure, .cartella__foto--sei figure:first-child { aspect-ratio: 4 / 5; }
+.cartella__foto--tre { grid-template-columns: repeat(3, 1fr); }
+.cartella__foto--tre figure:first-child { aspect-ratio: 4 / 5; }
+.cartella__foto--otto { grid-template-columns: repeat(4, 1fr); }
+.cartella__foto--otto figure, .cartella__foto--otto figure:first-child { aspect-ratio: 4 / 5; }
 @media (max-width: 760px) {
   .ramo { height: 175px; margin: 0 8px; }
   .ramo__nome { font-size: 1.1rem; }
@@ -370,6 +378,9 @@ html.js:not(.is-ridotto) .stella { transform: none; }
   .cartella { grid-template-columns: 1fr; }
   .cartella__foto { grid-template-columns: 1fr 1fr; }
   .cartella__foto figure:first-child { grid-column: 1 / -1; aspect-ratio: 16 / 10; }
+  .cartella__foto--cinque figure:first-child { grid-row: auto; }
+  .cartella__foto--sei figure:first-child, .cartella__foto--otto figure:first-child { grid-column: auto; aspect-ratio: 4 / 5; }
+  .cartella__foto--tre figure:first-child { object-position: center; }
 }
 
 /* ── dintorni: la sezione a passi (clonata da funtownstudio.com): testi a sinistra, omino a destra, tappe sotto ── */
