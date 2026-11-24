@@ -141,7 +141,9 @@ for f in range(N if MODE == 'anim' else 1):
         poni(g['coscia'], f, hip, math.degrees(math.atan2(kn[1]-hip[1], kn[0]-hip[0])))
         poni(g['stinco'], f, kn, math.degrees(math.atan2(ank[1]-kn[1], ank[0]-kn[0])))
         # la scarpa resta quasi orizzontale, con la punta che scende un poco quando spinge in basso
-        poni(g['scarpa'], f, ank, 8*math.sin(a) + 4)
+        # la scarpa segue lo stinco (caviglia quasi rigida), così il piede si inclina con il pantalone
+        sa = math.degrees(math.atan2(ank[1]-kn[1], ank[0]-kn[0]))
+        poni(g["scarpa"], f, ank, max(-22, min(22, (sa - 98) * .65 + 3)))
 sc.frame_start, sc.frame_end = 0, (N-1 if MODE == 'anim' else 0)
 sc.render.image_settings.file_format = 'PNG'; sc.render.image_settings.color_mode = 'RGBA'
 sc.render.filepath = S + ('/bl_' if MODE == 'anim' else '/bl_fermo_')
