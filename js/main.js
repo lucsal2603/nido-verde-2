@@ -492,14 +492,13 @@
     const centro = 'polygon(50% 56%, 50% 56%, 50% 56%, 50% 56%, 50% 56%)';
     const timpano = 'polygon(50% 0%, 100% 32%, 100% 100%, 0% 100%, 0% 32%)';
     gsap.set(foto, { clipPath: centro }); gsap.set(img, { filter: 'brightness(.25) saturate(.6)', scale: 1.18 });
-    gsap.set(punti, { xPercent: -50, yPercent: -50, scale: 0, opacity: 0, rotate: -90 }); gsap.set(lettere, { opacity: 0, filter: 'blur(10px)', scale: 1.4 }); gsap.set(occ, { opacity: 0, y: 24 });
+    gsap.set(punti, { xPercent: -50, yPercent: -50, scale: 0, opacity: 0, rotate: -90 }); gsap.set(lettere, { opacity: 0, filter: 'blur(10px)', scale: 1.4 }); if (occ) gsap.set(occ, { opacity: 0, y: 24 });
 
     const tl = gsap.timeline({ scrollTrigger: { trigger: q('.stelle__pin', sez), start: 'top top', end: 'bottom bottom', scrub: .6,
       onUpdate: (e) => { testata.classList.toggle('is-scura', e.progress > .1 && e.progress < .98); } } });
     ST.create({ trigger: sez, start: 'top bottom', end: 'bottom top', onToggle: (e) => accendi(e.isActive) });
     tl.to(sez, { backgroundColor: '#0E1A12', ease: 'none', duration: .16 }, 0)
       .to(canvas, { opacity: 1, ease: 'none', duration: .2 }, .06)
-      .to(occ, { opacity: 1, y: 0, color: '#A0B028', ease: 'power2.out', duration: .1 }, .1)
       /* la costellazione: si accende la prima stella, una scintilla corre lungo il tratto fino alla successiva, che si accende all'arrivo, e così via fino a chiudere la casetta */
       .to(punti[0], { scale: 1.6, opacity: 1, rotate: 0, ease: 'back.out(2.4)', duration: .025 }, .12)
       .to(punti[0], { scale: 1, ease: 'power2.out', duration: .02 }, .145);
