@@ -587,9 +587,11 @@ html.is-ridotto .biglietto { transform: translateY(-32%); z-index: 5; }
 .fisarmonica__voce.is-aperta button span::before { transform: translate(-50%, -50%) rotate(45deg); }
 .fisarmonica__voce.is-aperta button span::after { transform: translate(-50%, -50%) rotate(135deg); }
 .fisarmonica__pannello { display: grid; grid-template-rows: 0fr; transition: grid-template-rows var(--d-lenta) var(--e-out); }
-.fisarmonica__pannello > p { overflow: hidden; min-height: 0; max-width: 60ch; color: var(--inchiostro); }
+.fisarmonica__testo p { margin: 0 0 .8em; }
+.fisarmonica__testo p:last-child { margin-bottom: 0; }
+.fisarmonica__pannello > p, .fisarmonica__pannello > div { overflow: hidden; min-height: 0; max-width: 60ch; color: var(--inchiostro); }
 .fisarmonica__voce.is-aperta .fisarmonica__pannello { grid-template-rows: 1fr; }
-.fisarmonica__voce.is-aperta .fisarmonica__pannello > p { padding-bottom: 22px; }
+.fisarmonica__voce.is-aperta .fisarmonica__pannello > p, .fisarmonica__voce.is-aperta .fisarmonica__pannello > div { padding-bottom: 22px; }
 
 /* ── prenota ── */
 .prenota { display: grid; grid-template-columns: 1.2fr 1fr; gap: clamp(28px, 5vw, 96px); padding: var(--sez) var(--gut); background: var(--carta); position: relative; z-index: 2; }
