@@ -957,7 +957,7 @@
     apri.addEventListener('click', () => {
       if (box.classList.contains('is-aperta')) return;
       const f = document.createElement('iframe');
-      f.src = 'https://www.google.com/maps?q=' + encodeURIComponent('Via Zimone 43, Viverone BI') + '&z=15&hl=it&output=embed';
+      f.src = 'https://www.google.com/maps?q=45.4289571,8.0538508&z=15&hl=it&output=embed';   /* il punto esatto del Nido (Via Pozzo Rolle 43): con «Via Zimone 43» il navigatore porta sulla stradina sopra */
       f.title = 'Mappa: Il Nido tra gli Ulivi, Viverone'; f.loading = 'lazy'; f.referrerPolicy = 'no-referrer-when-downgrade'; f.setAttribute('allowfullscreen', '');
       box.appendChild(f); box.classList.add('is-aperta');
     });
