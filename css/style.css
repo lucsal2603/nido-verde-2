@@ -396,8 +396,7 @@ html.is-ridotto .dintorni { padding-bottom: clamp(96px, 11vw, 156px); }
 .passi__omino { position: absolute; inset: 0; display: flex; align-items: center; justify-content: flex-start; opacity: 0; visibility: hidden; }
 .passi__omino picture { display: contents; }
 .passi__omino img { max-height: 80%; max-width: 94%; width: auto; height: auto; object-fit: contain; }
-.passi__omino--cammina img { max-height: 84%; }
-.passi__omino--panchina img, .passi__omino--barca img, .passi__omino--auto img, .passi__omino--canoa img { max-height: 70%; max-width: 72%; }
+.passi__omino--panchina img, .passi__omino--cammina img, .passi__omino--barca img, .passi__omino--auto img, .passi__omino--canoa img { max-height: 70%; max-width: 72%; }
 .passi__omino--bici img { max-width: 80%; }
 .strati-fuga { position: fixed; inset: 0; z-index: 3; pointer-events: none; display: none; overflow: hidden; }
 .strati-fuga__foglio { position: absolute; top: 0; bottom: 0; left: -60vw; right: 0; will-change: translate; }
@@ -423,8 +422,7 @@ html.is-ridotto .dintorni { padding-bottom: clamp(96px, 11vw, 156px); }
   .passi__riga { flex-direction: column; gap: 1rem; height: 60svh; }
   .passi__scena { flex: 0 0 26svh; order: -1; }
   .passi__omino img { max-height: 94%; max-width: 96%; }
-  .passi__omino--cammina img { max-height: 96%; }
-  .passi__omino--panchina img, .passi__omino--barca img, .passi__omino--auto img, .passi__omino--canoa img { max-height: 90%; max-width: 72%; }
+  .passi__omino--panchina img, .passi__omino--cammina img, .passi__omino--barca img, .passi__omino--auto img, .passi__omino--canoa img { max-height: 90%; max-width: 72%; }
   .passi__testi { flex: 1; }
   .passo { inset: 0 0 auto 0; gap: 1rem; }
   .passo__titolo, .passo__corsivo { font-size: clamp(1.8rem, 7vw, 2.3rem); }

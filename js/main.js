@@ -818,7 +818,6 @@
       const corsa = Math.max(0, scena.clientWidth - img.clientWidth);
       gsap.set(img, { x: frazione(u, k) * corsa });
     };
-    gsap.set(q('.passi__omino--cammina img', root), { scaleX: -1 });   /* l'omino a piedi guarda a sinistra nel render: specchiato, cammina nel verso in cui scivola */
     attiva(0); posiziona(0, 0);
     /* le animazioni a destra si caricano tardi: appena un'immagine arriva si ricalcola la sua corsa, così la macchina non parte da fuori scena */
     let ultimaU = 0, ultimaK = 0;
