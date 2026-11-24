@@ -90,6 +90,8 @@
     <div class="hero__palco">
       <figure class="hero__foto">
         <img src="img/starsbox-letto.webp" alt="Dal letto della Starsbox, con il tetto aperto, la vista sul lago di Viverone" fetchpriority="high">
+        <script>/* anteprima: con ?copertina=lago nell'indirizzo la copertina diventa il tramonto sul lago */
+          if (/[?&]copertina=lago/.test(location.search)) { const i = document.currentScript.previousElementSibling; i.src = 'img/lago-tramonto.webp'; i.alt = 'Il tramonto sul lago di Viverone dalla collina degli ulivi'; i.style.objectPosition = '50% 70%'; }</script>
       </figure>
       <div class="hero__testo">
         <p class="occhiello" data-sale>Glamping sul lago di Viverone</p>
