@@ -1056,7 +1056,7 @@
         .to(casa, { clipPath: 'polygon(0% 24%, 50% 0%, 100% 24%, 100% 100%, 0% 100%)', duration: .6, ease: 'back.out(2.2)' })
         .fromTo(img, { scale: 1.35 }, { scale: 1.06, duration: 1.6, ease: 'power3.out', clearProps: 'transform' }, 0)
         .from(qa(':scope > *', dentro), { y: 30, opacity: 0, duration: .7, stagger: .08, ease: 'power3.out' }, .7)
-        .fromTo(piene, { width: '0%' }, { width: '98%', duration: 1.2, ease: 'power2.out' }, 1.1)
+        .fromTo(piene, { width: '0%' }, { width: getComputedStyle(piene).getPropertyValue('--pieno').trim() || '98%', duration: 1.2, ease: 'power2.out' }, 1.1)
         .from(vai, { y: 20, opacity: 0, duration: .6, ease: 'power3.out' }, .9);
     });
   }
