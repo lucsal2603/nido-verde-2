@@ -87,7 +87,11 @@
     gsap.set(foglia, { transformOrigin: '50% 6%' });
     const xTo = gsap.quickTo(foglia, 'x', { duration: .18, ease: 'power3' }), yTo = gsap.quickTo(foglia, 'y', { duration: .18, ease: 'power3' });
     const rotTo = gsap.quickTo(foglia, 'rotation', { duration: .5, ease: 'power2' });
-    window.addEventListener('pointermove', (e) => { xTo(e.clientX); yTo(e.clientY); foglia.style.opacity = '1'; }, { passive: true });
+    /* sulle parti scure (piede, notte, coccole, dintorni) la foglia diventa lime, altrimenti si confonde con lo sfondo */
+    const SCURE = '.piede, .stelle, .coccole, .dintorni';
+    window.addEventListener('pointermove', (e) => { xTo(e.clientX); yTo(e.clientY); foglia.style.opacity = '1';
+      const t = e.target instanceof Element ? e.target : null;
+      foglia.classList.toggle('is-chiara', !!(t && t.closest(SCURE) && !t.closest('.popup__carta') && !(q('#popup') && !q('#popup').hidden && t.closest('.popup')))); }, { passive: true });
     document.addEventListener('pointerleave', () => { foglia.style.opacity = '0'; });
     if (lenis) { lenis.on('scroll', ({ velocity }) => rotTo(gsap.utils.clamp(-40, 40, velocity * .5))); ST.addEventListener('scrollEnd', () => rotTo(0)); }
     qa('a, button').forEach((el) => { el.addEventListener('pointerenter', () => html.classList.add('foglia-grande')); el.addEventListener('pointerleave', () => html.classList.remove('foglia-grande')); });

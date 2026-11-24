@@ -80,8 +80,8 @@ gamba_l = {}; gamba_n = {}
 def gamba(nome, col):
     # coscia e stinco come oggetti con perno all'anca e al ginocchio, la scarpa con perno alla caviglia
     c = oggetto(nome+'_coscia', col, poligoni=[capsula((0, 0), (L1, 0), 80, 70)], origine=(0, 0))
-    s = oggetto(nome+'_stinco', col, poligoni=[capsula((0, 0), (L2, 0), 68, 58)], origine=(0, 0))
-    p = oggetto(nome+'_scarpa', SCARPA, poligoni=[[(-30, -20), (32, -18), (50, -8), (54, 5), (49, 14), (-30, 14), (-34, -3)]], origine=(0, 0))
+    s = oggetto(nome+'_stinco', col, poligoni=[capsula((0, 0), (L2 - 16, 0), 68, 50)], origine=(0, 0))
+    p = oggetto(nome+'_scarpa', SCARPA, poligoni=[[(-32, -30), (14, -30), (34, -18), (52, -8), (56, 5), (51, 14), (-32, 14), (-36, -6)]], origine=(0, 0))
     return {'coscia': c, 'stinco': s, 'scarpa': p}
 pedivella_l = oggetto('pedivella_lontana', '07309E', poligoni=[capsula((0, 0), (CRANK, 0), 11, 9)], origine=(0, 0))
 pedale_l = oggetto('pedale_lontano', NAVY, poligoni=[capsula((-14, 0), (14, 0), 8)], origine=(0, 0))

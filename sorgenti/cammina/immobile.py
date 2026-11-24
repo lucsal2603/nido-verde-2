@@ -70,8 +70,8 @@ def posa(e):
     # e: 0 = sul bastoncino, 1 = a visiera (già addolcito)
     el = bez(EL0, CE, EL1, e)
     ma = bez(MA0, CM, MA1, e)
-    rx, ry = 33 + 9 * e, 37 - 21 * e
-    ang = math.radians(-15 + 3 * e)
+    rx, ry = 33, 37                     # la mano resta sempre lo stesso cerchio
+    ang = math.radians(-15)
     return el, ma, rx, ry, ang
 
 N = 104                     # ~4,4 secondi: ferma, alza piano, guarda lontano, riabbassa piano
