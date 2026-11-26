@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Gestionale · Il Nido tra gli Ulivi</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#1B2A1E">
+  <link rel="icon" type="image/png" sizes="32x32" href="../img/favicon-32.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Albert+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="gestionale.css?v=1">
+</head>
+<body>
+
+<!-- ── accesso ── -->
+<section class="accesso" id="accesso">
+  <div class="accesso__carta">
+    <img class="accesso__logo" src="../img/logo-testata.png" alt="Il Nido tra gli Ulivi">
+    <p class="occhiello">Area riservata</p>
+    <h1>Il gestionale <em>del Nido</em></h1>
+    <form class="accesso__form" id="accessoForm" autocomplete="on">
+      <label>Nome utente<input name="utente" autocomplete="username" required></label>
+      <label>Password<span class="campo-password"><input name="password" type="password" autocomplete="current-password" required><button type="button" class="mostra" aria-label="Mostra la password">Mostra</button></span></label>
+      <p class="accesso__errore" id="accessoErrore" hidden>Nome utente o password non corretti.</p>
+      <button class="btn btn--pieno btn--grande" type="submit">Entra</button>
+    </form>
+    <p class="accesso__demo">Anteprima dimostrativa · utente <b>federica</b> · password <b>ulivi2027</b></p>
+  </div>
+</section>
+
+<!-- ── app ── -->
+<div class="app" id="app" hidden>
+  <aside class="lato" id="lato">
+    <a class="lato__logo" href="#panoramica"><img src="../img/logo-testata.png" alt=""><span>Il Nido <em>gestionale</em></span></a>
+    <nav class="lato__menu" id="menu" aria-label="Sezioni del gestionale">
+      <a href="#panoramica" data-tour="panoramica"><i>⌂</i>Panoramica</a>
+      <a href="#prenotazioni" data-tour="prenotazioni"><i>▦</i>Calendario e prenotazioni</a>
+      <a href="#pagine" data-tour="pagine"><i>✎</i>Testi e foto del sito</a>
+      <a href="#nidi" data-tour="nidi"><i>⌂</i>I nidi</a>
+      <a href="#prezzi" data-tour="prezzi"><i>€</i>Prezzi e coccole</a>
+      <a href="#domande" data-tour="domande"><i>?</i>Domande frequenti</a>
+      <a href="#recensioni" data-tour="recensioni"><i>★</i>Recensioni</a>
+      <a href="#foto" data-tour="foto"><i>▣</i>Libreria foto</a>
+      <a href="#impostazioni" data-tour="impostazioni"><i>⚙</i>Contatti e impostazioni</a>
+    </nav>
+    <div class="lato__piede">
+      <button type="button" class="lato__tutorial" id="apriTutorial" data-tour="tutorial">▶ Rivedi il tutorial</button>
+      <a class="lato__sito" href="../" target="_blank" rel="noopener">Apri il sito ↗</a>
+      <button type="button" class="lato__esci" id="esci">Esci</button>
+    </div>
+  </aside>
+
+  <div class="principale">
+    <header class="barra">
+      <button type="button" class="barra__menu" id="barraMenu" aria-label="Apri il menu">☰</button>
+      <div class="barra__titolo"><p class="occhiello" id="titoloOcchiello">Ciao Federica</p><h1 id="titoloPagina">Panoramica</h1></div>
+      <div class="barra__azioni">
+        <span class="barra__modifiche" id="contaModifiche" hidden></span>
+        <button type="button" class="btn" id="annulla" hidden>Annulla</button>
+        <button type="button" class="btn btn--pieno" id="salva" data-tour="salva" disabled>Salva modifiche</button>
+      </div>
+    </header>
+    <p class="avviso-demo">Anteprima dimostrativa: puoi provare tutto, ma le modifiche non cambiano il sito vero.</p>
+    <main class="contenuto" id="contenuto" tabindex="-1"></main>
+  </div>
+</div>
+
+<!-- ── tutorial ── -->
+<div class="tour" id="tour" hidden>
+  <div class="tour__buco" id="tourBuco"></div>
+  <div class="tour__carta" id="tourCarta" role="dialog" aria-modal="true" aria-labelledby="tourTitolo">
+    <p class="tour__passo" id="tourPasso"></p>
+    <h2 id="tourTitolo"></h2>
+    <p id="tourTesto"></p>
+    <div class="tour__puntini" id="tourPuntini"></div>
+    <div class="tour__azioni">
+      <button type="button" class="tour__salta" id="tourSalta">Salta</button>
+      <button type="button" class="btn" id="tourIndietro">Indietro</button>
+      <button type="button" class="btn btn--pieno" id="tourAvanti">Avanti</button>
+    </div>
+  </div>
+</div>
+
+<div class="avviso" id="avviso" role="status" aria-live="polite"></div>
+<input type="file" id="sceltaFoto" accept="image/*" hidden>
+
+<script src="gestionale.js?v=1"></script>
+</body>
+</html>
