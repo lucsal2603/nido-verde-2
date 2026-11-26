@@ -371,3 +371,6 @@ input, select, textarea { min-width: 0; max-width: 100%; }
 .conferma__icona.is-festa { background: rgba(160, 176, 40, .22); color: var(--oliva); }
 .conferma__icona .ic { width: 30px; height: 30px; }
 @media (max-width: 900px) { .visibile { flex-direction: column; align-items: stretch; } .finestra--conferma .finestra__azioni { flex-direction: column-reverse; } .finestra--conferma .btn { width: 100%; } }
+
+.rivela-azioni { display: flex; flex-wrap: wrap; gap: 8px; flex: none; }
+@media (max-width: 900px) { .rivela-azioni .btn { flex: 1; } }

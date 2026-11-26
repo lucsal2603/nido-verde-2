@@ -237,6 +237,8 @@ html.is-ridotto .nido__anta { display: none; }
 .nido--arrivo { grid-column: 1 / -1; display: grid; grid-template-columns: 1fr 1fr; gap: clamp(28px, 4vw, 64px); align-items: center; margin-top: clamp(24px, 4vw, 56px); }
 .nido--arrivo .nido__corpo { padding: 0; }
 .nido--arrivo .nido__foto img { filter: blur(12px) grayscale(.75) brightness(.38); transform: scale(1.12); }
+.nido--arrivo.nido--svelato .nido__foto img { filter: none; transform: none; }
+.nido--svelato .nido__galleria[hidden] { display: none; }
 @media (hover: hover) { .nido--arrivo:hover .nido__foto img { transform: scale(1.12); } }
 .nido__presto { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding-top: 14%; gap: 6px; color: var(--bianco); text-align: center; pointer-events: none; transition: opacity .5s; }
 .nido__presto-eti { font: 600 .72rem/1 var(--sans); letter-spacing: .24em; text-transform: uppercase; color: var(--evidenzia); }

@@ -321,6 +321,8 @@
   /* per il futuro: il gestionale potrà aggiornare il calendario senza ricaricare la pagina */
   window.NidoCalendario = { aggiorna: (d) => { DATI = d; costruisci(); }, scegliNido, apri, chiudi };
 
-  fetch(CONFIG.fonte, { cache: 'no-cache' }).then((r) => r.json()).then((d) => { DATI = d; costruisci(); })
+  /* anteprima del Nido 3 rivelato (?nido3=svelato): compare anche nel calendario */
+  const conNido3 = (d) => { if (/[?&]nido3=svelato/.test(location.search) && !d.nidi.nido3) d.nidi.nido3 = { nome: 'Moonbox', sottotitolo: 'Nido 3', foto: 'img/nidi-dall-alto.webp', occupate: [] }; return d; };
+  fetch(CONFIG.fonte, { cache: 'no-cache' }).then((r) => r.json()).then((d) => { DATI = conNido3(d); costruisci(); })
     .catch(() => { radice.classList.add('is-errore'); });
 })();

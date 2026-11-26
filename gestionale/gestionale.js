@@ -437,7 +437,7 @@
         <div class="nido-ed__testa"><div class="foto-segreta" aria-label="Foto non ancora caricata"><span>Foto in arrivo</span></div><div><p class="occhiello">Nido 3</p><h2>${esc(titolo.replace(/\*/g, ''))}</h2></div><button type="button" class="btn btn--piccolo" data-sost-cop>Carica la foto principale</button></div>
         <div class="visibile">
           <div><b data-stato-titolo>Ancora segreto</b><span data-stato-testo>Sul sito si vede come “in arrivo”, con la scritta Presto e qualche indizio. Non si può ancora prenotare.</span></div>
-          <button type="button" class="btn btn--pieno btn--rivela" data-rivela>Rivela il nido segreto</button>
+          <div class="rivela-azioni"><a class="btn" href="../?nido3=svelato" target="_blank" rel="noopener">Guarda come apparirà</a><button type="button" class="btn btn--pieno btn--rivela" data-rivela>Rivela il nido segreto</button></div>
         </div>
         <div class="due-campi">
           <label class="campo"><span>Nome e numero</span><input value="Nido 3" data-c="occhiello"></label>
