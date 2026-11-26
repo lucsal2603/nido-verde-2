@@ -103,7 +103,7 @@
         if (inizio && fine && d > inizio && d < fine) b.classList.add('giorno--dentro');
         if (!passato && !chiuso) {
           const p = prezzoNotte(d);
-          if (libera) b.insertAdjacentHTML('beforeend', `<small>${p}</small>`);
+          if (libera) b.insertAdjacentHTML('beforeend', `<small>${p} €</small>`);
         }
         const etichetta = `${lunga(d)}, ${passato ? 'passato' : chiuso ? 'struttura chiusa' : occupata(d) ? 'occupato' : 'libero, ' + prezzoNotte(d) + ' euro a notte'}`;
         b.setAttribute('aria-label', etichetta);
