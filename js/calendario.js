@@ -210,7 +210,7 @@
       return `<i class="${foglia ? 'cf-foglia' : 'cf-stella'}" style="--x:${(Math.cos(a) * r).toFixed(0)}px;--y:${(Math.sin(a) * r * .75 - 40).toFixed(0)}px;--r:${(Math.random() * 360).toFixed(0)}deg;--d:${(.9 + Math.random() * .5).toFixed(2)}s;--s:${(.6 + Math.random() * .8).toFixed(2)}"></i>`;
     }).join('');
     box.hidden = false; box.classList.remove('is-via'); void box.offsetWidth; box.classList.add('is-via');
-    setTimeout(() => box.querySelector('[data-cal-chiudi]')?.focus({ preventScroll: true }), 2200);
+    setTimeout(() => box.querySelector('[data-cal-chiudi]')?.focus({ preventScroll: true }), 3800);
   }
   function azzeraFatto() {
     const box = document.querySelector('[data-cal-fatto]'); if (!box || box.hidden) return;
