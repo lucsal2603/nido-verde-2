@@ -547,11 +547,14 @@
         if (el) {
           const r = el.getBoundingClientRect(), m = 6;
           Object.assign(buco.style, { left: r.left - m + 'px', top: r.top - m + 'px', width: r.width + 2 * m + 'px', height: r.height + 2 * m + 'px', opacity: 1 });
+          /* il velo sfocato ha un buco esattamente sopra la voce spiegata */
+          const x0 = r.left - m, y0 = r.top - m, w = r.width + 2 * m, h = r.height + 2 * m, k = 14;
+          $('#tourVelo').style.clipPath = `path(evenodd, 'M0 0H${innerWidth}V${innerHeight}H0Z M${x0 + k} ${y0}H${x0 + w - k}Q${x0 + w} ${y0} ${x0 + w} ${y0 + k}V${y0 + h - k}Q${x0 + w} ${y0 + h} ${x0 + w - k} ${y0 + h}H${x0 + k}Q${x0} ${y0 + h} ${x0} ${y0 + h - k}V${y0 + k}Q${x0} ${y0} ${x0 + k} ${y0}Z')`;
           const cw = carta.offsetWidth, ch = carta.offsetHeight;
           let x = r.right + 18, y = r.top + r.height / 2 - ch / 2;
           if (x + cw > innerWidth - 12) { x = Math.min(innerWidth - cw - 12, Math.max(12, r.left + r.width / 2 - cw / 2)); y = r.bottom + 18; if (y + ch > innerHeight - 12) y = r.top - ch - 18; }
           carta.style.left = Math.max(12, x) + 'px'; carta.style.top = Math.max(12, Math.min(innerHeight - ch - 12, y)) + 'px'; carta.classList.remove('is-centro');
-        } else { buco.style.opacity = 0; Object.assign(buco.style, { left: '50%', top: '50%', width: '0px', height: '0px' }); carta.style.left = ''; carta.style.top = ''; carta.classList.add('is-centro'); }
+        } else { buco.style.opacity = 0; $('#tourVelo').style.clipPath = 'none'; Object.assign(buco.style, { left: '50%', top: '50%', width: '0px', height: '0px' }); carta.style.left = ''; carta.style.top = ''; carta.classList.add('is-centro'); }
         carta.classList.remove('is-entra'); void carta.offsetWidth; carta.classList.add('is-entra');
       }, document.body.classList.contains('menu-aperto') ? 320 : 0);
     };

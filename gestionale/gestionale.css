@@ -256,8 +256,10 @@ button.stato { cursor: pointer; }
 
 /* tutorial */
 .tour { position: fixed; inset: 0; z-index: 100; }
-.tour__buco { position: fixed; border-radius: 14px; box-shadow: 0 0 0 9999px rgba(14, 26, 18, .72); transition: all .45s var(--e-out); pointer-events: none; }
-.tour__buco[style*="opacity: 0"] { box-shadow: 0 0 0 9999px rgba(14, 26, 18, .72); }
+/* tutto quello che non è il tutorial resta scuro e sfocato; si vede nitido solo il punto spiegato */
+.tour__velo { position: fixed; inset: 0; background: rgba(14, 26, 18, .55); backdrop-filter: blur(7px) saturate(.8); -webkit-backdrop-filter: blur(7px) saturate(.8); animation: veloEntra .4s ease both; }
+@keyframes veloEntra { from { opacity: 0; } }
+.tour__buco { position: fixed; border-radius: 14px; box-shadow: 0 0 0 2px var(--lime), 0 0 30px 4px rgba(160, 176, 40, .35); transition: all .45s var(--e-out); pointer-events: none; }
 .tour__carta { position: fixed; width: min(360px, calc(100% - 24px)); padding: 22px; border-radius: 22px; background: var(--bianco); box-shadow: 0 30px 80px -20px rgba(0, 0, 0, .6); transition: left .45s var(--e-out), top .45s var(--e-out); }
 .tour__carta.is-centro { left: 50% !important; top: 50% !important; transform: translate(-50%, -50%); width: min(440px, calc(100% - 24px)); text-align: center; }
 .tour__carta.is-entra { animation: tourEntra .45s var(--e-out); }
