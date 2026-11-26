@@ -172,7 +172,7 @@
     };
     const chiudi = () => {
       if (!aperta) return; aperta = false;
-      const fine = () => { g.hidden = true; lenis?.start(); html.classList.remove('is-galleria'); origine?.focus(); };
+      const fine = () => { g.hidden = true; if (!html.classList.contains('is-calendario')) lenis?.start(); html.classList.remove('is-galleria'); origine?.focus({ preventScroll: true }); };
       RIDOTTO ? fine() : gsap.to(g, { opacity: 0, duration: .3, onComplete: fine });
     };
     qa('[data-galleria]').forEach((b) => {

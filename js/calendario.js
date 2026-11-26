@@ -118,15 +118,20 @@
   function disegnaRiepilogo() {
     const n = notti(), nd = DATI.nidi[nido];
     q('[data-cal-nido]').textContent = `${nd.nome}`;
-    q('[data-cal-entrata]').textContent = inizio ? breve(inizio) : 'scegli il giorno';
-    q('[data-cal-uscita]').textContent = fine ? breve(fine) : (inizio ? 'scegli il giorno' : '—');
+    q('[data-cal-entrata]').textContent = inizio ? breve(inizio) : 'arrivo';
+    q('[data-cal-uscita]').textContent = fine ? breve(fine) : 'partenza';
     const soggiorno = n.reduce((t, d) => t + prezzoNotte(d), 0);
     const ex = DATI.extra.filter((e) => extra.has(e.id)).reduce((t, e) => t + e.prezzo, 0);
     q('[data-cal-notti]').textContent = n.length ? `${n.length} ${n.length === 1 ? 'notte' : 'notti'} · ${soggiorno} €` : '—';
     q('[data-cal-totale]').textContent = n.length ? `${soggiorno + ex} €` : '—';
     const pronto = n.length > 0;
+    q('[data-cal-barra]').textContent = pronto ? `${breve(inizio)} → ${breve(fine)} · ${n.length} ${n.length === 1 ? 'notte' : 'notti'}` : (inizio ? 'Ora scegli la partenza' : 'Scegli arrivo e partenza');
+    q('[data-cal-barra-totale]').textContent = pronto ? `${soggiorno + ex} €` : '';
+    q('[data-cal-avanti]').setAttribute('aria-disabled', String(!pronto));
+    if (!pronto) radice.classList.remove('is-riepilogo');
     qa('[data-cal-invia]').forEach((a) => { a.setAttribute('aria-disabled', String(!pronto)); a.href = pronto ? link(a.dataset.calInvia, n, soggiorno, ex) : '#calendario'; });
-    q('.calendario__aiuto').textContent = !inizio ? 'Tocca il giorno di arrivo.' : !fine ? 'Ora tocca il giorno di partenza.' : 'Perfetto! Controlla il riepilogo e manda la richiesta.';
+    q('.calendario__aiuto').textContent = !inizio ? 'Tocca il giorno di arrivo.' : !fine ? 'Ora tocca il giorno di partenza.' : 'Perfetto! Ora manda la richiesta.';
+    adatta();
   }
 
   function link(canale, n, soggiorno, ex) {
@@ -162,23 +167,38 @@
   }
 
   function costruisci() {
-    q('.calendario__nidi').innerHTML = Object.entries(DATI.nidi).map(([id, n]) => `<button type="button" class="calendario__nido" data-cal-scegli="${id}" aria-pressed="${id === nido}"><span>${n.sottotitolo}</span>${n.nome}</button>`).join('');
+    /* ogni nido con la sua foto e il link a tutte le sue foto: Skyroom e Starsbox hanno nomi simili, così non ci si confonde */
+    q('.calendario__nidi').innerHTML = Object.entries(DATI.nidi).map(([id, n]) => `<div class="calendario__scheda"><button type="button" class="calendario__nido" data-cal-scegli="${id}" aria-pressed="${id === nido}">${n.foto ? `<img src="${n.foto}" alt="" loading="lazy">` : ''}<span class="calendario__nido-testo"><span>${n.sottotitolo}</span>${n.nome}</span></button>${document.querySelector(`[data-cal-foto="${id}"]`) ? `<button type="button" class="calendario__foto-link" data-cal-galleria="${id}">Guarda le foto</button>` : ''}</div>`).join('');
     q('.calendario__extra').innerHTML = DATI.extra.map((e) => `<label class="spunta"><input type="checkbox" value="${e.id}"><span class="spunta__casella" aria-hidden="true"></span><span class="spunta__nome">${e.nome}</span><span class="spunta__prezzo">${e.prezzo} €</span></label>`).join('');
     if (DATI.esempio) q('.calendario__esempio').hidden = false;
     primoMese = meseIniziale();
     radice.addEventListener('click', (e) => {
       const g = e.target.closest('.giorno'); if (g && !g.disabled) { scegliGiorno(daIso(g.dataset.data)); return; }
+      const gf = e.target.closest('[data-cal-galleria]'); if (gf) { document.querySelector(`[data-cal-foto="${gf.dataset.calGalleria}"]`)?.click(); return; }
       const n = e.target.closest('[data-cal-scegli]'); if (n) { scegliNido(n.dataset.calScegli); return; }
       const inv = e.target.closest('[data-cal-invia]'); if (inv && inv.getAttribute('aria-disabled') === 'true') { e.preventDefault(); q('.calendario__aiuto').classList.remove('is-avviso'); void q('.calendario__aiuto').offsetWidth; q('.calendario__aiuto').classList.add('is-avviso'); }
     });
     q('[data-cal-prima]').addEventListener('click', () => { primoMese = D(primoMese.getUTCFullYear(), primoMese.getUTCMonth() - 1, 1); disegnaMesi(); });
     q('[data-cal-dopo]').addEventListener('click', () => { primoMese = D(primoMese.getUTCFullYear(), primoMese.getUTCMonth() + 1, 1); disegnaMesi(); });
     q('[data-cal-azzera]').addEventListener('click', () => { inizio = fine = null; disegnaMesi(); disegnaRiepilogo(); });
+    /* su telefono: prima le date, poi il riepilogo con le coccole (due schermate, niente scroll) */
+    q('[data-cal-avanti]').addEventListener('click', () => { if (q('[data-cal-avanti]').getAttribute('aria-disabled') === 'true') return; radice.classList.add('is-riepilogo'); adatta(); });
+    q('[data-cal-indietro]').addEventListener('click', () => { radice.classList.remove('is-riepilogo'); adatta(); });
+    window.addEventListener('resize', adatta);
     q('.calendario__extra').addEventListener('change', (e) => { const c = e.target; if (c.checked) extra.add(c.value); else extra.delete(c.value); disegnaRiepilogo(); });
     window.matchMedia('(max-width: 860px)').addEventListener('change', disegnaMesi);
     /* i bottoni "Prenota la Skyroom / la Starsbox" nelle schede portano qui con il nido già scelto */
     disegnaMesi(); disegnaRiepilogo();
-    radice.classList.add('is-pronto');
+    radice.classList.add('is-pronto'); adatta();
+  }
+
+  /* la finestra non scorre mai: se lo schermo è basso, il contenuto si rimpicciolisce quanto basta per starci tutto */
+  function adatta() {
+    const carta = radice.closest('.cal-pop__carta'); if (!carta || carta.closest('[hidden]')) return;
+    radice.style.zoom = '';
+    const cs = getComputedStyle(carta.parentElement), disponibile = carta.parentElement.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+    const serve = radice.getBoundingClientRect().height;
+    if (serve > disponibile + 1) radice.style.zoom = String(Math.max(.6, Math.floor(disponibile / serve * 1000) / 1000));
   }
 
   /* ── la finestra: tutti i bottoni "Prenota" la aprono al centro, con il nido già scelto se il bottone lo dice ── */
@@ -187,11 +207,12 @@
   const apri = (idNido) => {
     if (!pop) return;
     if (idNido) { if (DATI) scegliNido(idNido); else nido = idNido; }
+    radice.classList.remove('is-riepilogo');
     if (aperta) return; aperta = true;
     origine = document.activeElement;
     pop.hidden = false; document.documentElement.classList.add('is-calendario');
     window.nidoLenis?.stop();
-    requestAnimationFrame(() => pop.classList.add('is-aperta'));
+    adatta(); requestAnimationFrame(() => pop.classList.add('is-aperta'));
     setTimeout(() => pop.querySelector('.cal-pop__chiudi')?.focus({ preventScroll: true }), 60);
   };
   const chiudi = () => {
