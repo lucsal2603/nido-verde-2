@@ -202,6 +202,9 @@
   function prenota() {
     const box = document.querySelector('[data-cal-fatto]'); if (!box) return;
     const nd = DATI.nidi[nido];
+    /* numero di prenotazione (per ora inventato; poi lo darà il gestionale): iniziale del nido, data di arrivo e 3 cifre */
+    const codice = `${nd.nome.slice(0, 2).toUpperCase()}-${iso(inizio).slice(2).replace(/-/g, '')}-${String(Math.floor(100 + Math.random() * 900))}`;
+    const scelti = DATI.extra.filter((e) => extra.has(e.id));
     /* il riepilogo come un biglietto: il nido con la sua foto, poi arrivo, partenza e totale */
     const giorno = (d) => `<b>${d.getUTCDate()} ${MESI[d.getUTCMonth()]}</b><small>${GIORNI_LUNGHI[d.getUTCDay()]}</small>`;
     box.querySelector('[data-cal-fatto-dettagli]').innerHTML = `
@@ -210,6 +213,10 @@
         <div><span>Arrivo</span>${giorno(inizio)}</div>
         <div><span>Partenza</span>${giorno(fine)}</div>
         <div><span>${ultimo.n} ${ultimo.n === 1 ? 'notte' : 'notti'}</span><b>${ultimo.totale} €</b><small>totale</small></div>
+      </div>
+      <div class="cf-biglietto__piede">
+        <div class="cf-biglietto__codice"><span>N° prenotazione</span><b>${codice}</b></div>
+        <div class="cf-biglietto__extra"><span>Coccole</span>${scelti.length ? scelti.map((e) => `<i>${e.nome} <em>${e.prezzo} €</em></i>`).join('') : '<i class="is-nessuna">Nessun extra</i>'}</div>
       </div>`;
     const cielo = box.querySelector('.cal-fatto__cielo');
     cielo.innerHTML = Array.from({ length: 28 }, (_, i) => {
@@ -217,7 +224,14 @@
       const foglia = i % 3 === 0;
       return `<i class="${foglia ? 'cf-foglia' : 'cf-stella'}" style="--x:${(Math.cos(a) * r).toFixed(0)}px;--y:${(Math.sin(a) * r * .75 - 40).toFixed(0)}px;--r:${(Math.random() * 360).toFixed(0)}deg;--d:${(.9 + Math.random() * .5).toFixed(2)}s;--s:${(.6 + Math.random() * .8).toFixed(2)}"></i>`;
     }).join('');
-    box.hidden = false; box.classList.remove('is-via'); void box.offsetWidth; box.classList.add('is-via');
+    box.hidden = false; box.classList.remove('is-via');
+    /* anche la conferma sta tutta in una schermata: se serve si rimpicciolisce (misurata senza animazioni) */
+    const parti = [box.querySelector('.cal-fatto__bollino'), box.querySelector('.cal-fatto__testo')];
+    parti.forEach((el) => { el.style.zoom = ''; });
+    const cs = getComputedStyle(box), libero = box.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
+    const alto = parti.reduce((t, el) => t + el.getBoundingClientRect().height, 0) + 12;
+    if (alto > libero) parti.forEach((el) => { el.style.zoom = String(Math.max(.6, Math.floor(libero / alto * 1000) / 1000)); });
+    void box.offsetWidth; box.classList.add('is-via');
     setTimeout(() => box.querySelector('[data-cal-chiudi]')?.focus({ preventScroll: true }), 2900);
   }
   function azzeraFatto() {
