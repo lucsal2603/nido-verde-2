@@ -202,7 +202,15 @@
   function prenota() {
     const box = document.querySelector('[data-cal-fatto]'); if (!box) return;
     const nd = DATI.nidi[nido];
-    box.querySelector('[data-cal-fatto-dettagli]').innerHTML = `<b>${nd.nome}</b> · ${breve(inizio)} → ${breve(fine)} · ${ultimo.n} ${ultimo.n === 1 ? 'notte' : 'notti'} · <b>${ultimo.totale} €</b>`;
+    /* il riepilogo come un biglietto: il nido con la sua foto, poi arrivo, partenza e totale */
+    const giorno = (d) => `<b>${d.getUTCDate()} ${MESI[d.getUTCMonth()]}</b><small>${GIORNI_LUNGHI[d.getUTCDay()]}</small>`;
+    box.querySelector('[data-cal-fatto-dettagli]').innerHTML = `
+      <div class="cf-biglietto__nido">${nd.foto ? `<img src="${nd.foto}" alt="">` : ''}<div><span>${nd.sottotitolo}</span><strong>${nd.nome}</strong></div></div>
+      <div class="cf-biglietto__righe">
+        <div><span>Arrivo</span>${giorno(inizio)}</div>
+        <div><span>Partenza</span>${giorno(fine)}</div>
+        <div><span>${ultimo.n} ${ultimo.n === 1 ? 'notte' : 'notti'}</span><b>${ultimo.totale} €</b><small>totale</small></div>
+      </div>`;
     const cielo = box.querySelector('.cal-fatto__cielo');
     cielo.innerHTML = Array.from({ length: 28 }, (_, i) => {
       const a = (i / 28) * Math.PI * 2 + Math.random() * .3, r = 110 + Math.random() * 200;

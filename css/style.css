@@ -905,8 +905,28 @@ html.is-calendario .foglia { color: var(--oliva); }
 .cal-fatto__occhiello { margin: 22px 0 6px; font: 500 .74rem/1 var(--sans); letter-spacing: .2em; text-transform: uppercase; color: var(--lime); }
 .cal-fatto__titolo { margin: 0; font: 400 clamp(2.2rem, 4.4vw, 3.4rem)/1 var(--serif); letter-spacing: -.02em; }
 .cal-fatto__titolo em { font-style: italic; color: var(--evidenzia); }
-.cal-fatto__dettagli { margin: 16px 0 0; padding: 10px 18px; border-radius: 999px; background: rgba(247, 248, 243, .08); border: 1px solid rgba(247, 248, 243, .16); font-size: .95rem; }
-.cal-fatto__dettagli b { font-weight: 500; color: var(--bianco); }
+.cal-fatto__dettagli { position: relative; display: grid; grid-template-columns: auto 1fr; align-items: stretch; margin: 20px 0 0; width: min(500px, 100%); border-radius: 18px; background: var(--bianco); color: var(--inchiostro); text-align: left; box-shadow: 0 24px 60px -20px rgba(0, 0, 0, .55); }
+.cf-biglietto__nido { display: flex; align-items: center; gap: 12px; padding: 14px 20px 14px 14px; border-right: 2px dashed var(--salvia-chiara); position: relative; }
+.cf-biglietto__nido::before, .cf-biglietto__nido::after { content: ""; position: absolute; right: -9px; width: 16px; height: 16px; border-radius: 50%; background: #2D5135; }
+.cf-biglietto__nido::before { top: -8px; }
+.cf-biglietto__nido::after { bottom: -8px; }
+.cf-biglietto__nido img { width: 54px; height: 54px; object-fit: cover; border-radius: 12px; }
+.cf-biglietto__nido span { display: block; font: 500 .6rem/1 var(--sans); letter-spacing: .16em; text-transform: uppercase; color: var(--salvia); }
+.cf-biglietto__nido strong { display: block; margin-top: 4px; font: 400 1.6rem/1 var(--serif); color: var(--oliva); }
+.cf-biglietto__righe { display: grid; grid-template-columns: repeat(3, 1fr); align-items: center; padding: 14px 18px; gap: 10px; }
+.cf-biglietto__righe > div { display: grid; gap: 3px; }
+.cf-biglietto__righe span { font: 500 .6rem/1 var(--sans); letter-spacing: .14em; text-transform: uppercase; color: var(--salvia); }
+.cf-biglietto__righe b { font: 400 1.25rem/1.05 var(--serif); color: var(--inchiostro); }
+.cf-biglietto__righe > div:last-child b { font-size: 1.6rem; color: var(--oliva); }
+.cf-biglietto__righe small { font-size: .72rem; color: var(--salvia); }
+@media (max-width: 520px) {
+  .cal-fatto__dettagli { grid-template-columns: 1fr; }
+  .cf-biglietto__nido { border-right: 0; border-bottom: 2px dashed var(--salvia-chiara); padding: 12px 14px; }
+  .cf-biglietto__nido::before, .cf-biglietto__nido::after { top: auto; bottom: -9px; right: auto; }
+  .cf-biglietto__nido::before { left: -8px; }
+  .cf-biglietto__nido::after { right: -8px; }
+  .cf-biglietto__righe { padding: 12px 14px; }
+}
 .cal-fatto__nota { margin: 12px 0 20px; font-size: .9rem; opacity: .75; }
 .cal-fatto .bottone--pieno { background: var(--lime); border-color: var(--lime); color: var(--notte); }
 .cal-fatto .bottone--pieno::before { background: var(--bianco); }
