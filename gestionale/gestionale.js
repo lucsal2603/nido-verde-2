@@ -427,7 +427,28 @@
         <label class="campo"><span>Descrizione</span><textarea rows="4" data-c="descr">${esc(n.descr)}</textarea></label>
         <div class="campo"><span>Cosa c’è nel nido</span><ul class="lista-ed" data-lista>${n.dettagli.map((d) => voceLista(d)).join('')}</ul><button type="button" class="aggiungi" data-agg-voce>+ Aggiungi una voce</button></div>
         <div class="campo"><span>Galleria “Guarda le foto” <small>(la prima è quella che si vede per prima)</small></span><div class="galleria-ed" data-galleria-ed>${n.galleria.map((f) => fotoGalleria('../' + f)).join('')}<button type="button" class="galleria-ed__agg" data-agg-foto><b>+</b><span>Aggiungi foto</span></button></div></div>
-      </section>`).join('') + (tre ? `<section class="riquadro"><h2>Nido 3</h2><p class="tenue">Il terzo nido è ancora “in arrivo”: il suo testo si cambia da <a href="#pagine">Testi e foto del sito → I tre nidi</a>. Quando sarà pronto, qui comparirà la sua scheda completa come le altre due.</p></section>` : '');
+      </section>`).join('') + (tre ? (() => {
+      const art = tre.closest('article, .nido') || tre.parentElement.parentElement;
+      const motto = $('.nido__motto', art)?.textContent.trim() || '', titolo = aTesto($('h3', art)).testo;
+      const descr = $$('p', art).filter((p) => !p.className && p.textContent.trim().length > 60).map((p) => p.textContent.trim())[0] || '';
+      const indizi = $$('ul li', art).map((li) => li.textContent.trim());
+      return `
+      <section class="riquadro nido-ed nido-ed--segreto" data-id="nido3">
+        <div class="nido-ed__testa"><div class="foto-segreta" aria-label="Foto non ancora caricata"><span>Foto in arrivo</span></div><div><p class="occhiello">Nido 3</p><h2>${esc(titolo.replace(/\*/g, ''))}</h2></div><button type="button" class="btn btn--piccolo" data-sost-cop>Carica la foto principale</button></div>
+        <div class="visibile">
+          <div><b data-stato-titolo>Ancora segreto</b><span data-stato-testo>Sul sito si vede come “in arrivo”, con la scritta Presto e qualche indizio. Non si può ancora prenotare.</span></div>
+          <button type="button" class="btn btn--pieno btn--rivela" data-rivela>Rivela il nido segreto</button>
+        </div>
+        <div class="due-campi">
+          <label class="campo"><span>Nome e numero</span><input value="Nido 3" data-c="occhiello"></label>
+          <label class="campo"><span>Titolo della scheda</span><input value="${esc(titolo)}" data-c="titolo"></label>
+        </div>
+        <label class="campo"><span>Frase in corsivo</span><input value="${esc(motto)}" data-c="motto"></label>
+        <label class="campo"><span>Descrizione</span><textarea rows="4" data-c="descr">${esc(descr)}</textarea></label>
+        <div class="campo"><span>Indizi (quando lo riveli diventano “Cosa c’è nel nido”)</span><ul class="lista-ed" data-lista>${indizi.map((d) => voceLista(d)).join('')}</ul><button type="button" class="aggiungi" data-agg-voce>+ Aggiungi una voce</button></div>
+        <div class="campo"><span>Galleria “Guarda le foto”</span><div class="galleria-ed" data-galleria-ed><button type="button" class="galleria-ed__agg" data-agg-foto><b>+</b><span>Aggiungi foto</span></button></div></div>
+      </section>`;
+    })() : '');
   };
   const voceLista = (t) => `<li><span class="maniglia" aria-hidden="true"><svg class="ic" aria-hidden="true"><use href="#ic-maniglia"/></svg></span><input value="${esc(t)}"><button type="button" class="su" title="Sposta su" aria-label="Sposta su"><svg class="ic" aria-hidden="true"><use href="#ic-su"/></svg></button><button type="button" class="giu" title="Sposta giù" aria-label="Sposta giù"><svg class="ic" aria-hidden="true"><use href="#ic-giu"/></svg></button><button type="button" class="via" title="Togli" aria-label="Togli"><svg class="ic" aria-hidden="true"><use href="#ic-x"/></svg></button></li>`;
   const fotoGalleria = (src) => `<figure><img src="${esc(src)}" alt=""><div><button type="button" class="su" title="Sposta prima" aria-label="Sposta prima"><svg class="ic" aria-hidden="true"><use href="#ic-sx"/></svg></button><button type="button" class="giu" title="Sposta dopo" aria-label="Sposta dopo"><svg class="ic" aria-hidden="true"><use href="#ic-dx"/></svg></button><button type="button" class="via" title="Togli dalla galleria" aria-label="Togli dalla galleria"><svg class="ic" aria-hidden="true"><use href="#ic-x"/></svg></button></div></figure>`;
@@ -441,7 +462,22 @@
       if (e.target.closest('.giu') && li?.nextElementSibling && !li.nextElementSibling.matches('[data-agg-foto]')) { li.parentNode.insertBefore(li.nextElementSibling, li); segna(k + '-ordine', 'nido'); return; }
       if (e.target.closest('[data-agg-voce]')) { const ul = $('[data-lista]', s); ul.insertAdjacentHTML('beforeend', voceLista('')); $('li:last-child input', ul).focus(); segna(k + '-lista', 'nido'); return; }
       if (e.target.closest('[data-agg-foto]')) { scegliFoto((url) => { $('[data-agg-foto]', s).insertAdjacentHTML('beforebegin', fotoGalleria(url)); segna(k + '-galleria', 'nido'); avviso('Foto aggiunta alla galleria'); }); return; }
-      if (e.target.closest('[data-sost-cop]')) scegliFoto((url) => { $('.nido-ed__testa img', s).src = url; segna(k + '-foto', 'nido'); avviso('Foto principale cambiata'); });
+      const riv = e.target.closest('[data-rivela]');
+      if (riv) {
+        const svelato = s.classList.contains('is-pubblico');
+        conferma(svelato
+          ? { titolo: 'Vuoi nascondere di nuovo il Nido 3?', testo: 'Sul sito tornerà “in arrivo”, con la scritta Presto, e non si potrà più prenotare.', si: 'Sì, nascondilo' }
+          : { titolo: 'Sei sicura di svelare il nido segreto?', testo: 'Il Nido 3 comparirà sul sito come gli altri: foto, galleria e prenotazione nel calendario. Controlla prima che foto e testi siano pronti.', si: 'Sì, rivelalo', festa: true },
+        () => {
+          const on = !svelato; s.classList.toggle('is-pubblico', on);
+          $('[data-stato-titolo]', s).textContent = on ? 'Rivelato' : 'Ancora segreto';
+          $('[data-stato-testo]', s).textContent = on ? 'Il Nido 3 è visibile sul sito come gli altri nidi e si può prenotare.' : 'Sul sito si vede come “in arrivo”, con la scritta Presto e qualche indizio. Non si può ancora prenotare.';
+          riv.textContent = on ? 'Nascondi di nuovo' : 'Rivela il nido segreto'; riv.classList.toggle('btn--pieno', !on);
+          segna('nido3-rivela', 'nido'); avviso(on ? 'Nido segreto rivelato (anteprima: il sito vero non cambia)' : 'Nido 3 di nuovo segreto');
+        });
+        return;
+      }
+      if (e.target.closest('[data-sost-cop]')) scegliFoto((url) => { const seg = $('.foto-segreta', s); if (seg) seg.outerHTML = `<img src="${url}" alt="">`; $('.nido-ed__testa img', s).src = url; segna(k + '-foto', 'nido'); avviso('Foto principale cambiata'); });
     });
   };
 
@@ -549,6 +585,18 @@
   $('#sceltaFoto').addEventListener('change', (e) => { const f = e.target.files[0]; if (f && quandoScelta) quandoScelta(URL.createObjectURL(f)); quandoScelta = null; });
 
   /* ── finestra (per aggiungere una prenotazione) ── */
+  function conferma(o, fatto) {
+    const w = document.createElement('div'); w.className = 'finestra finestra--conferma';
+    w.innerHTML = `<div class="finestra__velo" data-chiudi></div><div class="finestra__carta" role="alertdialog" aria-modal="true" aria-labelledby="confTitolo">
+      <div class="conferma__icona${o.festa ? ' is-festa' : ''}" aria-hidden="true"><svg class="ic"><use href="#ic-nido"/></svg></div>
+      <h2 id="confTitolo">${o.titolo}</h2><p>${o.testo}</p>
+      <div class="finestra__azioni"><button type="button" class="btn" data-chiudi>Annulla</button><button type="button" class="btn btn--pieno" data-si>${o.si}</button></div></div>`;
+    document.body.append(w); requestAnimationFrame(() => w.classList.add('is-aperta'));
+    const chiudi = () => { w.classList.remove('is-aperta'); setTimeout(() => w.remove(), 300); };
+    w.addEventListener('click', (e) => { if (e.target.closest('[data-chiudi]')) chiudi(); if (e.target.closest('[data-si]')) { chiudi(); fatto(); } });
+    w.addEventListener('keydown', (e) => { if (e.key === 'Escape') chiudi(); });
+    $('[data-chiudi].btn', w).focus();
+  }
   function finestra(titolo, campi, conferma) {
     const w = document.createElement('div'); w.className = 'finestra';
     w.innerHTML = `<div class="finestra__velo" data-chiudi></div><form class="finestra__carta" role="dialog" aria-modal="true"><button type="button" class="finestra__x" data-chiudi aria-label="Chiudi"><svg class="ic" aria-hidden="true"><use href="#ic-x"/></svg></button><h2>${titolo}</h2>${campi}<div class="finestra__azioni"><button type="button" class="btn" data-chiudi>Annulla</button><button class="btn btn--pieno" type="submit">Salva</button></div></form>`;

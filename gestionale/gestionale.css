@@ -355,3 +355,19 @@ input, select, textarea { min-width: 0; max-width: 100%; }
   .riquadro__testa .btn { white-space: normal; max-width: 100%; }
   #nuovaPren { width: 100%; }
 }
+
+/* nido segreto: foto nera finché non c'è quella vera, e il bottone per rivelarlo (con conferma) */
+.foto-segreta { width: 92px; height: 70px; flex: none; display: grid; place-items: center; border-radius: 14px; background: #000; color: rgba(247, 248, 243, .55); font-size: .66rem; letter-spacing: .12em; text-transform: uppercase; text-align: center; line-height: 1.2; padding: 6px; }
+.visibile { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 18px; padding: 14px 16px; border-radius: 14px; background: #F3E2C3; }
+.nido-ed--segreto.is-pubblico .visibile { background: rgba(160, 176, 40, .2); }
+.visibile b { display: block; font-weight: 600; }
+.visibile span { font-size: .88rem; color: #6B5428; }
+.nido-ed--segreto.is-pubblico .visibile span { color: var(--oliva); }
+.btn--rivela { flex: none; }
+.finestra--conferma .finestra__carta { width: min(440px, 100%); text-align: center; justify-items: center; }
+.finestra--conferma p { margin: 0; color: #3A4A3D; }
+.finestra--conferma .finestra__azioni { justify-content: center; width: 100%; }
+.conferma__icona { width: 64px; height: 64px; display: grid; place-items: center; border-radius: 50%; background: #F3E2C3; color: #8A5A12; }
+.conferma__icona.is-festa { background: rgba(160, 176, 40, .22); color: var(--oliva); }
+.conferma__icona .ic { width: 30px; height: 30px; }
+@media (max-width: 900px) { .visibile { flex-direction: column; align-items: stretch; } .finestra--conferma .finestra__azioni { flex-direction: column-reverse; } .finestra--conferma .btn { width: 100%; } }
