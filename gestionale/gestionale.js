@@ -130,6 +130,24 @@
     if (righe) return t.split('\n').filter((x) => x.trim()).map((x) => `<span class="riga"><i>${linea(x.trim())}</i></span>`).join(' ');
     return t.split('\n').map(linea).join('<br>');
   }
+  /* il sito anima alcuni testi (es. il titolo della copertina sale riga per riga): sostituendo il testo
+     si tengono gli stili dell'animazione già fatta, altrimenti le righe nuove resterebbero nascoste */
+  function sostituisci(el, testo, righe) {
+    /* titoli a righe: si riusano le righe che ci sono già (sono quelle che il sito anima), aggiungendone o togliendone se serve */
+    const esistenti = [...el.querySelectorAll(':scope > .riga')];
+    if (righe && esistenti.length) {
+      const linee = testo.split('\n').filter((x) => x.trim());
+      linee.forEach((l, k) => {
+        let r = esistenti[k];
+        if (!r) { r = esistenti[esistenti.length - 1].cloneNode(true); el.append(' ', r); esistenti.push(r); }
+        const dentro = r.querySelector('i') || r;
+        dentro.innerHTML = daTesto(l.trim(), false);
+      });
+      esistenti.slice(linee.length).forEach((r) => r.remove());
+      return;
+    }
+    el.innerHTML = daTesto(testo, righe);
+  }
   const nascosto = (el) => !!el.closest('[aria-hidden="true"], script, style, svg, template, noscript');
   function foglieTesto(radice) {
     const out = [];
@@ -304,7 +322,7 @@
       </div>
       <div class="editor__anteprima">
         <div class="anteprima-barra"><span>Anteprima</span><div class="schermi"><button type="button" data-schermo="pc" aria-pressed="true">Computer</button><button type="button" data-schermo="tel" aria-pressed="false">Telefono</button></div></div>
-        <div class="anteprima-cornice" id="cornice"><iframe id="anteprima" title="Anteprima del sito" src="../index.html?qa=1"></iframe></div>
+        <div class="anteprima-cornice" id="cornice"><iframe id="anteprima" title="Anteprima del sito" src="about:blank" data-src="../index.html"></iframe></div>
       </div>
     </div>`;
   LEGA.pagine = (c) => {
@@ -320,7 +338,11 @@
     };
     const trova = (det, p) => { const d = docA(); if (!d) return null; const s = $(det.dataset.sez, d); if (!s) return null; try { return p ? $(':scope > ' + p, s) : s; } catch (e) { return null; } };
     const evidenzia = (el) => {
-      if (!el) return; el.scrollIntoView({ block: 'center' });
+      if (!el) return;
+      /* il sito usa uno scorrimento morbido suo: si chiede a lui di arrivare al punto, così le animazioni restano quelle vere */
+      const w = ifr.contentWindow;
+      if (w?.nidoLenis) w.nidoLenis.scrollTo(el, { offset: -(w.innerHeight / 2) + el.getBoundingClientRect().height / 2, duration: 1.1 });
+      else el.scrollIntoView({ block: 'center', behavior: 'smooth' });
       const d = docA(); $$('.gest-evidenzia', d).forEach((x) => x.classList.remove('gest-evidenzia')); el.classList.add('gest-evidenzia');
     };
     /* il sito nell'anteprima ha la sua larghezza vera (computer 1440, telefono 390) ed è rimpicciolito per entrare nella cornice */
@@ -331,8 +353,19 @@
     };
     if (matchMedia('(max-width: 900px)').matches) { $('#cornice', c).classList.add('is-tel'); $$('[data-schermo]', c).forEach((x) => x.setAttribute('aria-pressed', String(x.dataset.schermo === 'tel'))); }
     scala(); window.addEventListener('resize', scala);
+    /* l'anteprima è il sito vero, identico a quello online (stesse animazioni e colori), solo senza la finestrella di benvenuto */
+    try { sessionStorage.setItem('nido:popup', '1'); sessionStorage.removeItem('nido:scroll'); } catch (e) { /* niente */ }
+    const carica = () => { ifr.src = ifr.dataset.src + '?anteprima=' + Date.now(); };
+    carica();
+    /* le modifiche fatte restano anche quando l'anteprima si ricarica (cambio computer/telefono) */
+    const applicate = new Map();
+    const applica = (k) => { const m = applicate.get(k); const el = m && trova({ dataset: { sez: m.sez } }, m.p); if (!el) return null;
+      if (m.tipo === 'testo') sostituisci(el, m.v, m.righe); else if (m.tipo === 'alt') el.alt = m.v; else { el.src = m.v; el.removeAttribute('srcset'); el.closest('picture')?.querySelectorAll('source').forEach((x) => x.remove()); }
+      return el; };
     ifr.addEventListener('load', () => {
+      if (ifr.src === 'about:blank') return;
       const d = docA(); if (!d) return;
+      applicate.forEach((_, k) => applica(k));
       const st = d.createElement('style'); st.textContent = '.gest-evidenzia{outline:3px solid #A0B028!important;outline-offset:4px;border-radius:6px;transition:outline-color .3s} html{scroll-behavior:smooth}'; d.head.append(st);
       const aperta = $('details.sez[open]', c); if (aperta) evidenzia(trova(aperta, ''));
     });
@@ -344,17 +377,18 @@
     c.addEventListener('input', (e) => {
       const f = e.target.closest('[data-percorso]'); if (!f) return;
       const det = f.closest('details'), el = trova(det, f.dataset.percorso);
-      if (e.target.matches('[data-alt]')) { if (el) el.alt = e.target.value; segna('alt-' + det.dataset.sez + f.dataset.percorso, 'alt'); return; }
-      if (el) el.innerHTML = daTesto(e.target.value, !!f.dataset.righe);
+      if (e.target.matches('[data-alt]')) { applicate.set('a' + det.dataset.sez + f.dataset.percorso, { sez: det.dataset.sez, p: f.dataset.percorso, tipo: 'alt', v: e.target.value }); if (el) el.alt = e.target.value; segna('alt-' + det.dataset.sez + f.dataset.percorso, 'alt'); return; }
+      applicate.set('t' + det.dataset.sez + f.dataset.percorso, { sez: det.dataset.sez, p: f.dataset.percorso, tipo: 'testo', v: e.target.value, righe: !!f.dataset.righe });
+      if (el) sostituisci(el, e.target.value, !!f.dataset.righe);
       segna('testo-' + det.dataset.sez + f.dataset.percorso, 'testo');
     });
     c.addEventListener('click', (e) => {
       const b = e.target.closest('[data-sostituisci]'); if (b) {
         const fig = b.closest('.foto-campo'), det = fig.closest('details');
-        scegliFoto((url) => { $('img', fig).src = url; const el = trova(det, fig.dataset.percorso); if (el) { el.src = url; el.removeAttribute('srcset'); el.closest('picture')?.querySelectorAll('source').forEach((s) => s.remove()); evidenzia(el); } segna('foto-' + det.dataset.sez + fig.dataset.percorso, 'foto'); avviso('Foto cambiata nell’anteprima'); });
+        scegliFoto((url) => { $('img', fig).src = url; const k = 'f' + det.dataset.sez + fig.dataset.percorso; applicate.set(k, { sez: det.dataset.sez, p: fig.dataset.percorso, tipo: 'foto', v: url }); evidenzia(applica(k)); segna('foto-' + det.dataset.sez + fig.dataset.percorso, 'foto'); avviso('Foto cambiata nell’anteprima'); });
         return;
       }
-      const s = e.target.closest('[data-schermo]'); if (s) { $$('[data-schermo]', c).forEach((x) => x.setAttribute('aria-pressed', String(x === s))); $('#cornice', c).classList.toggle('is-tel', s.dataset.schermo === 'tel'); setTimeout(scala, 420); }
+      const s = e.target.closest('[data-schermo]'); if (s) { $$('[data-schermo]', c).forEach((x) => x.setAttribute('aria-pressed', String(x === s))); $('#cornice', c).classList.toggle('is-tel', s.dataset.schermo === 'tel'); setTimeout(() => { scala(); carica(); }, 420); }
     });
   };
 
