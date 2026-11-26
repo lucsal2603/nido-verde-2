@@ -303,6 +303,10 @@
       <label>Arrivata da<select name="canale"><option>Telefono</option><option>WhatsApp</option><option>Airbnb</option><option>Booking</option><option>Di persona</option></select></label>`,
     (f) => {
       const a = f.arrivo.value, b = f.partenza.value; if (!a || !b || b <= a) { avviso('Controlla le date: la partenza deve essere dopo l’arrivo'); return false; }
+      /* mai due prenotazioni sulle stesse notti dello stesso nido, né su giorni chiusi */
+      const n0 = f.nido.value, sovrapposta = PRENOTAZIONI.find((p) => p.nido === n0 && a < p.partenza && b > p.arrivo);
+      if (sovrapposta) { avviso(`Date già occupate: ${sovrapposta.ospiti} (${breve(sovrapposta.arrivo)} → ${breve(sovrapposta.partenza)})`); return false; }
+      for (let d = a; d < b; d = piu(d, 1)) if (chiuse[n0].has(d)) { avviso(`Il ${breve(d)} è chiuso: riaprilo dal calendario`); return false; }
       let notti = 0, tot = 0; for (let d = a; d < b; d = piu(d, 1)) { notti++; tot += prezzoNotte(d); }
       const extra = $$('input[name="extra"]:checked', f).map((x) => x.value); tot += DATI.extra.filter((x) => extra.includes(x.nome)).reduce((t, x) => t + x.prezzo, 0);
       const nd = DATI.nidi[f.nido.value];
