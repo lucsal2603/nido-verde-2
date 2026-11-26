@@ -1,0 +1,78 @@
+{
+ "esempio": true,
+ "nota": "Date di esempio. Quando il calendario sarà collegato al gestionale questo file verrà sostituito dai dati veri (stesso formato).",
+ "stagione": {
+  "apertura": "03-01",
+  "chiusura": "10-31"
+ },
+ "prezzi": {
+  "feriale": 110,
+  "weekend": 130
+ },
+ "extra": [
+  {
+   "id": "vasca",
+   "nome": "Vasca idromassaggio",
+   "prezzo": 40
+  },
+  {
+   "id": "brindisi",
+   "nome": "Aperitivo Brindisi",
+   "prezzo": 20
+  },
+  {
+   "id": "contadino",
+   "nome": "Aperitivo del Contadino",
+   "prezzo": 40
+  },
+  {
+   "id": "torta",
+   "nome": "Torta di compleanno",
+   "prezzo": 15
+  }
+ ],
+ "nidi": {
+  "skyroom": {
+   "nome": "Skyroom",
+   "sottotitolo": "Nido 1",
+   "occupate": [
+    "2027-03-06",
+    "2027-03-13",
+    "2027-03-14",
+    "2027-03-27",
+    "2027-04-03",
+    "2027-04-04",
+    "2027-04-24",
+    "2027-04-25",
+    "2027-05-01",
+    "2027-05-15",
+    "2027-05-16",
+    "2027-05-29",
+    "2027-05-30",
+    "2027-06-12",
+    "2027-06-26",
+    "2027-06-27"
+   ]
+  },
+  "starsbox": {
+   "nome": "Starsbox",
+   "sottotitolo": "Nido 2",
+   "occupate": [
+    "2027-03-05",
+    "2027-03-06",
+    "2027-03-20",
+    "2027-04-02",
+    "2027-04-03",
+    "2027-04-04",
+    "2027-04-17",
+    "2027-05-08",
+    "2027-05-09",
+    "2027-05-22",
+    "2027-06-05",
+    "2027-06-06",
+    "2027-06-19",
+    "2027-06-20"
+   ]
+  }
+ }
+}

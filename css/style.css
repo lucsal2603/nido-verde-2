@@ -707,3 +707,90 @@ html.is-ridotto .dintorni__azioni { position: static; }
   .menu .menu__prenota { margin: 14px 0 0; height: 50px; }
   .menu__occhiello { margin-bottom: 6px; }
 }
+
+/* ── calendario della disponibilità (dentro Prenota) ── */
+.calendario { grid-column: 1 / -1; margin-top: clamp(12px, 2vw, 28px); padding: clamp(22px, 3.4vw, 48px); border-radius: var(--r-l); background: var(--bianco); border: 1px solid var(--salvia-chiara); scroll-margin-top: calc(var(--testata-h) + 12px); }
+.calendario__testa { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 18px 32px; }
+.calendario__testa .occhiello { margin-bottom: .35em; }
+.calendario__titolo { margin: 0; font: 400 var(--t-m)/1.05 var(--serif); letter-spacing: -.02em; color: var(--inchiostro); }
+.calendario__titolo em { font-style: italic; color: var(--oliva); }
+.calendario__nidi { display: inline-flex; gap: 6px; padding: 5px; border-radius: 999px; background: var(--carta-2); }
+.calendario__nido { display: inline-flex; flex-direction: column; align-items: flex-start; gap: 3px; padding: 9px 22px 10px; border: 0; border-radius: 999px; background: transparent; color: var(--oliva); font: 400 1.25rem/1 var(--serif); cursor: pointer; transition: background var(--d-base), color var(--d-base); }
+.calendario__nido span { font: 500 .62rem/1 var(--sans); letter-spacing: .16em; text-transform: uppercase; color: var(--salvia); transition: color var(--d-base); }
+.calendario__nido[aria-pressed="true"] { background: var(--oliva); color: var(--bianco); }
+.calendario__nido[aria-pressed="true"] span { color: var(--evidenzia); }
+@media (hover: hover) { .calendario__nido[aria-pressed="false"]:hover { background: rgba(63, 94, 66, .1); } }
+.calendario__esempio { margin: 16px 0 0; padding: 10px 14px; border-radius: var(--r-s); background: rgba(160, 176, 40, .14); color: var(--oliva); font-size: .88rem; }
+.calendario__corpo { display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, 340px); gap: clamp(22px, 3.4vw, 52px); margin-top: clamp(20px, 2.6vw, 34px); }
+.calendario__sfoglia { position: relative; }
+.calendario__frecce { position: absolute; top: -6px; left: 0; right: 0; display: flex; justify-content: space-between; pointer-events: none; z-index: 1; }
+.calendario__freccia { pointer-events: auto; width: 40px; height: 40px; display: grid; place-items: center; border-radius: 50%; border: 1px solid var(--salvia-chiara); background: var(--bianco); color: var(--oliva); cursor: pointer; transition: background var(--d-base), color var(--d-base), border-color var(--d-base); }
+.calendario__freccia svg { width: 18px; }
+.calendario__freccia:disabled { opacity: .3; cursor: default; }
+@media (hover: hover) { .calendario__freccia:not(:disabled):hover { background: var(--oliva); border-color: var(--oliva); color: var(--bianco); } }
+.calendario__mesi { display: grid; grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); gap: clamp(20px, 3vw, 44px); }
+.calendario__nome-mese { margin: 0 0 14px; text-align: center; font: 400 1.5rem/40px var(--serif); text-transform: capitalize; color: var(--inchiostro); }
+.calendario__nome-mese span { color: var(--salvia); }
+.calendario__griglia { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px 0; }
+.calendario__intestazione { padding-bottom: 8px; text-align: center; font: 500 .66rem/1 var(--sans); letter-spacing: .14em; text-transform: uppercase; color: var(--salvia); }
+.giorno { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; height: 54px; padding: 0; border: 0; background: transparent; color: var(--inchiostro); font: 500 .98rem/1 var(--sans); cursor: pointer; z-index: 0; }
+.giorno::before { content: ""; position: absolute; inset: 3px; border-radius: 14px; z-index: -1; transition: background var(--d-veloce); }
+.giorno small { font-size: .64rem; font-weight: 500; color: var(--salvia); letter-spacing: .02em; }
+@media (hover: hover) { .giorno:not(:disabled):hover::before { background: var(--carta-2); } }
+.giorno:focus-visible { outline: none; }
+.giorno:focus-visible::before { box-shadow: 0 0 0 2px var(--oliva); }
+.giorno:disabled { cursor: default; }
+.giorno--passato, .giorno--chiuso { color: rgba(27, 42, 30, .25); }
+.giorno--occupato { color: rgba(27, 42, 30, .38); }
+.giorno--occupato > span { text-decoration: line-through; text-decoration-thickness: 1.5px; }
+.giorno--occupato::after { content: ""; position: absolute; inset: 3px; border-radius: 14px; background: repeating-linear-gradient(-45deg, rgba(96, 120, 96, .13) 0 3px, transparent 3px 8px); z-index: -1; }
+.giorno--solo-uscita { color: var(--inchiostro); }
+.giorno--solo-uscita > span { text-decoration: none; }
+.giorno--fuori { opacity: .35; }
+.giorno--dentro::before { inset: 3px 0; border-radius: 0; background: rgba(160, 176, 40, .22); }
+.giorno--entrata::before, .giorno--uscita::before { background: var(--oliva); }
+.giorno--entrata, .giorno--uscita, .giorno--entrata small, .giorno--uscita small { color: var(--bianco); }
+.giorno--entrata::after, .giorno--uscita::after { content: ""; position: absolute; top: 3px; bottom: 3px; width: 50%; background: rgba(160, 176, 40, .22); z-index: -2; }
+.giorno--entrata::after { right: 0; }
+.giorno--uscita::after { left: 0; }
+.giorno--entrata:not(:has(~ .giorno--uscita))::after { display: none; }
+.calendario__legenda { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 18px 0 0; padding: 0; list-style: none; font-size: .84rem; color: var(--salvia); }
+.calendario__legenda li { display: flex; align-items: center; gap: 8px; }
+.leg { width: 16px; height: 16px; border-radius: 5px; border: 1px solid var(--salvia-chiara); }
+.leg--occupato { background: repeating-linear-gradient(-45deg, rgba(96, 120, 96, .3) 0 2px, transparent 2px 5px); }
+.leg--scelto { background: var(--oliva); border-color: var(--oliva); }
+.calendario__riepilogo { align-self: start; padding: clamp(20px, 2.4vw, 28px); border-radius: var(--r-m); background: var(--carta); }
+.calendario__aiuto { margin: 0 0 14px; font: italic 1.2rem/1.2 var(--serif); color: var(--oliva); }
+.calendario__aiuto.is-avviso { animation: calAvviso .5s var(--e-out); color: var(--inchiostro); }
+@keyframes calAvviso { 0%, 100% { transform: none; } 25% { transform: translateX(-6px); } 50% { transform: translateX(5px); } 75% { transform: translateX(-3px); } }
+.calendario__scelta { margin: 0; }
+.calendario__scelta div { display: flex; justify-content: space-between; gap: 12px; padding: 9px 0; border-top: 1px solid var(--salvia-chiara); font-size: .95rem; }
+.calendario__scelta dt { color: var(--salvia); }
+.calendario__scelta dd { margin: 0; text-align: right; font-weight: 500; }
+.calendario__sotto { margin: 16px 0 8px; font: italic 1.05rem var(--serif); color: var(--salvia); }
+.calendario__extra { display: grid; gap: 2px; }
+.spunta { display: grid; grid-template-columns: 20px 1fr auto; align-items: center; gap: 10px; padding: 7px 0; font-size: .92rem; cursor: pointer; }
+.spunta input { position: absolute; opacity: 0; pointer-events: none; }
+.spunta__casella { width: 20px; height: 20px; border-radius: 6px; border: 1.5px solid var(--salvia-chiara); background: var(--bianco); transition: background var(--d-veloce), border-color var(--d-veloce); }
+.spunta input:checked + .spunta__casella { background: var(--oliva) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='m5 10.5 3.2 3L15 6.5' fill='none' stroke='%23F7F8F3' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / 16px no-repeat; border-color: var(--oliva); }
+.spunta input:focus-visible + .spunta__casella { outline: 2px solid var(--oliva); outline-offset: 2px; }
+.spunta__prezzo { color: var(--salvia); }
+.calendario__totale { display: flex; justify-content: space-between; align-items: baseline; margin-top: 12px; padding-top: 14px; border-top: 1px solid var(--salvia-chiara); }
+.calendario__totale span { color: var(--salvia); }
+.calendario__totale strong { font: 400 2rem/1 var(--serif); color: var(--inchiostro); }
+.calendario__azioni { display: grid; gap: 8px; margin-top: 18px; }
+.calendario__azioni .bottone { width: 100%; }
+.calendario__azioni .bottone[aria-disabled="true"] { opacity: .45; pointer-events: auto; cursor: not-allowed; }
+.calendario__azzera { display: block; margin: 12px auto 0; padding: 4px; border: 0; background: none; color: var(--salvia); font: 500 .85rem var(--sans); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+.calendario__nota { margin: 12px 0 0; font-size: .8rem; line-height: 1.45; color: var(--salvia); text-align: center; }
+.calendario__errore { display: none; margin: 16px 0 0; color: var(--oliva); }
+.calendario.is-errore .calendario__corpo { display: none; }
+.calendario.is-errore .calendario__errore { display: block; }
+@media (max-width: 860px) {
+  .calendario { margin-left: calc(var(--gut) * -.5); margin-right: calc(var(--gut) * -.5); padding: 20px 14px; border-radius: var(--r-m); }
+  .calendario__nidi { width: 100%; }
+  .calendario__nido { flex: 1; align-items: center; padding: 9px 10px 10px; }
+  .calendario__corpo { grid-template-columns: 1fr; }
+  .giorno { height: 48px; font-size: .92rem; }
+  .giorno small { font-size: .58rem; }
+}
