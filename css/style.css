@@ -854,7 +854,7 @@ html.is-calendario .foglia { color: var(--oliva); }
 .cal-fatto { position: absolute; inset: 0; z-index: 4; display: grid; place-items: center; align-content: center; gap: 6px; padding: 30px 24px; text-align: center; color: var(--bianco); overflow: hidden; }
 .cal-fatto[hidden] { display: none; }
 .cal-fatto__goccia { position: absolute; left: 50%; top: 38%; width: max(260%, 260vh); aspect-ratio: 1; margin-left: calc(max(260%, 260vh) / -2); margin-top: calc(max(260%, 260vh) / -2); border-radius: 50%; background: radial-gradient(closest-side, #355C3C 0%, #24432B 45%, #1A3220 100%); transform: scale(0); }
-.is-via .cal-fatto__goccia { animation: cfGoccia 2.6s linear both; }
+.is-via .cal-fatto__goccia { animation: cfGoccia 1.5s linear both; }
 @keyframes cfGoccia {
   0%   { transform: scale(0, 0);       border-radius: 50%; }
   14%  { transform: scale(.05, .035);  border-radius: 46% 54% 52% 48%; }
@@ -870,7 +870,7 @@ html.is-calendario .foglia { color: var(--oliva); }
 .cal-fatto__cielo i { position: absolute; left: 0; top: 0; opacity: 0; }
 .cf-stella { width: 14px; height: 14px; margin: -7px; background: var(--evidenzia); clip-path: polygon(50% 0, 61% 38%, 100% 50%, 61% 62%, 50% 100%, 39% 62%, 0 50%, 39% 38%); }
 .cf-foglia { width: 18px; height: 9px; margin: -4.5px -9px; border-radius: 0 100%; background: #7E9A63; }
-.is-via .cal-fatto__cielo i { animation: cfScoppio calc(var(--d) * 1.3) cubic-bezier(.15, .7, .3, 1) 2.45s both; }
+.is-via .cal-fatto__cielo i { animation: cfScoppio calc(var(--d) * 1.3) cubic-bezier(.15, .7, .3, 1) 1.6s both; }
 @keyframes cfScoppio {
   0% { opacity: 0; transform: translate(0, 0) rotate(0) scale(.2); }
   15% { opacity: 1; }
@@ -880,8 +880,8 @@ html.is-calendario .foglia { color: var(--oliva); }
 .cal-fatto__bollino { width: clamp(96px, 13vh, 128px); height: auto; overflow: visible; transform: scale(0); }
 .cfb-cerchio { fill: var(--lime); }
 .cfb-spunta { fill: none; stroke: var(--notte); stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 120; stroke-dashoffset: 120; }
-.is-via .cal-fatto__bollino { animation: cfGelatina 1.4s linear 2s both; }
-.is-via .cfb-spunta { animation: cfTratto .6s cubic-bezier(.65, 0, .35, 1) 2.5s forwards; }
+.is-via .cal-fatto__bollino { animation: cfGelatina 1.3s linear 1.2s both; }
+.is-via .cfb-spunta { animation: cfTratto .55s cubic-bezier(.65, 0, .35, 1) 1.65s forwards; }
 @keyframes cfGelatina {
   0%   { transform: scale(0, 0); }
   22%  { transform: scale(1.25, .8); }
@@ -895,12 +895,12 @@ html.is-calendario .foglia { color: var(--oliva); }
 .cal-fatto__testo { display: grid; justify-items: center; max-width: 520px; }
 .cal-fatto__testo > * { opacity: 0; }
 .is-via .cal-fatto__testo > * { animation: cfSale .9s cubic-bezier(.34, 1.4, .64, 1) both; }
-.is-via .cal-fatto__testo > :nth-child(1) { animation-delay: 2.75s; }
-.is-via .cal-fatto__testo > :nth-child(2) { animation-delay: 2.87s; }
-.is-via .cal-fatto__testo > :nth-child(3) { animation-delay: 3s; }
-.is-via .cal-fatto__testo > :nth-child(4) { animation-delay: 3.12s; }
-.is-via .cal-fatto__testo > :nth-child(5) { animation-delay: 3.25s; }
-.is-via .cal-fatto__testo > :nth-child(6) { animation-delay: 3.4s; }
+.is-via .cal-fatto__testo > :nth-child(1) { animation-delay: 1.9s; }
+.is-via .cal-fatto__testo > :nth-child(2) { animation-delay: 2.02s; }
+.is-via .cal-fatto__testo > :nth-child(3) { animation-delay: 2.15s; }
+.is-via .cal-fatto__testo > :nth-child(4) { animation-delay: 2.27s; }
+.is-via .cal-fatto__testo > :nth-child(5) { animation-delay: 2.4s; }
+.is-via .cal-fatto__testo > :nth-child(6) { animation-delay: 2.55s; }
 @keyframes cfSale { from { opacity: 0; transform: translateY(22px) scale(.96); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
 .cal-fatto__occhiello { margin: 22px 0 6px; font: 500 .74rem/1 var(--sans); letter-spacing: .2em; text-transform: uppercase; color: var(--lime); }
 .cal-fatto__titolo { margin: 0; font: 400 clamp(2.2rem, 4.4vw, 3.4rem)/1 var(--serif); letter-spacing: -.02em; }
