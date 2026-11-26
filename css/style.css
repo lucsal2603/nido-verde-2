@@ -755,6 +755,7 @@ html.is-calendario .foglia { color: var(--oliva); }
 .calendario__nome-mese { margin: 0 0 14px; text-align: center; font: 400 1.5rem/40px var(--serif); text-transform: capitalize; color: var(--inchiostro); }
 .calendario__nome-mese span { color: var(--salvia); }
 .calendario__griglia { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px 0; }
+.calendario__vuoto { height: 48px; }
 .calendario__intestazione { padding-bottom: 8px; text-align: center; font: 500 .66rem/1 var(--sans); letter-spacing: .14em; text-transform: uppercase; color: var(--salvia); }
 .giorno { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; height: 48px; padding: 0; border: 0; background: transparent; color: var(--inchiostro); font: 500 .98rem/1 var(--sans); cursor: pointer; z-index: 0; }
 .giorno::before { content: ""; position: absolute; inset: 3px; border-radius: 14px; z-index: -1; transition: background var(--d-veloce); }
@@ -845,5 +846,6 @@ html.is-calendario .foglia { color: var(--oliva); }
   .calendario__nido { width: 100%; }
   .calendario__corpo { grid-template-columns: 1fr; }
   .giorno { height: 46px; font-size: .92rem; }
+  .calendario__vuoto { height: 46px; }
   .giorno small { font-size: .58rem; }
 }

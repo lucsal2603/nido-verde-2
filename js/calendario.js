@@ -109,6 +109,7 @@
         b.setAttribute('aria-label', etichetta);
         griglia.append(b);
       }
+      for (let i = vuoti + ultimo; i < 42; i++) { const e = document.createElement('span'); e.className = 'calendario__vuoto'; griglia.append(e); }
       mese.append(griglia); box.append(mese);
     }
     const prima = D(oggi.getUTCFullYear(), oggi.getUTCMonth(), 1);
@@ -131,7 +132,6 @@
     if (!pronto) radice.classList.remove('is-riepilogo');
     qa('[data-cal-invia]').forEach((a) => { a.setAttribute('aria-disabled', String(!pronto)); a.href = pronto ? link(a.dataset.calInvia, n, soggiorno, ex) : '#calendario'; });
     q('.calendario__aiuto').textContent = !inizio ? 'Tocca il giorno di arrivo.' : !fine ? 'Ora tocca il giorno di partenza.' : 'Perfetto! Ora manda la richiesta.';
-    adatta();
   }
 
   function link(canale, n, soggiorno, ex) {
@@ -182,9 +182,9 @@
     q('[data-cal-dopo]').addEventListener('click', () => { primoMese = D(primoMese.getUTCFullYear(), primoMese.getUTCMonth() + 1, 1); disegnaMesi(); });
     q('[data-cal-azzera]').addEventListener('click', () => { inizio = fine = null; disegnaMesi(); disegnaRiepilogo(); });
     /* su telefono: prima le date, poi il riepilogo con le coccole (due schermate, niente scroll) */
-    q('[data-cal-avanti]').addEventListener('click', () => { if (q('[data-cal-avanti]').getAttribute('aria-disabled') === 'true') return; radice.classList.add('is-riepilogo'); adatta(); });
-    q('[data-cal-indietro]').addEventListener('click', () => { radice.classList.remove('is-riepilogo'); adatta(); });
-    window.addEventListener('resize', adatta);
+    q('[data-cal-avanti]').addEventListener('click', () => { if (q('[data-cal-avanti]').getAttribute('aria-disabled') === 'true') return; radice.classList.add('is-riepilogo'); });
+    q('[data-cal-indietro]').addEventListener('click', () => { radice.classList.remove('is-riepilogo'); });
+    window.addEventListener('resize', () => adatta());
     q('.calendario__extra').addEventListener('change', (e) => { const c = e.target; if (c.checked) extra.add(c.value); else extra.delete(c.value); disegnaRiepilogo(); });
     window.matchMedia('(max-width: 860px)').addEventListener('change', disegnaMesi);
     /* i bottoni "Prenota la Skyroom / la Starsbox" nelle schede portano qui con il nido già scelto */
@@ -193,12 +193,36 @@
   }
 
   /* la finestra non scorre mai: se lo schermo è basso, il contenuto si rimpicciolisce quanto basta per starci tutto */
-  function adatta() {
+  /* la finestra non scorre mai: se lo schermo è basso il contenuto si rimpicciolisce.
+     La misura si fa solo all'apertura e quando cambia lo schermo, sul caso più alto (date e riepilogo),
+     così le scritte restano sempre della stessa grandezza mentre si usa il calendario */
+  let zoomFissato = null;
+  function adatta(forza) {
     const carta = radice.closest('.cal-pop__carta'); if (!carta || carta.closest('[hidden]')) return;
+    const chiave = innerWidth + 'x' + innerHeight;
+    if (!forza && zoomFissato === chiave) return;
+    zoomFissato = chiave;
+    /* la finestra entra con un piccolo rimpicciolimento: la misura si corregge per quello */
+    const altezza = () => radice.getBoundingClientRect().height * (carta.offsetWidth / (carta.getBoundingClientRect().width || carta.offsetWidth));
     radice.style.zoom = '';
     const cs = getComputedStyle(carta.parentElement), disponibile = carta.parentElement.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom);
-    const serve = radice.getBoundingClientRect().height;
-    if (serve > disponibile + 1) radice.style.zoom = String(Math.max(.6, Math.floor(disponibile / serve * 1000) / 1000));
+    const eraRiepilogo = radice.classList.contains('is-riepilogo');
+    radice.classList.remove('is-riepilogo'); const h1 = altezza();
+    radice.classList.add('is-riepilogo'); const h2 = altezza();
+    radice.classList.toggle('is-riepilogo', eraRiepilogo);
+    const serve = Math.max(h1, h2);
+    if (serve <= disponibile + 1) return;
+    /* con lo zoom il testo può andare a capo in modo diverso: si riprova finché ci sta tutto */
+    let z = Math.floor(disponibile / serve * 1000) / 1000;
+    for (let k = 0; k < 8; k++) {
+      radice.style.zoom = String(Math.max(.6, z));
+      radice.classList.remove('is-riepilogo'); const a1 = altezza();
+      radice.classList.add('is-riepilogo'); const a2 = altezza();
+      radice.classList.toggle('is-riepilogo', eraRiepilogo);
+      const h = Math.max(a1, a2);
+      if (h <= disponibile + 1 || z <= .6) break;
+      z = Math.floor(z * disponibile / h * 1000) / 1000 - .005;
+    }
   }
 
   /* ── la finestra: tutti i bottoni "Prenota" la aprono al centro, con il nido già scelto se il bottone lo dice ── */
