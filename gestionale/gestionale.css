@@ -251,7 +251,7 @@ button.stato { cursor: pointer; }
 
 /* avviso */
 .avviso { position: fixed; left: 50%; bottom: 26px; z-index: 90; max-width: calc(100% - 32px); padding: 13px 20px; border-radius: 14px; background: var(--inchiostro); color: var(--bianco); font-weight: 500; box-shadow: 0 16px 40px -12px rgba(0, 0, 0, .5); transform: translate(-50%, 140%); opacity: 0; transition: transform .45s var(--e-out), opacity .3s; pointer-events: none; }
-.avviso::before { content: "✓"; display: inline-grid; place-items: center; width: 22px; height: 22px; margin-right: 10px; border-radius: 50%; background: var(--lime); color: var(--notte); font-size: .8rem; }
+.avviso::before { content: ""; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='m6 12.5 4 4 8-9' fill='none' stroke='%230E1A12' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-size: 14px; background-repeat: no-repeat; background-position: center; vertical-align: -5px; display: inline-grid; place-items: center; width: 22px; height: 22px; margin-right: 10px; border-radius: 50%; background: var(--lime); color: var(--notte); font-size: .8rem; }
 .avviso.is-via { transform: translate(-50%, 0); opacity: 1; }
 
 /* tutorial */
@@ -319,4 +319,39 @@ button.stato { cursor: pointer; }
   .tabella td { padding: 0; border: 0; }
   .tabella td:nth-child(1) { grid-column: 1; font-size: .78rem; }
   .tabella td:nth-child(8) { grid-column: 2; grid-row: 1 / span 2; align-self: center; }
+}
+
+/* icone disegnate (al posto dei simboli, che sul telefono diventavano emoji) */
+.ic { width: 18px; height: 18px; flex: none; display: inline-block; vertical-align: -3px; }
+.lato__menu a i .ic, .veloce i .ic { width: 16px; height: 16px; }
+.lato__tutorial .ic { width: 14px; height: 14px; vertical-align: -2px; margin-right: 4px; }
+.lato__sito .ic { width: 14px; height: 14px; vertical-align: -2px; }
+.barra__menu .ic { width: 22px; height: 22px; }
+.su, .giu, .via { display: inline-grid; place-items: center; padding: 0; }
+.su .ic, .giu .ic, .via .ic { width: 16px; height: 16px; }
+.mese-nav button { display: grid; place-items: center; }
+.finestra__x { display: grid; place-items: center; }
+.maniglia .ic { width: 16px; height: 16px; }
+.galleria-ed__agg b { font-weight: 400; font-size: 1.6rem; line-height: 1; }
+#rivediTour .ic { width: 14px; height: 14px; }
+
+/* niente scorrimento in orizzontale: tutto sta nella larghezza dello schermo */
+html, body { overflow-x: clip; max-width: 100%; }
+.principale, .contenuto, .contenuto > *, .riquadro, .due-campi > *, .tre-campi > *, .campo, .editor > * { min-width: 0; }
+input, select, textarea { min-width: 0; max-width: 100%; }
+.campo input[type="date"] { -webkit-appearance: none; appearance: none; min-height: 46px; }
+@media (max-width: 900px) {
+  .scelta-nido button { min-width: 0; padding-right: 10px; font-size: 1.05rem; }
+  .scelta-nido img { width: 34px; }
+  .extra-ed li { flex-wrap: wrap; }
+  .extra-ed li > input { flex: 1 1 100%; }
+  .extra-ed .campo--euro { flex: 1; width: auto; }
+  .libreria { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .filtri { flex-wrap: wrap; }
+  .filtri input { flex: 1 1 100%; }
+}
+@media (max-width: 900px) {
+  .riquadro__testa { flex-wrap: wrap; }
+  .riquadro__testa .btn { white-space: normal; max-width: 100%; }
+  #nuovaPren { width: 100%; }
 }

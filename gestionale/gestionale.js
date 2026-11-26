@@ -80,6 +80,8 @@
   }
   const saluto = () => { const h = new Date().getHours(); return (h < 13 ? 'Buongiorno' : h < 18 ? 'Buon pomeriggio' : 'Buonasera') + ' Federica'; };
   $('#barraMenu').addEventListener('click', () => document.body.classList.toggle('menu-aperto'));
+  /* toccando una voce del menu (anche quella della pagina in cui sei) il menu si chiude e si vede la pagina */
+  $$('#menu a, .lato__logo').forEach((a) => a.addEventListener('click', () => { document.body.classList.remove('menu-aperto'); if (a.getAttribute('href') === location.hash) window.scrollTo({ top: 0, behavior: 'smooth' }); }));
 
   /* ── prenotazioni di esempio, ricavate dalle date occupate del calendario ── */
   const NOMI = ['Giulia e Marco', 'Sara e Luca', 'Elena e Davide', 'Chiara e Paolo', 'Marta e Andrea', 'Francesca e Simone', 'Alice e Matteo', 'Irene e Tommaso', 'Laura e Pietro', 'Anna e Giorgio', 'Valentina e Nicola', 'Silvia e Fabio', 'Martina e Riccardo', 'Federico e Camilla', 'Beatrice e Lorenzo', 'Giorgia e Stefano', 'Noemi e Alessio', 'Ilaria e Daniele'];
@@ -225,15 +227,15 @@
       <section class="riquadro">
         <div class="riquadro__testa"><h2>Cose veloci</h2></div>
         <div class="veloci">
-          <a href="#prenotazioni" class="veloce"><i>▦</i><b>Chiudi delle date</b><span>ferie, lavori, giorni pieni</span></a>
-          <a href="#pagine" class="veloce" data-apri-sezione="#hero"><i>▣</i><b>Cambia la foto di copertina</b><span>la prima foto del sito</span></a>
-          <a href="#domande" class="veloce"><i>?</i><b>Aggiungi una domanda</b><span>nelle domande frequenti</span></a>
-          <a href="#prezzi" class="veloce"><i>€</i><b>Cambia i prezzi</b><span>notti e coccole</span></a>
+          <a href="#prenotazioni" class="veloce"><i><svg class="ic" aria-hidden="true"><use href="#ic-calendario"/></svg></i><b>Chiudi delle date</b><span>ferie, lavori, giorni pieni</span></a>
+          <a href="#pagine" class="veloce" data-apri-sezione="#hero"><i><svg class="ic" aria-hidden="true"><use href="#ic-foto"/></svg></i><b>Cambia la foto di copertina</b><span>la prima foto del sito</span></a>
+          <a href="#domande" class="veloce"><i><svg class="ic" aria-hidden="true"><use href="#ic-domanda"/></svg></i><b>Aggiungi una domanda</b><span>nelle domande frequenti</span></a>
+          <a href="#prezzi" class="veloce"><i><svg class="ic" aria-hidden="true"><use href="#ic-euro"/></svg></i><b>Cambia i prezzi</b><span>notti e coccole</span></a>
         </div>
       </section>
     </div>
     <section class="riquadro riquadro--sito">
-      <div><h2>Il tuo sito</h2><p>Ogni cosa che vedi sul sito si cambia da qui: testi, foto, prezzi, domande, recensioni e date. Prima di salvare vedi sempre l’anteprima.</p><a class="btn btn--pieno" href="#pagine">Modifica testi e foto</a> <a class="btn" href="../" target="_blank" rel="noopener">Apri il sito ↗</a></div>
+      <div><h2>Il tuo sito</h2><p>Ogni cosa che vedi sul sito si cambia da qui: testi, foto, prezzi, domande, recensioni e date. Prima di salvare vedi sempre l’anteprima.</p><a class="btn btn--pieno" href="#pagine">Modifica testi e foto</a> <a class="btn" href="../" target="_blank" rel="noopener">Apri il sito <svg class="ic" aria-hidden="true"><use href="#ic-esterno"/></svg></a></div>
       <img src="../img/coppia-tramonto.webp" alt="">
     </section>`;
   };
@@ -247,7 +249,7 @@
     <section class="riquadro">
       <div class="riquadro__testa riquadro__testa--a-capo">
         <div class="scelta-nido" role="group" aria-label="Nido">${Object.entries(DATI.nidi).map(([id, n]) => `<button type="button" data-nido="${id}" aria-pressed="${id === calNido}"><img src="../${n.foto || ''}" alt="">${n.nome}</button>`).join('')}</div>
-        <div class="mese-nav"><button type="button" data-mese="-1" aria-label="Mese precedente">‹</button><b id="meseNome"></b><button type="button" data-mese="1" aria-label="Mese successivo">›</button></div>
+        <div class="mese-nav"><button type="button" data-mese="-1" aria-label="Mese precedente"><svg class="ic" aria-hidden="true"><use href="#ic-prima"/></svg></button><b id="meseNome"></b><button type="button" data-mese="1" aria-label="Mese successivo"><svg class="ic" aria-hidden="true"><use href="#ic-dopo"/></svg></button></div>
       </div>
       <div class="cal" id="cal"></div>
       <ul class="leggenda"><li><i class="l-libero"></i>Libero</li><li><i class="l-pren"></i>Prenotato</li><li><i class="l-chiuso"></i>Chiuso da te</li></ul>
@@ -424,19 +426,19 @@
         <label class="campo"><span>Frase in corsivo</span><input value="${esc(n.motto)}" data-c="motto"></label>
         <label class="campo"><span>Descrizione</span><textarea rows="4" data-c="descr">${esc(n.descr)}</textarea></label>
         <div class="campo"><span>Cosa c’è nel nido</span><ul class="lista-ed" data-lista>${n.dettagli.map((d) => voceLista(d)).join('')}</ul><button type="button" class="aggiungi" data-agg-voce>+ Aggiungi una voce</button></div>
-        <div class="campo"><span>Galleria “Guarda le foto” <small>(la prima è quella che si vede per prima)</small></span><div class="galleria-ed" data-galleria-ed>${n.galleria.map((f) => fotoGalleria('../' + f)).join('')}<button type="button" class="galleria-ed__agg" data-agg-foto>+<span>Aggiungi foto</span></button></div></div>
+        <div class="campo"><span>Galleria “Guarda le foto” <small>(la prima è quella che si vede per prima)</small></span><div class="galleria-ed" data-galleria-ed>${n.galleria.map((f) => fotoGalleria('../' + f)).join('')}<button type="button" class="galleria-ed__agg" data-agg-foto><b>+</b><span>Aggiungi foto</span></button></div></div>
       </section>`).join('') + (tre ? `<section class="riquadro"><h2>Nido 3</h2><p class="tenue">Il terzo nido è ancora “in arrivo”: il suo testo si cambia da <a href="#pagine">Testi e foto del sito → I tre nidi</a>. Quando sarà pronto, qui comparirà la sua scheda completa come le altre due.</p></section>` : '');
   };
-  const voceLista = (t) => `<li><span class="maniglia" aria-hidden="true">⋮⋮</span><input value="${esc(t)}"><button type="button" class="su" title="Sposta su">↑</button><button type="button" class="giu" title="Sposta giù">↓</button><button type="button" class="via" title="Togli">✕</button></li>`;
-  const fotoGalleria = (src) => `<figure><img src="${esc(src)}" alt=""><div><button type="button" class="su" title="Sposta prima">←</button><button type="button" class="giu" title="Sposta dopo">→</button><button type="button" class="via" title="Togli dalla galleria">✕</button></div></figure>`;
+  const voceLista = (t) => `<li><span class="maniglia" aria-hidden="true"><svg class="ic" aria-hidden="true"><use href="#ic-maniglia"/></svg></span><input value="${esc(t)}"><button type="button" class="su" title="Sposta su" aria-label="Sposta su"><svg class="ic" aria-hidden="true"><use href="#ic-su"/></svg></button><button type="button" class="giu" title="Sposta giù" aria-label="Sposta giù"><svg class="ic" aria-hidden="true"><use href="#ic-giu"/></svg></button><button type="button" class="via" title="Togli" aria-label="Togli"><svg class="ic" aria-hidden="true"><use href="#ic-x"/></svg></button></li>`;
+  const fotoGalleria = (src) => `<figure><img src="${esc(src)}" alt=""><div><button type="button" class="su" title="Sposta prima" aria-label="Sposta prima"><svg class="ic" aria-hidden="true"><use href="#ic-sx"/></svg></button><button type="button" class="giu" title="Sposta dopo" aria-label="Sposta dopo"><svg class="ic" aria-hidden="true"><use href="#ic-dx"/></svg></button><button type="button" class="via" title="Togli dalla galleria" aria-label="Togli dalla galleria"><svg class="ic" aria-hidden="true"><use href="#ic-x"/></svg></button></div></figure>`;
   LEGA.nidi = (c) => {
     c.addEventListener('input', (e) => { const s = e.target.closest('[data-id]'); if (s) segna('nido-' + s.dataset.id + '-' + (e.target.dataset.c || 'lista'), 'nido'); });
     c.addEventListener('click', (e) => {
       const s = e.target.closest('[data-id]'); if (!s) return; const k = 'nido-' + s.dataset.id;
       const li = e.target.closest('li, figure');
-      if (e.target.matches('.via') && li) { li.remove(); segna(k + '-rimozione-' + Math.random(), 'nido'); return; }
-      if (e.target.matches('.su') && li?.previousElementSibling) { li.parentNode.insertBefore(li, li.previousElementSibling); segna(k + '-ordine', 'nido'); return; }
-      if (e.target.matches('.giu') && li?.nextElementSibling && !li.nextElementSibling.matches('[data-agg-foto]')) { li.parentNode.insertBefore(li.nextElementSibling, li); segna(k + '-ordine', 'nido'); return; }
+      if (e.target.closest('.via') && li) { li.remove(); segna(k + '-rimozione-' + Math.random(), 'nido'); return; }
+      if (e.target.closest('.su') && li?.previousElementSibling) { li.parentNode.insertBefore(li, li.previousElementSibling); segna(k + '-ordine', 'nido'); return; }
+      if (e.target.closest('.giu') && li?.nextElementSibling && !li.nextElementSibling.matches('[data-agg-foto]')) { li.parentNode.insertBefore(li.nextElementSibling, li); segna(k + '-ordine', 'nido'); return; }
       if (e.target.closest('[data-agg-voce]')) { const ul = $('[data-lista]', s); ul.insertAdjacentHTML('beforeend', voceLista('')); $('li:last-child input', ul).focus(); segna(k + '-lista', 'nido'); return; }
       if (e.target.closest('[data-agg-foto]')) { scegliFoto((url) => { $('[data-agg-foto]', s).insertAdjacentHTML('beforebegin', fotoGalleria(url)); segna(k + '-galleria', 'nido'); avviso('Foto aggiunta alla galleria'); }); return; }
       if (e.target.closest('[data-sost-cop]')) scegliFoto((url) => { $('.nido-ed__testa img', s).src = url; segna(k + '-foto', 'nido'); avviso('Foto principale cambiata'); });
@@ -466,11 +468,11 @@
       </div>
     </section>`;
   };
-  const rigaExtra = (n, p) => `<li><input value="${esc(n)}" placeholder="Nome della coccola"><label class="campo--euro"><input type="number" min="0" value="${p}"><i>€</i></label><button type="button" class="via" title="Togli">✕</button></li>`;
+  const rigaExtra = (n, p) => `<li><input value="${esc(n)}" placeholder="Nome della coccola"><label class="campo--euro"><input type="number" min="0" value="${p}"><i>€</i></label><button type="button" class="via" title="Togli" aria-label="Togli"><svg class="ic" aria-hidden="true"><use href="#ic-x"/></svg></button></li>`;
   LEGA.prezzi = (c) => {
     c.addEventListener('input', (e) => segna('prezzi-' + (e.target.dataset.k || 'extra'), 'prezzi'));
     c.addEventListener('click', (e) => {
-      if (e.target.matches('.via')) { e.target.closest('li').remove(); segna('prezzi-extra-via-' + Math.random(), 'prezzi'); }
+      if (e.target.closest('.via')) { e.target.closest('li').remove(); segna('prezzi-extra-via-' + Math.random(), 'prezzi'); }
       if (e.target.closest('#aggExtra')) { $('#extraEd', c).insertAdjacentHTML('beforeend', rigaExtra('', '')); $('#extraEd li:last-child input', c).focus(); segna('prezzi-extra', 'prezzi'); }
     });
   };
@@ -480,14 +482,14 @@
     const voci = $$('.fisarmonica__voce', SITO).map((v) => ({ d: $('button', v).textContent.trim(), r: $$('.fisarmonica__pannello p', v).map((p) => aTesto(p).testo).join('\n\n') }));
     return `<section class="riquadro"><p class="aiuto">Cambia l’ordine con le frecce. La prima domanda è quella che si legge per prima sul sito.</p><ol class="faq-ed" id="faqEd">${voci.map((v) => rigaFaq(v.d, v.r)).join('')}</ol><button type="button" class="aggiungi" id="aggFaq">+ Aggiungi una domanda</button></section>`;
   };
-  const rigaFaq = (d, r) => `<li><div class="faq-ed__campi"><label class="campo"><span>Domanda</span><input value="${esc(d)}" placeholder="Es. Si possono portare animali?"></label><label class="campo"><span>Risposta</span><textarea rows="${Math.max(2, Math.ceil(r.length / 80))}">${esc(r)}</textarea></label></div><div class="ordina"><button type="button" class="su" title="Sposta su">↑</button><button type="button" class="giu" title="Sposta giù">↓</button><button type="button" class="via" title="Togli">✕</button></div></li>`;
+  const rigaFaq = (d, r) => `<li><div class="faq-ed__campi"><label class="campo"><span>Domanda</span><input value="${esc(d)}" placeholder="Es. Si possono portare animali?"></label><label class="campo"><span>Risposta</span><textarea rows="${Math.max(2, Math.ceil(r.length / 80))}">${esc(r)}</textarea></label></div><div class="ordina"><button type="button" class="su" title="Sposta su" aria-label="Sposta su"><svg class="ic" aria-hidden="true"><use href="#ic-su"/></svg></button><button type="button" class="giu" title="Sposta giù" aria-label="Sposta giù"><svg class="ic" aria-hidden="true"><use href="#ic-giu"/></svg></button><button type="button" class="via" title="Togli" aria-label="Togli"><svg class="ic" aria-hidden="true"><use href="#ic-x"/></svg></button></div></li>`;
   const listaOrdinabile = (c, lista, agg, nuova, chiave) => {
     c.addEventListener('input', () => segna(chiave, chiave));
     c.addEventListener('click', (e) => {
       const li = e.target.closest('li');
-      if (e.target.matches('.via') && li) { if (confirm('Vuoi togliere questa voce?')) { li.remove(); segna(chiave + Math.random(), chiave); } return; }
-      if (e.target.matches('.su') && li?.previousElementSibling) { li.parentNode.insertBefore(li, li.previousElementSibling); segna(chiave, chiave); return; }
-      if (e.target.matches('.giu') && li?.nextElementSibling) { li.parentNode.insertBefore(li.nextElementSibling, li); segna(chiave, chiave); return; }
+      if (e.target.closest('.via') && li) { if (confirm('Vuoi togliere questa voce?')) { li.remove(); segna(chiave + Math.random(), chiave); } return; }
+      if (e.target.closest('.su') && li?.previousElementSibling) { li.parentNode.insertBefore(li, li.previousElementSibling); segna(chiave, chiave); return; }
+      if (e.target.closest('.giu') && li?.nextElementSibling) { li.parentNode.insertBefore(li.nextElementSibling, li); segna(chiave, chiave); return; }
       if (e.target.closest(agg)) { $(lista, c).insertAdjacentHTML('beforeend', nuova()); const u = $(lista + ' > li:last-child', c); u.scrollIntoView({ block: 'center', behavior: 'smooth' }); $('input, textarea', u).focus(); segna(chiave, chiave); }
     });
   };
@@ -498,7 +500,7 @@
     const rec = $$('.citazione', SITO).map((r) => ({ t: $('blockquote', r)?.textContent.trim() || '', n: $('footer b', r)?.textContent.trim() || '', q: $('footer span:not(.nido)', r)?.textContent.trim() || '', nido: $('footer .nido', r)?.textContent.trim() || '' }));
     return `<section class="riquadro"><p class="aiuto">Le recensioni che scorrono sul sito. Puoi copiarle da Airbnb o Booking.</p><ol class="faq-ed rec-ed" id="recEd">${rec.map((r) => rigaRec(r)).join('')}</ol><button type="button" class="aggiungi" id="aggRec">+ Aggiungi una recensione</button></section>`;
   };
-  const rigaRec = (r) => `<li><div class="faq-ed__campi"><label class="campo"><span>Cosa ha scritto</span><textarea rows="3">${esc(r.t)}</textarea></label><div class="tre-campi"><label class="campo"><span>Nome</span><input value="${esc(r.n)}"></label><label class="campo"><span>Quando</span><input value="${esc(r.q)}" placeholder="Es. agosto 2026"></label><label class="campo"><span>Nido</span><select>${['Skyroom', 'Starsbox'].map((x) => `<option${x === r.nido ? ' selected' : ''}>${x}</option>`).join('')}</select></label></div></div><div class="ordina"><button type="button" class="su">↑</button><button type="button" class="giu">↓</button><button type="button" class="via">✕</button></div></li>`;
+  const rigaRec = (r) => `<li><div class="faq-ed__campi"><label class="campo"><span>Cosa ha scritto</span><textarea rows="3">${esc(r.t)}</textarea></label><div class="tre-campi"><label class="campo"><span>Nome</span><input value="${esc(r.n)}"></label><label class="campo"><span>Quando</span><input value="${esc(r.q)}" placeholder="Es. agosto 2026"></label><label class="campo"><span>Nido</span><select>${['Skyroom', 'Starsbox'].map((x) => `<option${x === r.nido ? ' selected' : ''}>${x}</option>`).join('')}</select></label></div></div><div class="ordina"><button type="button" class="su" aria-label="Sposta su"><svg class="ic" aria-hidden="true"><use href="#ic-su"/></svg></button><button type="button" class="giu" aria-label="Sposta giù"><svg class="ic" aria-hidden="true"><use href="#ic-giu"/></svg></button><button type="button" class="via" aria-label="Togli"><svg class="ic" aria-hidden="true"><use href="#ic-x"/></svg></button></div></li>`;
   LEGA.recensioni = (c) => { listaOrdinabile(c, '#recEd', '#aggRec', () => rigaRec({ t: '', n: '', q: '', nido: 'Skyroom' }), 'recensioni'); c.addEventListener('change', () => segna('recensioni', 'recensioni')); };
 
   /* LIBRERIA FOTO */
@@ -536,7 +538,7 @@
     <section class="riquadro"><h2>Il tuo accesso</h2>
       <div class="due-campi"><label class="campo"><span>Nome utente</span><input value="federica" autocomplete="off"></label><label class="campo"><span>Nuova password</span><input type="password" placeholder="Lascia vuoto per non cambiarla" autocomplete="new-password"></label></div>
       <p class="aiuto">Nell’anteprima la password non si può cambiare davvero.</p>
-      <button type="button" class="btn" id="rivediTour">▶ Rivedi il tutorial</button>
+      <button type="button" class="btn" id="rivediTour"><svg class="ic" aria-hidden="true"><use href="#ic-play"/></svg> Rivedi il tutorial</button>
     </section>`;
   };
   LEGA.impostazioni = (c) => { c.addEventListener('input', () => segna('impostazioni', 'impostazioni')); $('#rivediTour', c).addEventListener('click', () => tour.apri()); };
@@ -549,7 +551,7 @@
   /* ── finestra (per aggiungere una prenotazione) ── */
   function finestra(titolo, campi, conferma) {
     const w = document.createElement('div'); w.className = 'finestra';
-    w.innerHTML = `<div class="finestra__velo" data-chiudi></div><form class="finestra__carta" role="dialog" aria-modal="true"><button type="button" class="finestra__x" data-chiudi aria-label="Chiudi">✕</button><h2>${titolo}</h2>${campi}<div class="finestra__azioni"><button type="button" class="btn" data-chiudi>Annulla</button><button class="btn btn--pieno" type="submit">Salva</button></div></form>`;
+    w.innerHTML = `<div class="finestra__velo" data-chiudi></div><form class="finestra__carta" role="dialog" aria-modal="true"><button type="button" class="finestra__x" data-chiudi aria-label="Chiudi"><svg class="ic" aria-hidden="true"><use href="#ic-x"/></svg></button><h2>${titolo}</h2>${campi}<div class="finestra__azioni"><button type="button" class="btn" data-chiudi>Annulla</button><button class="btn btn--pieno" type="submit">Salva</button></div></form>`;
     document.body.append(w); requestAnimationFrame(() => w.classList.add('is-aperta'));
     const chiudi = () => { w.classList.remove('is-aperta'); setTimeout(() => w.remove(), 300); };
     w.addEventListener('click', (e) => { if (e.target.closest('[data-chiudi]')) chiudi(); });
@@ -569,7 +571,7 @@
     { s: '[data-tour="foto"]', t: 'Libreria foto', x: 'Tutte le foto del sito in un posto solo, con scritto dove compaiono. Ne sostituisci una e cambia ovunque.' },
     { s: '[data-tour="impostazioni"]', t: 'Contatti e impostazioni', x: 'Numero di WhatsApp, telefono, email, indirizzo e orari: li cambi una volta e si aggiornano su tutti i bottoni.' },
     { s: '[data-tour="salva"]', t: 'Ricordati di salvare', x: 'Quando cambi qualcosa qui compare il numero di modifiche. Premi “Salva modifiche” e il sito si aggiorna. Con “Annulla” torni a com’era.' },
-    { s: '[data-tour="tutorial"]', t: 'Quando vuoi, lo rivedi', x: 'Questo giro lo trovi sempre qui, nel menu a sinistra. Buon lavoro! 🌿' }
+    { s: '[data-tour="tutorial"]', t: 'Quando vuoi, lo rivedi', x: 'Questo giro lo trovi sempre qui, nel menu a sinistra. Buon lavoro!' }
   ];
   const tour = (() => {
     let i = 0;

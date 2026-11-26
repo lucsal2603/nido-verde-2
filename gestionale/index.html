@@ -10,9 +10,33 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Albert+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="gestionale.css?v=2">
+  <link rel="stylesheet" href="gestionale.css?v=5">
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="ic-casa" viewBox="0 0 24 24"><path d="M4 11 12 4l8 7v9H4z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M10 20v-5h4v5" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+    <symbol id="ic-calendario" viewBox="0 0 24 24"><rect x="4" y="5.5" width="16" height="14.5" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="ic-matita" viewBox="0 0 24 24"><path d="M5 19l1-4L16 5l3 3L9 18z M14 7l3 3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+    <symbol id="ic-nido" viewBox="0 0 24 24"><path d="M12 3 21 12H3z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M5.5 12v8h13v-8" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+    <symbol id="ic-euro" viewBox="0 0 24 24"><path d="M17 6.5A6.5 6.5 0 1 0 17 17.5M4.5 10.5h9M4.5 13.5h9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="ic-domanda" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M9.6 9.5a2.5 2.5 0 1 1 3.4 2.3c-.7.3-1 .8-1 1.5v.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="16.6" r="1.1" fill="currentColor"/></symbol>
+    <symbol id="ic-stella" viewBox="0 0 24 24"><path d="m12 4 2.4 5 5.4.6-4 3.7 1.1 5.4L12 16l-4.9 2.7 1.1-5.4-4-3.7 5.4-.6z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></symbol>
+    <symbol id="ic-foto" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="9" cy="10" r="1.6" fill="currentColor"/><path d="m4 17 5-4.5 3.5 3 3-2.5 4.5 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+    <symbol id="ic-ingranaggio" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 3v2.5M12 18.5V21M3 12h2.5M18.5 12H21M5.6 5.6l1.8 1.8M16.6 16.6l1.8 1.8M5.6 18.4l1.8-1.8M16.6 7.4l1.8-1.8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="ic-play" viewBox="0 0 24 24"><path d="M8 5.5v13l10.5-6.5z" fill="currentColor"/></symbol>
+    <symbol id="ic-esterno" viewBox="0 0 24 24"><path d="M9 5H5v14h14v-4M13 5h6v6M19 5l-8 8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ic-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="ic-su" viewBox="0 0 24 24"><path d="M12 19V5M6 11l6-6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ic-giu" viewBox="0 0 24 24"><path d="M12 5v14M6 13l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ic-sx" viewBox="0 0 24 24"><path d="M19 12H5M11 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ic-dx" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ic-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="ic-prima" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ic-dopo" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ic-maniglia" viewBox="0 0 24 24"><g fill="currentColor"><circle cx="9" cy="6" r="1.5"/><circle cx="15" cy="6" r="1.5"/><circle cx="9" cy="12" r="1.5"/><circle cx="15" cy="12" r="1.5"/><circle cx="9" cy="18" r="1.5"/><circle cx="15" cy="18" r="1.5"/></g></symbol>
+  </defs>
+</svg>
 
 <!-- ── accesso ── -->
 <section class="accesso" id="accesso">
@@ -35,26 +59,26 @@
   <aside class="lato" id="lato">
     <a class="lato__logo" href="#panoramica"><img src="../img/logo-testata.png" alt=""><span>Il Nido <em>gestionale</em></span></a>
     <nav class="lato__menu" id="menu" aria-label="Sezioni del gestionale">
-      <a href="#panoramica" data-tour="panoramica"><i>⌂</i>Panoramica</a>
-      <a href="#prenotazioni" data-tour="prenotazioni"><i>▦</i>Calendario e prenotazioni</a>
-      <a href="#pagine" data-tour="pagine"><i>✎</i>Testi e foto del sito</a>
-      <a href="#nidi" data-tour="nidi"><i>⌂</i>I nidi</a>
-      <a href="#prezzi" data-tour="prezzi"><i>€</i>Prezzi e coccole</a>
-      <a href="#domande" data-tour="domande"><i>?</i>Domande frequenti</a>
-      <a href="#recensioni" data-tour="recensioni"><i>★</i>Recensioni</a>
-      <a href="#foto" data-tour="foto"><i>▣</i>Libreria foto</a>
-      <a href="#impostazioni" data-tour="impostazioni"><i>⚙</i>Contatti e impostazioni</a>
+      <a href="#panoramica" data-tour="panoramica"><i><svg class="ic" aria-hidden="true"><use href="#ic-casa"/></svg></i>Panoramica</a>
+      <a href="#prenotazioni" data-tour="prenotazioni"><i><svg class="ic" aria-hidden="true"><use href="#ic-calendario"/></svg></i>Calendario e prenotazioni</a>
+      <a href="#pagine" data-tour="pagine"><i><svg class="ic" aria-hidden="true"><use href="#ic-matita"/></svg></i>Testi e foto del sito</a>
+      <a href="#nidi" data-tour="nidi"><i><svg class="ic" aria-hidden="true"><use href="#ic-nido"/></svg></i>I nidi</a>
+      <a href="#prezzi" data-tour="prezzi"><i><svg class="ic" aria-hidden="true"><use href="#ic-euro"/></svg></i>Prezzi e coccole</a>
+      <a href="#domande" data-tour="domande"><i><svg class="ic" aria-hidden="true"><use href="#ic-domanda"/></svg></i>Domande frequenti</a>
+      <a href="#recensioni" data-tour="recensioni"><i><svg class="ic" aria-hidden="true"><use href="#ic-stella"/></svg></i>Recensioni</a>
+      <a href="#foto" data-tour="foto"><i><svg class="ic" aria-hidden="true"><use href="#ic-foto"/></svg></i>Libreria foto</a>
+      <a href="#impostazioni" data-tour="impostazioni"><i><svg class="ic" aria-hidden="true"><use href="#ic-ingranaggio"/></svg></i>Contatti e impostazioni</a>
     </nav>
     <div class="lato__piede">
-      <button type="button" class="lato__tutorial" id="apriTutorial" data-tour="tutorial">▶ Rivedi il tutorial</button>
-      <a class="lato__sito" href="../" target="_blank" rel="noopener">Apri il sito ↗</a>
+      <button type="button" class="lato__tutorial" id="apriTutorial" data-tour="tutorial"><svg class="ic" aria-hidden="true"><use href="#ic-play"/></svg> Rivedi il tutorial</button>
+      <a class="lato__sito" href="../" target="_blank" rel="noopener">Apri il sito <svg class="ic" aria-hidden="true"><use href="#ic-esterno"/></svg></a>
       <button type="button" class="lato__esci" id="esci">Esci</button>
     </div>
   </aside>
 
   <div class="principale">
     <header class="barra">
-      <button type="button" class="barra__menu" id="barraMenu" aria-label="Apri il menu">☰</button>
+      <button type="button" class="barra__menu" id="barraMenu" aria-label="Apri il menu"><svg class="ic" aria-hidden="true"><use href="#ic-menu"/></svg></button>
       <div class="barra__titolo"><p class="occhiello" id="titoloOcchiello">Ciao Federica</p><h1 id="titoloPagina">Panoramica</h1></div>
       <div class="barra__azioni">
         <span class="barra__modifiche" id="contaModifiche" hidden></span>
@@ -87,6 +111,6 @@
 <div class="avviso" id="avviso" role="status" aria-live="polite"></div>
 <input type="file" id="sceltaFoto" accept="image/*" hidden>
 
-<script src="gestionale.js?v=6"></script>
+<script src="gestionale.js?v=7"></script>
 </body>
 </html>
