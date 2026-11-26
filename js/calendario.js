@@ -41,6 +41,7 @@
   };
   const festivo = (d) => festiviAnno(d.getUTCFullYear()).has(iso(d));
 
+  let ultimo = null;
   let DATI = null, nido = 'skyroom', inizio = null, fine = null, primoMese = null, extra = new Set();
 
   const inStagione = (d) => {
@@ -130,7 +131,8 @@
     q('[data-cal-barra-totale]').textContent = pronto ? `${soggiorno + ex} €` : '';
     q('[data-cal-avanti]').setAttribute('aria-disabled', String(!pronto));
     if (!pronto) radice.classList.remove('is-riepilogo');
-    qa('[data-cal-invia]').forEach((a) => { a.setAttribute('aria-disabled', String(!pronto)); a.href = pronto ? link(a.dataset.calInvia, n, soggiorno, ex) : '#calendario'; });
+    q('[data-cal-prenota]').setAttribute('aria-disabled', String(!pronto));
+    ultimo = { n: n.length, totale: soggiorno + ex };
     q('.calendario__aiuto').textContent = !inizio ? 'Tocca il giorno di arrivo.' : !fine ? 'Ora tocca il giorno di partenza.' : 'Perfetto! Ora manda la richiesta.';
   }
 
@@ -176,7 +178,11 @@
       const g = e.target.closest('.giorno'); if (g && !g.disabled) { scegliGiorno(daIso(g.dataset.data)); return; }
       const gf = e.target.closest('[data-cal-galleria]'); if (gf) { document.querySelector(`[data-cal-foto="${gf.dataset.calGalleria}"]`)?.click(); return; }
       const n = e.target.closest('[data-cal-scegli]'); if (n) { scegliNido(n.dataset.calScegli); return; }
-      const inv = e.target.closest('[data-cal-invia]'); if (inv && inv.getAttribute('aria-disabled') === 'true') { e.preventDefault(); q('.calendario__aiuto').classList.remove('is-avviso'); void q('.calendario__aiuto').offsetWidth; q('.calendario__aiuto').classList.add('is-avviso'); }
+      const pr = e.target.closest('[data-cal-prenota]');
+      if (pr) {
+        if (pr.getAttribute('aria-disabled') === 'true') { q('.calendario__aiuto').classList.remove('is-avviso'); void q('.calendario__aiuto').offsetWidth; q('.calendario__aiuto').classList.add('is-avviso'); return; }
+        prenota(); return;
+      }
     });
     q('[data-cal-prima]').addEventListener('click', () => { primoMese = D(primoMese.getUTCFullYear(), primoMese.getUTCMonth() - 1, 1); disegnaMesi(); });
     q('[data-cal-dopo]').addEventListener('click', () => { primoMese = D(primoMese.getUTCFullYear(), primoMese.getUTCMonth() + 1, 1); disegnaMesi(); });
@@ -192,7 +198,27 @@
     radice.classList.add('is-pronto'); adatta();
   }
 
-  /* la finestra non scorre mai: se lo schermo è basso, il contenuto si rimpicciolisce quanto basta per starci tutto */
+  /* ── per ora la prenotazione è simulata: un'animazione di conferma. Qui arriverà la chiamata al gestionale e il pagamento ── */
+  function prenota() {
+    const box = document.querySelector('[data-cal-fatto]'); if (!box) return;
+    const nd = DATI.nidi[nido];
+    box.querySelector('[data-cal-fatto-dettagli]').innerHTML = `<b>${nd.nome}</b> · ${breve(inizio)} → ${breve(fine)} · ${ultimo.n} ${ultimo.n === 1 ? 'notte' : 'notti'} · <b>${ultimo.totale} €</b>`;
+    const cielo = box.querySelector('.cal-fatto__cielo');
+    cielo.innerHTML = Array.from({ length: 28 }, (_, i) => {
+      const a = (i / 28) * Math.PI * 2 + Math.random() * .3, r = 110 + Math.random() * 200;
+      const foglia = i % 3 === 0;
+      return `<i class="${foglia ? 'cf-foglia' : 'cf-stella'}" style="--x:${(Math.cos(a) * r).toFixed(0)}px;--y:${(Math.sin(a) * r * .75 - 40).toFixed(0)}px;--r:${(Math.random() * 360).toFixed(0)}deg;--d:${(.9 + Math.random() * .5).toFixed(2)}s;--s:${(.6 + Math.random() * .8).toFixed(2)}"></i>`;
+    }).join('');
+    box.hidden = false; box.classList.remove('is-via'); void box.offsetWidth; box.classList.add('is-via');
+    setTimeout(() => box.querySelector('[data-cal-chiudi]')?.focus({ preventScroll: true }), 2200);
+  }
+  function azzeraFatto() {
+    const box = document.querySelector('[data-cal-fatto]'); if (!box || box.hidden) return;
+    box.hidden = true; box.classList.remove('is-via');
+    inizio = fine = null; extra.clear(); qa('.calendario__extra input').forEach((c) => { c.checked = false; });
+    radice.classList.remove('is-riepilogo'); disegnaMesi(); disegnaRiepilogo();
+  }
+
   /* la finestra non scorre mai: se lo schermo è basso il contenuto si rimpicciolisce.
      La misura si fa solo all'apertura e quando cambia lo schermo, sul caso più alto (date e riepilogo),
      così le scritte restano sempre della stessa grandezza mentre si usa il calendario */
@@ -242,7 +268,7 @@
   const chiudi = () => {
     if (!aperta) return; aperta = false;
     pop.classList.remove('is-aperta'); document.documentElement.classList.remove('is-calendario');
-    setTimeout(() => { if (!aperta) pop.hidden = true; }, 420);
+    setTimeout(() => { if (!aperta) { pop.hidden = true; azzeraFatto(); } }, 420);
     window.nidoLenis?.start();
     origine?.focus?.({ preventScroll: true });
   };

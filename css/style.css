@@ -849,3 +849,59 @@ html.is-calendario .foglia { color: var(--oliva); }
   .calendario__vuoto { height: 46px; }
   .giorno small { font-size: .58rem; }
 }
+
+/* ── prenotazione confermata (simulata): la casetta si disegna, il tetto si apre, escono stelle e foglie ── */
+.cal-fatto { position: absolute; inset: 0; z-index: 4; display: grid; place-items: center; align-content: center; gap: 6px; padding: 30px 24px; text-align: center; color: var(--bianco); background: radial-gradient(120% 90% at 50% 30%, #23402A 0%, var(--notte) 70%); overflow: hidden; }
+.cal-fatto[hidden] { display: none; }
+.cal-fatto.is-via { animation: cfEntra .55s var(--e-out) both; }
+@keyframes cfEntra { from { clip-path: circle(0 at 50% 38%); } to { clip-path: circle(150% at 50% 38%); } }
+.cal-fatto__cielo { position: absolute; left: 50%; top: 36%; width: 0; height: 0; }
+.cal-fatto__cielo i { position: absolute; left: 0; top: 0; opacity: 0; }
+.cf-stella { width: 14px; height: 14px; margin: -7px; background: var(--evidenzia); clip-path: polygon(50% 0, 61% 38%, 100% 50%, 61% 62%, 50% 100%, 39% 62%, 0 50%, 39% 38%); }
+.cf-foglia { width: 18px; height: 9px; margin: -4.5px -9px; border-radius: 0 100%; background: #7E9A63; }
+.is-via .cal-fatto__cielo i { animation: cfScoppio var(--d) cubic-bezier(.15, .7, .3, 1) 1.25s both; }
+@keyframes cfScoppio {
+  0% { opacity: 0; transform: translate(0, 0) rotate(0) scale(.2); }
+  15% { opacity: 1; }
+  75% { opacity: 1; }
+  100% { opacity: 0; transform: translate(var(--x), var(--y)) rotate(var(--r)) scale(var(--s)); }
+}
+.cal-fatto__casa { position: relative; width: clamp(130px, 17vh, 180px); height: auto; overflow: visible; fill: none; stroke: var(--bianco); stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+.cal-fatto__casa::before { content: none; }
+.cf-base, .cf-falda path, .cf-spunta { stroke-dasharray: 400; stroke-dashoffset: 400; }
+.cf-spunta { stroke: var(--lime); stroke-width: 7; }
+.cf-luce { stroke: none; fill: var(--evidenzia); opacity: 0; transform-origin: 100px 122px; filter: blur(14px); }
+.is-via .cf-luce { animation: cfLuce 1.4s var(--e-out) 1.3s forwards; }
+@keyframes cfLuce { 0% { opacity: 0; transform: scale(.3); } 40% { opacity: .55; transform: scale(1.1); } 100% { opacity: .22; transform: scale(1); } }
+.cf-falda--sx { transform-origin: 44px 88px; }
+.cf-falda--dx { transform-origin: 156px 88px; }
+.is-via .cf-base { animation: cfTratto .8s var(--e-inout) .25s forwards; }
+.is-via .cf-falda path { animation: cfTratto .55s var(--e-inout) .7s forwards; }
+.is-via .cf-falda--sx { animation: cfApriSx .7s cubic-bezier(.34, 1.56, .64, 1) 1.15s both; }
+.is-via .cf-falda--dx { animation: cfApriDx .7s cubic-bezier(.34, 1.56, .64, 1) 1.15s both; }
+.is-via .cf-spunta { animation: cfTratto .5s var(--e-out) 1.45s forwards; }
+@keyframes cfTratto { to { stroke-dashoffset: 0; } }
+@keyframes cfApriSx { from { transform: none; } to { transform: rotate(-14deg); } }
+@keyframes cfApriDx { from { transform: none; } to { transform: rotate(14deg); } }
+.cal-fatto__testo { position: relative; display: grid; justify-items: center; max-width: 520px; }
+.cal-fatto__testo > * { opacity: 0; }
+.is-via .cal-fatto__testo > * { animation: cfSale .7s var(--e-out) both; }
+.is-via .cal-fatto__testo > :nth-child(1) { animation-delay: 1.7s; }
+.is-via .cal-fatto__testo > :nth-child(2) { animation-delay: 1.82s; }
+.is-via .cal-fatto__testo > :nth-child(3) { animation-delay: 1.94s; }
+.is-via .cal-fatto__testo > :nth-child(4) { animation-delay: 2.04s; }
+.is-via .cal-fatto__testo > :nth-child(5) { animation-delay: 2.16s; }
+.is-via .cal-fatto__testo > :nth-child(6) { animation-delay: 2.3s; }
+@keyframes cfSale { from { opacity: 0; transform: translateY(18px); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
+.cal-fatto__occhiello { margin: 18px 0 6px; font: 500 .74rem/1 var(--sans); letter-spacing: .2em; text-transform: uppercase; color: var(--lime); }
+.cal-fatto__titolo { margin: 0; font: 400 clamp(2.2rem, 4.4vw, 3.4rem)/1 var(--serif); letter-spacing: -.02em; }
+.cal-fatto__titolo em { font-style: italic; color: var(--evidenzia); }
+.cal-fatto__dettagli { margin: 16px 0 0; padding: 10px 18px; border-radius: 999px; background: rgba(247, 248, 243, .08); border: 1px solid rgba(247, 248, 243, .16); font-size: .95rem; }
+.cal-fatto__dettagli b { font-weight: 500; color: var(--bianco); }
+.cal-fatto__nota { margin: 12px 0 20px; font-size: .9rem; opacity: .75; }
+.cal-fatto .bottone--pieno { background: var(--lime); border-color: var(--lime); color: var(--notte); }
+.cal-fatto .bottone--pieno::before { background: var(--bianco); }
+.cal-fatto__anteprima { margin: 16px 0 0; font-size: .72rem; opacity: .5; }
+@media (prefers-reduced-motion: reduce) {
+  .cal-fatto *, .cal-fatto { animation-duration: 1ms !important; animation-delay: 0s !important; }
+}

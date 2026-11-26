@@ -24,13 +24,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Big+Shoulders+Display:wght@300;400&family=Albert+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=2026112427">
+  <link rel="stylesheet" href="css/style.css?v=2026112430">
   <script>if ('scrollRestoration' in history) history.scrollRestoration = 'manual';</script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.4/dist/lenis.min.js"></script>
   <script src="js/main.js?v=2026112425" defer></script>
-  <script src="js/calendario.js?v=2026112428" defer></script>
+  <script src="js/calendario.js?v=2026112430" defer></script>
 </head>
 <body>
 
@@ -582,6 +582,24 @@
   <div class="cal-pop__carta" role="dialog" aria-modal="true" aria-labelledby="calTitolo" data-lenis-prevent>
     <button class="cal-pop__chiudi" type="button" aria-label="Chiudi il calendario" data-cal-chiudi><span></span><span></span></button>
     <div class="cal-gallerie" aria-hidden="true"><button type="button" data-galleria="img/skyroom-fronte.webp,img/skyroom-vista.webp,img/skyroom-dentro.webp,img/terrazza-tramonto.webp,img/skyroom-ulivo.webp,img/skyroom-drone.webp,img/skyroom-tramonto-letto.webp,img/skyroom-letto-vista.webp,img/skyroom-risveglio.webp,img/skyroom-tende.webp,img/skyroom-esterno.webp,img/skyroom-ulivi.webp" data-nome="la Skyroom" data-cal-foto="skyroom" tabindex="-1"><b></b></button><button type="button" data-galleria="img/starsbox-aperta.webp,img/starsbox-ulivo.webp,img/starsbox-lago.webp,img/starsbox-drone.webp,img/starsbox-letto.webp,img/starsbox-dentro.webp,img/starsbox-cielo.webp,img/starsbox-arco-letto.webp,img/starsbox-notte-lago.webp,img/bacio.webp,img/starsbox-papaveri.webp" data-nome="la Starsbox" data-cal-foto="starsbox" tabindex="-1"><b></b></button></div>
+    <div class="cal-fatto" data-cal-fatto hidden aria-live="assertive">
+      <div class="cal-fatto__cielo" aria-hidden="true"></div>
+      <svg class="cal-fatto__casa" viewBox="0 0 200 200" aria-hidden="true">
+        <path class="cf-base" d="M44 92v74h112V92"/>
+        <g class="cf-falda cf-falda--sx"><path d="M100 30 36 96"/></g>
+        <g class="cf-falda cf-falda--dx"><path d="M100 30l64 66"/></g>
+        <path class="cf-spunta" d="M76 126l17 17 33-37"/>
+        <circle class="cf-luce" cx="100" cy="122" r="46"/>
+      </svg>
+      <div class="cal-fatto__testo">
+        <p class="cal-fatto__occhiello">Prenotazione confermata</p>
+        <h2 class="cal-fatto__titolo">Il tuo nido <em>ti aspetta.</em></h2>
+        <p class="cal-fatto__dettagli" data-cal-fatto-dettagli></p>
+        <p class="cal-fatto__nota">Riceverai la conferma via mail, con tutte le indicazioni per arrivare.</p>
+        <button type="button" class="bottone bottone--pieno bottone--grande" data-cal-chiudi>Torna al sito</button>
+        <p class="cal-fatto__anteprima">Anteprima: questa è una simulazione, nessuna prenotazione è stata registrata.</p>
+      </div>
+    </div>
     <div class="calendario" id="calendario" data-calendario>
       <div class="calendario__testa">
         <div>
@@ -621,10 +639,9 @@
           <div class="calendario__extra"></div>
           <div class="calendario__totale"><span>Totale indicativo</span><strong data-cal-totale>—</strong></div>
           <div class="calendario__azioni">
-            <a class="bottone bottone--pieno bottone--grande" data-cal-invia="whatsapp" href="#calendario" target="_blank" rel="noreferrer" aria-disabled="true">Richiedi su WhatsApp</a>
-            <a class="bottone" data-cal-invia="email" href="#calendario" aria-disabled="true">oppure per email</a>
+            <button type="button" class="bottone bottone--pieno bottone--grande" data-cal-prenota aria-disabled="true">Prenota</button>
           </div>
-          <p class="calendario__nota">Colazione inclusa, per 2 persone. Federica ti conferma date e prezzo.</p>
+          <p class="calendario__nota">Colazione inclusa, per 2 persone.</p>
         </aside>
       </div>
       <p class="calendario__errore">Il calendario non si è caricato: scrivi a Federica su WhatsApp e ti dice subito le date libere.</p>
