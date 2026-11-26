@@ -177,13 +177,56 @@
     q('.calendario__extra').addEventListener('change', (e) => { const c = e.target; if (c.checked) extra.add(c.value); else extra.delete(c.value); disegnaRiepilogo(); });
     window.matchMedia('(max-width: 860px)').addEventListener('change', disegnaMesi);
     /* i bottoni "Prenota la Skyroom / la Starsbox" nelle schede portano qui con il nido già scelto */
-    document.querySelectorAll('[data-prenota-nido]').forEach((a) => a.addEventListener('click', () => scegliNido(a.dataset.prenotaNido)));
     disegnaMesi(); disegnaRiepilogo();
     radice.classList.add('is-pronto');
   }
 
+  /* ── la finestra: tutti i bottoni "Prenota" la aprono al centro, con il nido già scelto se il bottone lo dice ── */
+  const pop = document.getElementById('calPop');
+  let origine = null, aperta = false;
+  const apri = (idNido) => {
+    if (!pop) return;
+    if (idNido) { if (DATI) scegliNido(idNido); else nido = idNido; }
+    if (aperta) return; aperta = true;
+    origine = document.activeElement;
+    pop.hidden = false; document.documentElement.classList.add('is-calendario');
+    window.nidoLenis?.stop();
+    requestAnimationFrame(() => pop.classList.add('is-aperta'));
+    setTimeout(() => pop.querySelector('.cal-pop__chiudi')?.focus({ preventScroll: true }), 60);
+  };
+  const chiudi = () => {
+    if (!aperta) return; aperta = false;
+    pop.classList.remove('is-aperta'); document.documentElement.classList.remove('is-calendario');
+    setTimeout(() => { if (!aperta) pop.hidden = true; }, 420);
+    window.nidoLenis?.start();
+    origine?.focus?.({ preventScroll: true });
+  };
+  if (pop) {
+    /* in fase di cattura: così il salto alla sezione (in main.js) non parte */
+    document.addEventListener('click', (e) => {
+      const a = e.target.closest('a[href="#prenota"], a[href="#calendario"], [data-prenota-nido]');
+      if (!a || a.hasAttribute('data-no-cal') || a.hasAttribute('data-cal-invia') || pop.contains(a)) return;
+      e.preventDefault(); e.stopPropagation();
+      /* se il clic viene dal menu, il menu si chiude prima */
+      if (document.documentElement.classList.contains('is-menu')) document.getElementById('menuBottone')?.click();
+      apri(a.dataset.prenotaNido);
+    }, true);
+    pop.addEventListener('click', (e) => { if (e.target.closest('[data-cal-chiudi]')) chiudi(); });
+    window.addEventListener('keydown', (e) => {
+      if (!aperta) return;
+      if (e.key === 'Escape') { chiudi(); return; }
+      if (e.key === 'Tab') {   /* il fuoco resta dentro la finestra */
+        const f = [...pop.querySelectorAll('button:not([disabled]), a[href], input')].filter((x) => x.offsetParent !== null);
+        if (!f.length) return;
+        if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f[f.length - 1].focus(); }
+        else if (!e.shiftKey && document.activeElement === f[f.length - 1]) { e.preventDefault(); f[0].focus(); }
+      }
+    });
+    if (location.hash === '#calendario') setTimeout(() => apri(), 600);
+  }
+
   /* per il futuro: il gestionale potrà aggiornare il calendario senza ricaricare la pagina */
-  window.NidoCalendario = { aggiorna: (d) => { DATI = d; costruisci(); }, scegliNido };
+  window.NidoCalendario = { aggiorna: (d) => { DATI = d; costruisci(); }, scegliNido, apri, chiudi };
 
   fetch(CONFIG.fonte, { cache: 'no-cache' }).then((r) => r.json()).then((d) => { DATI = d; costruisci(); })
     .catch(() => { radice.classList.add('is-errore'); });

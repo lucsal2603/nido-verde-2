@@ -22,6 +22,7 @@
   if (!QA && !RIDOTTO && window.Lenis) {
     lenis = new window.Lenis({ lerp: .1, smoothWheel: true });
     lenis.on('scroll', ST.update);
+    window.nidoLenis = lenis;   /* lo usa anche il calendario (js/calendario.js) per fermare lo scroll quando è aperto */
     gsap.ticker.add((t) => lenis.raf(t * 1000));
     gsap.ticker.lagSmoothing(0);
   }

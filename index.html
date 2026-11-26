@@ -24,13 +24,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Big+Shoulders+Display:wght@300;400&family=Albert+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css?v=2026112422">
+  <link rel="stylesheet" href="css/style.css?v=2026112423">
   <script>if ('scrollRestoration' in history) history.scrollRestoration = 'manual';</script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.4/dist/lenis.min.js"></script>
-  <script src="js/main.js?v=2026112422" defer></script>
-  <script src="js/calendario.js?v=2026112422" defer></script>
+  <script src="js/main.js?v=2026112423" defer></script>
+  <script src="js/calendario.js?v=2026112423" defer></script>
 </head>
 <body>
 
@@ -162,7 +162,7 @@
             <div class="prezzo"><strong><span data-conta="110">0</span> €</strong><small>da lunedì a giovedì</small></div>
             <div class="prezzo"><strong><span data-conta="130">0</span> €</strong><small>venerdì, sabato, domenica, festivi e prefestivi, luglio e agosto</small></div>
           </div>
-          <a class="bottone" href="#calendario" data-prenota-nido="skyroom">Vedi le date libere</a>
+          <a class="bottone" href="#calendario" data-prenota-nido="skyroom">Prenota la Skyroom</a>
         </div>
       </article>
 
@@ -192,7 +192,7 @@
             <div class="prezzo"><strong><span data-conta="110">0</span> €</strong><small>da lunedì a giovedì</small></div>
             <div class="prezzo"><strong><span data-conta="130">0</span> €</strong><small>venerdì, sabato, domenica, festivi e prefestivi, luglio e agosto</small></div>
           </div>
-          <a class="bottone" href="#calendario" data-prenota-nido="starsbox">Vedi le date libere</a>
+          <a class="bottone" href="#calendario" data-prenota-nido="starsbox">Prenota la Starsbox</a>
         </div>
       </article>
 
@@ -493,9 +493,10 @@
     <div class="prenota__testo">
       <p class="occhiello" data-sale>Prenota</p>
       <h2 class="titolo-xl"><span class="riga"><i>Scrivi a</i></span><span class="riga"><i><em>Federica.</em></i></span></h2>
-      <p data-sale>Ti risponde lei, di persona. Scegli il nido e le date nel calendario qui sotto: la richiesta le arriva già compilata, e lei ti conferma tutto di persona.</p>
+      <p data-sale>Ti risponde lei, di persona. Scegli il nido e le date nel calendario: la richiesta le arriva già compilata, e lei ti conferma tutto di persona.</p>
       <div class="prenota__azioni" data-sale>
-        <a class="bottone bottone--pieno bottone--grande" href="https://wa.me/393515987323?text=Ciao%20Federica%21%20Vorrei%20prenotare%20una%20notte%20al%20Nido%20tra%20gli%20Ulivi.%0ANido%3A%20%28Skyroom%20%2F%20Starsbox%20%2F%20indifferente%29%0ADate%3A%20%0ASiamo%20in%3A%202%0AExtra%20che%20mi%20interessano%3A%20%28vasca%2C%20aperitivo%2C%20torta%29" target="_blank" rel="noreferrer">WhatsApp</a>
+        <a class="bottone bottone--pieno bottone--grande" href="#calendario">Vedi le date libere</a>
+        <a class="bottone bottone--grande" href="https://wa.me/393515987323?text=Ciao%20Federica%21%20Vorrei%20prenotare%20una%20notte%20al%20Nido%20tra%20gli%20Ulivi.%0ANido%3A%20%28Skyroom%20%2F%20Starsbox%20%2F%20indifferente%29%0ADate%3A%20%0ASiamo%20in%3A%202%0AExtra%20che%20mi%20interessano%3A%20%28vasca%2C%20aperitivo%2C%20torta%29" target="_blank" rel="noreferrer">WhatsApp</a>
         <a class="bottone bottone--grande" href="tel:+393515987323">Chiama, 351 598 7323</a>
         <a class="bottone bottone--grande" href="mailto:federica@ilnidotragliulivi.com?subject=Richiesta%20di%20prenotazione%20%E2%80%93%20Il%20Nido%20tra%20gli%20Ulivi&amp;body=Ciao%20Federica%2C%0Avorrei%20prenotare%20una%20notte%20al%20Nido%20tra%20gli%20Ulivi.%0A%0ANido%20che%20preferisco%3A%20%28Skyroom%20%2F%20Starsbox%20%2F%20indifferente%29%0ADate%3A%20%0AExtra%20che%20mi%20interessano%3A%20%28vasca%2C%20aperitivo%2C%20torta%29%0AEventuali%20allergie%20o%20richieste%3A%20%0A%0AGrazie%21">federica@ilnidotragliulivi.com</a>
         <a class="bottone bottone--grande" href="https://www.instagram.com/ilnidotragliulivi/" target="_blank" rel="noreferrer">Instagram</a>
@@ -508,49 +509,6 @@
       <div><dt>Pagamento</dt><dd>La prenotazione si conferma con bonifico bancario o carta di credito; la fattura arriva via mail. Gli extra si pagano al check-in, con POS o in contanti.</dd></div>
       <div><dt>Recensioni</dt><dd><a href="https://www.airbnb.it/rooms/1009265614261996404" target="_blank" rel="noreferrer">Skyroom su Airbnb</a> e <a href="https://www.airbnb.it/rooms/1009287311700061954" target="_blank" rel="noreferrer">Starsbox su Airbnb</a>.</dd></div>
     </dl>
-    <div class="calendario" id="calendario" data-calendario>
-      <div class="calendario__testa">
-        <div>
-          <p class="occhiello">Disponibilità</p>
-          <h3 class="calendario__titolo">Scegli il nido <em>e le date</em></h3>
-        </div>
-        <div class="calendario__nidi" role="group" aria-label="Scegli il nido"></div>
-      </div>
-      <p class="calendario__esempio" hidden>Anteprima: le date occupate sono di esempio, il calendario si collegherà alle prenotazioni vere.</p>
-      <div class="calendario__corpo">
-        <div class="calendario__sfoglia">
-          <div class="calendario__frecce">
-            <button type="button" class="calendario__freccia" data-cal-prima aria-label="Mese precedente"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4 6.5 10l6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-            <button type="button" class="calendario__freccia" data-cal-dopo aria-label="Mese successivo"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7.5 4 6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
-          </div>
-          <div class="calendario__mesi" aria-live="polite"></div>
-          <ul class="calendario__legenda">
-            <li><i class="leg leg--libero"></i>Libero, prezzo a notte</li>
-            <li><i class="leg leg--occupato"></i>Occupato</li>
-            <li><i class="leg leg--scelto"></i>Le tue date</li>
-          </ul>
-        </div>
-        <aside class="calendario__riepilogo" aria-label="Riepilogo della richiesta">
-          <p class="calendario__aiuto" aria-live="polite">Tocca il giorno di arrivo.</p>
-          <dl class="calendario__scelta">
-            <div><dt>Nido</dt><dd data-cal-nido>—</dd></div>
-            <div><dt>Arrivo</dt><dd data-cal-entrata>—</dd></div>
-            <div><dt>Partenza</dt><dd data-cal-uscita>—</dd></div>
-            <div><dt>Soggiorno</dt><dd data-cal-notti>—</dd></div>
-          </dl>
-          <p class="calendario__sotto">Aggiungi le coccole</p>
-          <div class="calendario__extra"></div>
-          <div class="calendario__totale"><span>Totale indicativo</span><strong data-cal-totale>—</strong></div>
-          <div class="calendario__azioni">
-            <a class="bottone bottone--pieno bottone--grande" data-cal-invia="whatsapp" href="#calendario" target="_blank" rel="noreferrer" aria-disabled="true">Richiedi su WhatsApp</a>
-            <a class="bottone" data-cal-invia="email" href="#calendario" aria-disabled="true">oppure per email</a>
-          </div>
-          <button type="button" class="calendario__azzera" data-cal-azzera>Cancella le date</button>
-          <p class="calendario__nota">Colazione inclusa, per 2 persone. Il prezzo è indicativo: Federica ti conferma disponibilità e totale.</p>
-        </aside>
-      </div>
-      <p class="calendario__errore">Il calendario non si è caricato: scrivi a Federica su WhatsApp e ti dice subito le date libere.</p>
-    </div>
     <!-- la mappa di Google si carica solo al clic: niente cookie di terzi finché l'ospite non lo chiede -->
     <div class="prenota__mappa" data-mappa>
       <div class="mappa__copertina">
@@ -618,6 +576,56 @@
 </div>
 
 <!-- popup di benvenuto: appare alla prima visita, poi ogni quattro visite (localStorage), mai due volte nella stessa sessione -->
+<!-- prenotazione: il calendario si apre in una finestra al centro da tutti i bottoni "Prenota" -->
+<div class="cal-pop" id="calPop" hidden>
+  <div class="cal-pop__velo" data-cal-chiudi></div>
+  <div class="cal-pop__carta" role="dialog" aria-modal="true" aria-labelledby="calTitolo" data-lenis-prevent>
+    <button class="cal-pop__chiudi" type="button" aria-label="Chiudi il calendario" data-cal-chiudi><span></span><span></span></button>
+    <div class="calendario" id="calendario" data-calendario>
+      <div class="calendario__testa">
+        <div>
+          <p class="occhiello">Disponibilità</p>
+          <h2 class="calendario__titolo" id="calTitolo">Scegli il nido <em>e le date</em></h2>
+        </div>
+        <div class="calendario__nidi" role="group" aria-label="Scegli il nido"></div>
+      </div>
+      <p class="calendario__esempio" hidden>Anteprima: le date occupate sono di esempio, il calendario si collegherà alle prenotazioni vere.</p>
+      <div class="calendario__corpo">
+        <div class="calendario__sfoglia">
+          <div class="calendario__frecce">
+            <button type="button" class="calendario__freccia" data-cal-prima aria-label="Mese precedente"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M12.5 4 6.5 10l6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <button type="button" class="calendario__freccia" data-cal-dopo aria-label="Mese successivo"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m7.5 4 6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          </div>
+          <div class="calendario__mesi" aria-live="polite"></div>
+          <ul class="calendario__legenda">
+            <li><i class="leg leg--libero"></i>Libero, prezzo a notte</li>
+            <li><i class="leg leg--occupato"></i>Occupato</li>
+            <li><i class="leg leg--scelto"></i>Le tue date</li>
+          </ul>
+        </div>
+        <aside class="calendario__riepilogo" aria-label="Riepilogo della richiesta">
+          <p class="calendario__aiuto" aria-live="polite">Tocca il giorno di arrivo.</p>
+          <dl class="calendario__scelta">
+            <div><dt>Nido</dt><dd data-cal-nido>—</dd></div>
+            <div><dt>Arrivo</dt><dd data-cal-entrata>—</dd></div>
+            <div><dt>Partenza</dt><dd data-cal-uscita>—</dd></div>
+            <div><dt>Soggiorno</dt><dd data-cal-notti>—</dd></div>
+          </dl>
+          <p class="calendario__sotto">Aggiungi le coccole</p>
+          <div class="calendario__extra"></div>
+          <div class="calendario__totale"><span>Totale indicativo</span><strong data-cal-totale>—</strong></div>
+          <div class="calendario__azioni">
+            <a class="bottone bottone--pieno bottone--grande" data-cal-invia="whatsapp" href="#calendario" target="_blank" rel="noreferrer" aria-disabled="true">Richiedi su WhatsApp</a>
+            <a class="bottone" data-cal-invia="email" href="#calendario" aria-disabled="true">oppure per email</a>
+          </div>
+          <button type="button" class="calendario__azzera" data-cal-azzera>Cancella le date</button>
+          <p class="calendario__nota">Colazione inclusa, per 2 persone. Il prezzo è indicativo: Federica ti conferma disponibilità e totale.</p>
+        </aside>
+      </div>
+      <p class="calendario__errore">Il calendario non si è caricato: scrivi a Federica su WhatsApp e ti dice subito le date libere.</p>
+    </div>
+  </div>
+</div>
 <div class="popup" id="popup" hidden>
   <div class="popup__velo" data-popup-chiudi></div>
   <div class="popup__carta" role="dialog" aria-modal="true" aria-labelledby="popupTitolo">
@@ -630,7 +638,7 @@
       <p>Siamo a Viverone, sulla collina sopra il lago: la Skyroom con il tetto trasparente apribile, la Starsbox con il tetto apribile, colazione e coccole comprese. Prenoti scrivendo a Federica, ti risponde lei.</p>
       <div class="popup__azioni">
         <a class="bottone bottone--pieno" href="#nidi" data-popup-chiudi>Scopri i tre nidi</a>
-        <a class="bottone" href="#prenota" data-popup-chiudi>Scrivi a Federica</a>
+        <a class="bottone" href="#prenota" data-popup-chiudi data-no-cal>Scrivi a Federica</a>
       </div>
     </div>
   </div>
